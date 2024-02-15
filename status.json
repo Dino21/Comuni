@@ -1,0 +1,2961 @@
+{
+    "0": {
+        "title": {
+            "en": "OK",
+            "it": "OK"
+        },
+        "description": {
+            "en": "Command executed correctly",
+            "it": "Comando eseguito correttamente"
+        },
+        "workcond": "ok"
+    },
+	 "1": {
+        "title": {
+            "en": "OK",
+            "it": "OK"
+        },
+        "description": {
+            "en": "Command executed correctly",
+            "it": "Comando eseguito correttamente"
+        },
+        "workcond": "ok"
+    },
+	"100": {
+        "title": {
+            "en": "Boot Mode ",
+            "it": "Boot Mode "
+        },
+        "description": {
+            "en": "Device in download mode",
+            "it": "Macchina in download mode"
+        },
+        "workcond": "recovery"
+    },
+    "101": {
+        "title": {
+            "en": "OK",
+            "it": "OK"
+        },
+        "description": {
+            "en": "Command executed correctly",
+            "it": "Comando eseguito correttamente"
+        },
+        "workcond": "ok"
+    },
+    "4": {
+        "title": {
+            "en": "Busy",
+            "it": "Occupato"
+        },
+        "description": {
+            "en": "The requested command cannot be executed.",
+            "it": "Il comando richiesto non può essere eseguito."
+        },
+        "workcond": "warning"
+    },
+    "102": {
+        "title": {
+            "en": "Busy",
+            "it": "Occupato"
+        },
+        "description": {
+            "en": "The requested command cannot be executed.",
+            "it": "Il comando richiesto non può essere eseguito."
+        },
+        "workcond": "warning"
+    },
+    "5": {
+        "title": {
+            "en": "Cover open",
+            "it": "Chiusura aperta"
+        },
+        "description": {
+            "en": "The upper cover is open (Forced condition after any error in the upper mechanical track).",
+            "it": "La chiusura superiore è aperta (Condizione forzata dopo ogni errore nel carrello meccanico superiore)."
+        },
+        "workcond": "warning"
+    },
+    "103": {
+        "title": {
+            "en": "Cover open",
+            "it": "Chiusura aperta"
+        },
+        "description": {
+            "en": "The upper cover is open (Forced condition after any error in the upper mechanical track).",
+            "it": "La chiusura superiore è aperta (Condizione forzata dopo ogni errore nel carrello meccanico superiore)."
+        },
+        "workcond": "warning"
+    },
+    "6": {
+        "title": {
+            "en": "Safe open",
+            "it": "Cassaforte aperta"
+        },
+        "description": {
+            "en": "The safe door is open.",
+            "it": "La porta della cassaforte è aperta."
+        },
+        "workcond": "warning"
+    },
+    "104": {
+        "title": {
+            "en": "Safe open",
+            "it": "Cassaforte aperta"
+        },
+        "description": {
+            "en": "The safe door is open.",
+            "it": "La porta della cassaforte è aperta."
+        },
+        "workcond": "warning"
+    },
+    "7": {
+        "title": {
+            "en": "Feeder open",
+            "it": "Sfogliatore aperto"
+        },
+        "description": {
+            "en": "The feeder is open.",
+            "it": "Lo sfogliatore è aperto."
+        },
+        "workcond": "warning"
+    },
+    "105": {
+        "title": {
+            "en": "Feeder open",
+            "it": "Sfogliatore aperto"
+        },
+        "description": {
+            "en": "The feeder is open.",
+            "it": "Lo sfogliatore è aperto."
+        },
+        "workcond": "warning"
+    },
+    "30": {
+        "title": {
+            "en": "Out of service",
+            "it": "Fuori servizio"
+        },
+        "description": {
+            "en": "If one of the “operating errors” of the previous table is not removed by the operator and the subsequent cleaning procedure, the machine goes “Out of service”. The same thing can occur at “power on” if one of the modules does not reply or is not working. To exit this status, power off the machine.",
+            "it": "Alcuni errori non sono stati rimossi e la macchina è momentanteamente fuori servizio. Spegnere e riaccendere la macchina."
+        },
+        "workcond": "error"
+    },
+    "106": {
+        "title": {
+            "en": "Out of service",
+            "it": "Fuori servizio"
+        },
+        "description": {
+            "en": "If one of the “operating errors” of the previous table is not removed by the operator and the subsequent cleaning procedure, the machine goes “Out of service”. The same thing can occur at “power on” if one of the modules does not reply or is not working. To exit this status, power off the machine.",
+            "it": "Alcuni errori non sono stati rimossi e la macchina è momentanteamente fuori servizio. Spegnere e riaccendere la macchina."
+        },
+        "workcond": "error"
+    },
+    "31": {
+        "title": {
+            "en": "Deposit out of service",
+            "it": "Deposito fuori servizio"
+        },
+        "description": {
+            "en": "The feeder or the identifier is not working. It is possible anyway to withdrawal the money.",
+            "it": "Lo sfogliatore o l'identificatore di banconote non funzione. È comunque possibile ritirare le banconote."
+        },
+        "workcond": "warning"
+    },
+    "107": {
+        "title": {
+            "en": "Deposit out of service",
+            "it": "Deposito fuori servizio"
+        },
+        "description": {
+            "en": "The feeder or the identifier is not working. It is possible anyway to withdrawal the money.",
+            "it": "Lo sfogliatore o l'identificatore di banconote non funzione. È comunque possibile ritirare le banconote."
+        },
+        "workcond": "warning"
+    },
+    "60": {
+        "title": {
+            "en": "Safe Out of service",
+            "it": "Cassaforte fuori servizio"
+        },
+        "description": {
+            "en": "Safe module (LOCO) doesn’t reply on the RS232 line to master controller (MACO).To exit this status, power off the CM18/CM18T.",
+            "it": "Il modulo di sicurezza (LOCO) non risponde a."
+        },
+        "workcond": "warning"
+    },
+    "108": {
+        "title": {
+            "en": "Safe Out of service",
+            "it": "Cassaforte fuori servizio"
+        },
+        "description": {
+            "en": "Safe module (LOCO) doesn’t reply on the RS232 line to master controller (MACO).To exit this status, power off the CM18/CM18T.",
+            "it": "Il modulo di sicurezza (LOCO) non risponde a."
+        },
+        "workcond": "warning"
+    },
+    "98": {
+        "title": {
+            "en": "CM LOCKED",
+            "it": "Macchina bloccata"
+        },
+        "description": {
+            "en": "Device locked",
+            "it": "Dispositivo bloccato"
+        },
+        "workcond": "warning"
+    },
+    "109": {
+        "title": {
+            "en": "CM LOCKED",
+            "it": "Macchina bloccata"
+        },
+        "description": {
+            "en": "Device locked",
+            "it": "Dispositivo bloccato"
+        },
+        "workcond": "warning"
+    },
+    "8": {
+        "title": {
+            "en": "One cassette in SAFE is open",
+            "it": "Un cassetto in cassaforte è aperto"
+        },
+        "description": {
+            "en": "Device locked",
+            "it": "Dispositivo bloccato"
+        },
+        "workcond": "warning"
+    },
+    "110": {
+        "title": {
+            "en": "Cage open",
+            "it": "Trasporto dei cassetti aperto"
+        },
+        "description": {
+            "en": "The cage is open. Fix the problem open the safe door and lock well the cage" , 
+            "it": "Il trasporto dei cassetti è aperto. Risolvere il problema aprendo la porta della cassaforte e bloccare correttamente il trasporto"
+        },
+        "workcond": "warning"
+    },
+    "3": {
+        "title": {
+            "en": "Syntax error",
+            "it": "Errore di Sintassi del comando"
+        },
+        "description": {
+            "en": "Syntax error in the Host command. Check the command sequence",
+            "it": "Errore di sintassi nel comando di Host. Controllare la sintassi del comando"
+        },
+        "workcond": "warning"
+    },
+    "201": {
+        "title": {
+            "en": "Syntax error or invalid parameter",
+            "it": "Errore di Sintassi del comando o parametro invalido"
+        },
+        "description": {
+            "en": "Syntax error in the Host command. Check the command sequence or the input parameter",
+            "it": "Errore di sintassi nel comando di Host. Controllare la sintassi del comando o i parametri di input"
+        },
+        "workcond": "warning"
+    },
+    "2": {
+        "title": {
+            "en": "SW error",
+            "it": "Errore SW"
+        },
+        "description": {
+            "en": "A problem occurred during the FLASH of the target module or not answer",
+            "it": "Problema durante il FLASH del modulo o una mancata risposta dello stesso"
+        },
+        "workcond": "download"
+    },
+    "202": {
+        "title": {
+            "en": "SW/FW error",
+            "it": "Errore SW/FW"
+        },
+        "description": {
+            "en": "A problem occurred during the FLASH of the target module or not answer",
+            "it": "Problema durante il FLASH del modulo o una mancata risposta dello stesso"
+        },
+        "workcond": "download"
+    },
+    "74": {
+        "title": {
+            "en": "Wrong FW",
+            "it": "FW sbagliato"
+        },
+        "description": {
+            "en": "FW in download is not compatible",
+            "it": "Il FW in download non è compatibile"
+        },
+        "workcond": "warning"
+    },
+    "203": {
+        "title": {
+            "en": "Wrong FW",
+            "it": "FW sbagliato"
+        },
+        "description": {
+            "en": "FW in download is not compatible",
+            "it": "Il FW in download non è compatibile"
+        },
+        "workcond": "warning"
+    },
+    "9": {
+        "title": {
+            "en": "Note on output slot",
+            "it": "Banconote nel lato destro"
+        },
+        "description": {
+            "en": "Notes are detected on the output compartment.",
+            "it": "Banconote rilevate nel lato di output"
+        },
+        "workcond": "warning"
+    },
+    "204": {
+        "title": {
+            "en": "Note on output slot",
+            "it": "Banconote nel lato destro"
+        },
+        "description": {
+            "en": "Notes are detected on the output compartment.",
+            "it": "Banconote rilevate nel lato di output"
+        },
+        "workcond": "warning"
+    },
+    "10": {
+        "title": {
+            "en": "Note on output slot",
+            "it": "Banconote nella bocchetta di output"
+        },
+        "description": {
+            "en": "Notes are detected on the output compartment.",
+            "it": "Banconote rilevate nella bocchetta di output"
+        },
+        "workcond": "warning"
+    },
+    "205": {
+        "title": {
+            "en": "Note on output slot",
+            "it": "Banconote nella bocchetta di output"
+        },
+        "description": {
+            "en": "Notes are detected on the output compartment.",
+            "it": "Banconote rilevate nella bocchetta di output"
+        },
+        "workcond": "warning"
+    },
+    "11": {
+        "title": {
+            "en": "Feeder reject out",
+            "it": "Banconote nella bocchetta di scarto"
+        },
+        "description": {
+            "en": "Notes are detected on the reject compartment of the feeder.",
+            "it": "Banconote rilevate nella bocchetta di scarto dello sfogliatore"
+        },
+        "workcond": "warning"
+    },
+    "206": {
+        "title": {
+            "en": "Feeder reject out",
+            "it": "Banconote nella bocchetta di scarto"
+        },
+        "description": {
+            "en": "Notes are detected on the reject compartment of the feeder.",
+            "it": "Banconote rilevate nella bocchetta di scarto dello sfogliatore"
+        },
+        "workcond": "warning"
+    },
+    "12": {
+        "title": {
+            "en": "No input note",
+            "it": "Nessuna Banconota inserita"
+        },
+        "description": {
+            "en": "No input notes are detected on the feeder input slot after a deposit command.",
+            "it": "Non sono state rilevate banconote nella bocchetta di input dopo un comando di deposito"
+        },
+        "workcond": "warning"
+    },
+    "207": {
+        "title": {
+            "en": "No input note",
+            "it": "Nessuna Banconota inserita"
+        },
+        "description": {
+            "en": "No input notes are detected on the feeder input slot after a deposit command.",
+            "it": "Non sono state rilevate banconote nella bocchetta di input dopo un comando di deposito"
+        },
+        "workcond": "warning"
+    },
+    "64": {
+        "title": {
+            "en": "Note on Feeder input",
+            "it": "Banconote nella bocchetta di input"
+        },
+        "description": {
+            "en": "Note left on the feeder input tray at the end of a deposit command.",
+            "it": "Banconote nella bocchetta di input dopo un comando di deposito"
+        },
+        "workcond": "warning"
+    },
+    "208": {
+        "title": {
+            "en": "Note on Feeder input",
+            "it": "Banconote nella bocchetta di input"
+        },
+        "description": {
+            "en": "Note left on the feeder input tray at the end of a deposit command.",
+            "it": "Banconote nella bocchetta di input dopo un comando di deposito"
+        },
+        "workcond": "warning"
+    },
+    "13": {
+        "title": {
+            "en": "Denomination full",
+            "it": "Cassetti pieni"
+        },
+        "description": {
+            "en": "All the cassettes programmed with the specific denomination are full.",
+            "it": "Tutti i cassetti impostati con la specifica denominazione sono pieni"
+        },
+        "workcond": "warning"
+    },
+    "209": {
+        "title": {
+            "en": "Denomination full",
+            "it": "Cassetti pieni"
+        },
+        "description": {
+            "en": "All the cassettes programmed with the specific denomination are full.",
+            "it": "Tutti i cassetti impostati con la specifica denominazione sono pieni"
+        },
+        "workcond": "warning"
+    },
+    "14": {
+        "title": {
+            "en": "Denomination empty",
+            "it": "Cassetti vuoti"
+        },
+        "description": {
+            "en": "All the cassettes programmed with the specific denomination are empty.",
+            "it": "Tutti i cassetti impostati con la specifica denominazione sono vuoti"
+        },
+        "workcond": "warning"
+    },
+    "210": {
+        "title": {
+            "en": "Denomination empty",
+            "it": "Cassetti vuoti"
+        },
+        "description": {
+            "en": "All the cassettes programmed with the specific denomination are empty.",
+            "it": "Tutti i cassetti impostati con la specifica denominazione sono vuoti"
+        },
+        "workcond": "warning"
+    },
+    "65": {
+        "title": {
+            "en": "Wrong Key",
+            "it": "Chiave sbagliata"
+        },
+        "description": {
+            "en": "The key code used is wrong.",
+            "it": "Il codice inserito è sbagliato."
+        },
+        "workcond": "warning"
+    },
+    "211": {
+        "title": {
+            "en": "Wrong Key",
+            "it": "Chiave sbagliata"
+        },
+        "description": {
+            "en": "The key code used is wrong.",
+            "it": "Il codice inserito è sbagliato."
+        },
+        "workcond": "warning"
+    },
+    "66": {
+        "title": {
+            "en": "No Cassette Enable",
+            "it": "Nessun cassetto abilitato"
+        },
+        "description": {
+            "en": "There are no cassette enable with reference to the operator side used.",
+            "it": "Non ci sono cassetti attivi che fanno riferimento al lato che si sta utilizzando."
+        },
+        "workcond": "warning"
+    },
+    "212": {
+        "title": {
+            "en": "No Cassette Enable",
+            "it": "Nessun cassetto abilitato"
+        },
+        "description": {
+            "en": "There are no cassette enable with reference to the operator side used.",
+            "it": "Non ci sono cassetti attivi che fanno riferimento al lato che si sta utilizzando."
+        },
+        "workcond": "warning"
+    },
+    "67": {
+        "title": {
+            "en": "Wrong side",
+            "it": "Lato sbagliato"
+        },
+        "description": {
+            "en": "The operator side used in the cmd is not correct.",
+            "it": "Il lato utilizzato nel cmd non è corretto."
+        },
+        "workcond": "warning"
+    },
+    "213": {
+        "title": {
+            "en": "Wrong side",
+            "it": "Lato sbagliato"
+        },
+        "description": {
+            "en": "The operator side used in the cmd is not correct.",
+            "it": "Il lato utilizzato nel cmd non è corretto."
+        },
+        "workcond": "warning"
+    },
+    "68": {
+        "title": {
+            "en": "Req. Over limit",
+            "it": "Rich. oltre i limiti"
+        },
+        "description": {
+            "en": "Request over limit.",
+            "it": "La richiesta è oltre i limiti."
+        },
+        "workcond": "warning"
+    },
+    "214": {
+        "title": {
+            "en": "Req. Over limit",
+            "it": "Rich. oltre i limiti"
+        },
+        "description": {
+            "en": "Request over limit.",
+            "it": "La richiesta è oltre i limiti."
+        },
+        "workcond": "warning"
+    },
+    "69": {
+        "title": {
+            "en": "Cass. not pres.",
+            "it": "Cass. not pres."
+        },
+        "description": {
+            "en": "The cassette is not present",
+            "it": "Il cassetto non è presente"
+        },
+        "workcond": "warning"
+    },
+    "215": {
+        "title": {
+            "en": "Cass. not pres.",
+            "it": "Cass. not pres."
+        },
+        "description": {
+            "en": "The cassette is not present",
+            "it": "Il cassetto non è presente"
+        },
+        "workcond": "warning"
+    },
+    "70": {
+        "title": {
+            "en": "C/n.id not empty",
+            "it": "C/n.id non vuoto"
+        },
+        "description": {
+            "en": "The cassette or denomination is not empty",
+            "it": "Il cassetto o il taglio non è vuoto"
+        },
+        "workcond": "warning"
+    },
+    "216": {
+        "title": {
+            "en": "C/n.id not empty",
+            "it": "C/n.id non vuoto"
+        },
+        "description": {
+            "en": "The cassette or denomination is not empty",
+            "it": "Il cassetto o il taglio non è vuoto"
+        },
+        "workcond": "warning"
+    },
+    "71": {
+        "title": {
+            "en": "n.id not present",
+            "it": "n.id non presente"
+        },
+        "description": {
+            "en": "The denomination is not present",
+            "it": "Denominazione non presente"
+        },
+        "workcond": "warning"
+    },
+    "217": {
+        "title": {
+            "en": "n.id not present",
+            "it": "n.id non presente"
+        },
+        "description": {
+            "en": "The denomination is not present",
+            "it": "Denominazione non presente"
+        },
+        "workcond": "warning"
+    },
+    "72": {
+        "title": {
+            "en": "No journal",
+            "it": "Journal non presente"
+        },
+        "description": {
+            "en": "The electronic journal optional kit is not present or not working",
+            "it": "Il kit opzionale per journal elettronico non è presente o non funziona"
+        },
+        "workcond": "warning"
+    },
+    "218": {
+        "title": {
+            "en": "No journal",
+            "it": "Journal non presente"
+        },
+        "description": {
+            "en": "The electronic journal optional kit is not present or not working",
+            "it": "Il kit opzionale per journal elettronico non è presente o non funziona"
+        },
+        "workcond": "warning"
+    },
+    "73": {
+        "title": {
+            "en": "Record not present",
+            "it": "Record non presente "
+        },
+        "description": {
+            "en": "The journal record is not present in the specific area range",
+            "it": "Il record del journal non è presente nell'area di area specifica"
+        },
+        "workcond": "warning"
+    },
+    "219": {
+        "title": {
+            "en": "Record not present",
+            "it": "Record non presente "
+        },
+        "description": {
+            "en": "The journal record is not present in the specific area range",
+            "it": "Il record del journal non è presente nell'area di area specifica"
+        },
+        "workcond": "warning"
+    },
+    "220": {
+        "title": {
+            "en": "Starting reboot",
+            "it": "Riavvio in corso"
+        },
+        "description": {
+            "en": "Starting Reboot after download first record dll RTC",
+            "it": "Riavvio dopo il download del primo record dll RTC"
+        },
+        "workcond": "recovery"
+    },
+    "221": {
+        "title": {
+            "en": "Unexpected command",
+            "it": "Comando inaspettato"
+        },
+        "description": {
+            "en": "Unexpected command",
+            "it": "Comando inaspettato"
+        },
+        "workcond": "warning"
+    },
+    "75": {
+        "title": {
+            "en": "Booking not in ACTIVE status",
+            "it": "Prenotazione non in stato ATTIVO"
+        },
+        "description": {
+            "en": "The request booking is noy in ACTIVE status",
+            "it": "La prenotazione della richiesta non è nello stato ATTIVO"
+        },
+        "workcond": "warning"
+    },
+    "222": {
+        "title": {
+            "en": "Booking not in ACTIVE status",
+            "it": "Prenotazione non in stato ATTIVO"
+        },
+        "description": {
+            "en": "The request booking is noy in ACTIVE status",
+            "it": "La prenotazione della richiesta non è nello stato ATTIVO"
+        },
+        "workcond": "warning"
+    },
+    "76": {
+        "title": {
+            "en": "Coin error",
+            "it": "Errore di moneta"
+        },
+        "description": {
+            "en": "Function error, busy, busy+low coin, generic error",
+            "it": "Erroe di funzione, occupata, occupata+monete in esaurimento, errore generico"
+        },
+        "workcond": "warning"
+    },
+    "223": {
+        "title": {
+            "en": "Coin error",
+            "it": "Errore di moneta"
+        },
+        "description": {
+            "en": "Function error, busy, busy+low coin, generic error",
+            "it": "Erroe di funzione, occupata, occupata+monete in esaurimento, errore generico"
+        },
+        "workcond": "warning"
+    },
+    "80": {
+        "title": {
+            "en": "Cat. 2 Box full",
+            "it": "Cat. 2 Box pieno"
+        },
+        "description": {
+            "en": "Cat. 2 Box slot full",
+            "it": "Cat. 2 Box slot pieno"
+        },
+        "workcond": "warning"
+    },
+    "230": {
+        "title": {
+            "en": "Cat. 2 Box full",
+            "it": "Cat. 2 Box pieno"
+        },
+        "description": {
+            "en": "Cat. 2 Box slot full",
+            "it": "Cat. 2 Box slot pieno"
+        },
+        "workcond": "warning"
+    },
+    "81": {
+        "title": {
+            "en": "Cat. 2 Box not pres.",
+            "it": "Cat. 2 Box non pres."
+        },
+        "description": {
+            "en": "Cat. 2 Box not present",
+            "it": "Cat. 2 Box non presente"
+        },
+        "workcond": "warning"
+    },
+    "231": {
+        "title": {
+            "en": "Cat. 2 Box not pres.",
+            "it": "Cat. 2 Box non pres."
+        },
+        "description": {
+            "en": "Cat. 2 Box not present",
+            "it": "Cat. 2 Box non presente"
+        },
+        "workcond": "warning"
+    },
+    "298": {
+        "title": {
+            "en": "Reply outData truncated",
+            "it": "Reply outData troncato"
+        },
+        "description": {
+            "en": "Reply outData truncated",
+            "it": "Reply outData troncato"
+        },
+        "workcond": "warning"
+    },
+    "299": {
+        "title": {
+            "en": "Not enought buffer size",
+            "it": "Buffer non sufficiente"
+        },
+        "description": {
+            "en": "Insufficient size outData buffer",
+            "it": "buffer di output insufficiente"
+        },
+        "workcond": "warning"
+    },
+    "16": {
+        "title": {
+            "en": "Feeder jam",
+            "it": "Feeder jam"
+        },
+        "description": {
+            "en": "An error is detected during the feeding cyrcle. The 'feeder open' condition is activated. Open The feeder, remove the notes, close and restart.",
+            "it": "Un errore è stato rilevato durante il processo delle banconote. La condizione 'sfogliatore aperto' è attivata. Aprire lo sfogliatore, rimuovere le banconote, chiudere e riavviare"
+        },
+        "workcond": "error"
+    },
+    "301": {
+        "title": {
+            "en": "Feeder jam",
+            "it": "Feeder jam"
+        },
+        "description": {
+            "en": "An error is detected during the feeding cyrcle. The 'feeder open' condition is activated. Open The feeder, remove the notes, close and restart.",
+            "it": "Un errore è stato rilevato durante il processo delle banconote. La condizione 'sfogliatore aperto' è attivata. Aprire lo sfogliatore, rimuovere le banconote, chiudere e riavviare"
+        },
+        "workcond": "error"
+    },
+    "17": {
+        "title": {
+            "en": "Identify unit jam",
+            "it": "Identify unit jam"
+        },
+        "description": {
+            "en": "The note is jammed inside the unit or its transition time exceeds the limits. The 'cover open' status is activated. Open the note reader, remove the jammed note, check the conditions of the internal surfaces, close and restart.",
+            "it": "La banconota è bloccata dentro la macchina o il tempo di movimento supera il limite. Lo stato 'cover open' è attivo. Aprire il lettore di banconote, rimuovere la banconota bloccata, controllare le condizioni delle superfici interne, chiudere e riavviare"
+        },
+        "workcond": "error"
+    },
+    "302": {
+        "title": {
+            "en": "Identify unit jam",
+            "it": "Identify unit jam"
+        },
+        "description": {
+            "en": "The note is jammed inside the unit or its transition time exceeds the limits. The 'cover open' status is activated. Open the note reader, remove the jammed note, check the conditions of the internal surfaces, close and restart.",
+            "it": "La banconota è bloccata dentro la macchina o il tempo di movimento supera il limite. Lo stato 'cover open' è attivo. Aprire il lettore di banconote, rimuovere la banconota bloccata, controllare le condizioni delle superfici interne, chiudere e riavviare"
+        },
+        "workcond": "error"
+    },
+    "18": {
+        "title": {
+            "en": "Upper track jam",
+            "it": "Jam parte superiore"
+        },
+        "description": {
+            "en": "The note does not reach the F-SHIFT sensor within the specified time. More than two notes are detected in the path. The “Cover open” status is activated. Open the upper cover, remove the jammed notes, close, wait for the cleaning procedure, collect the notes conveyed to the output compartment and restart.",
+            "it": "La banconota non ha raggiunto il sensore F-SIFT nel tempo previsto. Più di due banconote sono state rilevate nel percorso. Lo stat 'Cover open' è attivo. Aprire il coperchio superiore, rimuovere le banconote bloccate, chiudere, attendere il recovery, raccogliere le banconote nella bocchetta di uscita e riavviare la macchina."
+        },
+        "workcond": "error"
+    },
+    "303": {
+        "title": {
+            "en": "Upper track jam",
+            "it": "Jam parte superiore"
+        },
+        "description": {
+            "en": "The note does not reach the F-SHIFT sensor within the specified time. More than two notes are detected in the path. The “Cover open” status is activated. Open the upper cover, remove the jammed notes, close, wait for the cleaning procedure, collect the notes conveyed to the output compartment and restart.",
+            "it": "La banconota non ha raggiunto il sensore F-SIFT nel tempo previsto. Più di due banconote sono state rilevate nel percorso. Lo stat 'Cover open' è attivo. Aprire il coperchio superiore, rimuovere le banconote bloccate, chiudere, attendere il recovery, raccogliere le banconote nella bocchetta di uscita e riavviare la macchina."
+        },
+        "workcond": "error"
+    },
+    "19": {
+        "title": {
+            "en": "Cross point jam",
+            "it": "Cross point jam"
+        },
+        "description": {
+            "en": "The note does not reach the destination path on time. The “Cover open “status is activated. Open the upper cover, remove the jammed notes, close, wait for the cleaning procedure, collect the notes conveyed to the output compartment and restart.",
+            "it": "La banconota non ha raggiunto la destinazione nel tempo pevisto. Lo stato 'Cover Open' è attivo. Aprire il coperchio superiore, rimuovere le banconote bloccate, chiudere, attendere il recovery, raccogliere le banconote nella bocchetta di uscita e riavviare la macchina."
+        },
+        "workcond": "error"
+    },
+    "304": {
+        "title": {
+            "en": "Cross point jam",
+            "it": "Cross point jam"
+        },
+        "description": {
+            "en": "The note does not reach the destination path on time. The “Cover open “status is activated. Open the upper cover, remove the jammed notes, close, wait for the cleaning procedure, collect the notes conveyed to the output compartment and restart.",
+            "it": "La banconota non ha raggiunto la destinazione nel tempo pevisto. Lo stato 'Cover Open' è attivo. Aprire il coperchio superiore, rimuovere le banconote bloccate, chiudere, attendere il recovery, raccogliere le banconote nella bocchetta di uscita e riavviare la macchina."
+        },
+        "workcond": "error"
+    },
+    "20": {
+        "title": {
+            "en": "Lower track jam",
+            "it": "Lower track jam"
+        },
+        "description": {
+            "en": "During a deposit operation an imbalance is detected between the number of notes in a specific cassette and the number of “diverted” commands directed to the same cassette. During a withdrawal operation the number of notes in the path is not correct or the note transition time exceeds the limit. Open the safe, open the cassette trays, check all the note paths",
+            "it": "Durante un'operazione di deposito viene rilevato uno squilibrio tra il numero di banconote in una specifica cassetta e il numero di comandi “deviati” diretti alla stessa cassetta. Durante un'operazione di ritiro il numero di note nel percorso non è corretto o il tempo di transizione delle note supera il limite. Apri la cassaforte, apri i coperchi dei cassetti e controlla tutti i percorsi delle banconote."
+        },
+        "workcond": "error"
+    },
+    "305": {
+        "title": {
+            "en": "Lower track jam",
+            "it": "Lower track jam"
+        },
+        "description": {
+            "en": "During a deposit operation an imbalance is detected between the number of notes in a specific cassette and the number of “diverted” commands directed to the same cassette. During a withdrawal operation the number of notes in the path is not correct or the note transition time exceeds the limit. Open the safe, open the cassette trays, check all the note paths",
+            "it": "Durante un'operazione di deposito viene rilevato uno squilibrio tra il numero di banconote in una specifica cassetta e il numero di comandi “deviati” diretti alla stessa cassetta. Durante un'operazione di ritiro il numero di note nel percorso non è corretto o il tempo di transizione delle note supera il limite. Apri la cassaforte, apri i coperchi dei cassetti e controlla tutti i percorsi delle banconote."
+        },
+        "workcond": "error"
+    },
+    "21": {
+        "title": {
+            "en": "Output track jam",
+            "it": "Jam in uscita"
+        },
+        "description": {
+            "en": "The note transition time from Fcash to Foutx exceeds the limits. The “cover open” status is activated. Open the cover and lift the two frames over the cross point area, remove the jammed notes, check for any visible obstacles, close and restart.Check also that the notes are not torn or do not have holes.",
+            "it": "Il tempo di transizione della nota da Fcash a Foutx supera i limiti. Lo stato 'coperchio aperto' è attivato. Aprire il coperchio e sollevare i due telai sopra la zona della traversa, rimuovere le banconote inceppate, verificare eventuali ostacoli visibili, chiudere e riavviare. Verificare inoltre che le banconote non siano strappate o non presentino buchi."
+        },
+        "workcond": "error"
+    },
+    "306": {
+        "title": {
+            "en": "Output track jam",
+            "it": "Jam in uscita"
+        },
+        "description": {
+            "en": "The note transition time from Fcash to Foutx exceeds the limits. The “cover open” status is activated. Open the cover and lift the two frames over the cross point area, remove the jammed notes, check for any visible obstacles, close and restart.Check also that the notes are not torn or do not have holes.",
+            "it": "Il tempo di transizione della nota da Fcash a Foutx supera i limiti. Lo stato 'coperchio aperto' è attivato. Aprire il coperchio e sollevare i due telai sopra la zona della traversa, rimuovere le banconote inceppate, verificare eventuali ostacoli visibili, chiudere e riavviare. Verificare inoltre che le banconote non siano strappate o non presentino buchi."
+        },
+        "workcond": "error"
+    },
+    "22": {
+        "title": {
+            "en": "Cassette A jam",
+            "it": "Jam cassetto A"
+        },
+        "description": {
+            "en": "The cassette photo sensors detect a wrong transition time. Open the safe and the tray with the cassette causing the error. When one or more notes are manually removed from the cassette the cassette note counter will be wrong.",
+            "it": "Il fotosensore del cassetto ha rilevato un trasporto errato. Aprire la cassaforte e la gabbiao con la cassetta che causa l'errore. Quando una o più banconote vengono rimosse manualmente dalla cassetta, il contatore delle banconote nella cassetta sarà errato."
+        },
+        "workcond": "error"
+    },
+    "307": {
+        "title": {
+            "en": "Cassette A jam",
+            "it": "Jam cassetto A"
+        },
+        "description": {
+            "en": "The cassette photo sensors detect a wrong transition time. Open the safe and the tray with the cassette causing the error. When one or more notes are manually removed from the cassette the cassette note counter will be wrong.",
+            "it": "Il fotosensore del cassetto ha rilevato un trasporto errato. Aprire la cassaforte e la gabbiao con la cassetta che causa l'errore. Quando una o più banconote vengono rimosse manualmente dalla cassetta, il contatore delle banconote nella cassetta sarà errato."
+        },
+        "workcond": "error"
+    },
+    "23": {
+        "title": {
+            "en": "Cassette B jam",
+            "it": "Jam cassetto B"
+        },
+        "description": {
+            "en": "The cassette photo sensors detect a wrong transition time. Open the safe and the tray with the cassette causing the error When one or more notes are manually removed from the cassette the cassette note counter will be wrong.",
+            "it": "Il fotosensore del cassetto ha rilevato un trasporto errato. Aprire la cassaforte e la gabbia con la cassetta che causa l'errore. Quando una o più banconote vengono rimosse manualmente dalla cassetta, il contatore delle banconote nella cassetta sarà errato."
+        },
+        "workcond": "error"
+    },
+    "308": {
+        "title": {
+            "en": "Cassette B jam",
+            "it": "Jam cassetto B"
+        },
+        "description": {
+            "en": "The cassette photo sensors detect a wrong transition time. Open the safe and the tray with the cassette causing the error When one or more notes are manually removed from the cassette the cassette note counter will be wrong.",
+            "it": "Il fotosensore del cassetto ha rilevato un trasporto errato. Aprire la cassaforte e la gabbia con la cassetta che causa l'errore. Quando una o più banconote vengono rimosse manualmente dalla cassetta, il contatore delle banconote nella cassetta sarà errato."
+        },
+        "workcond": "error"
+    },
+    "24": {
+        "title": {
+            "en": "Cassette C jam",
+            "it": "Jam cassetto C"
+        },
+        "description": {
+            "en": "The cassette photo sensors detect a wrong transition time. Open the safe and the tray with the cassette causing the error When one or more notes are manually removed from the cassette the cassette note counter will be wrong.",
+            "it": "Il fotosensore del cassetto ha rilevato un trasporto errato. Aprire la cassaforte e la gabbia con la cassetta che causa l'errore. Quando una o più banconote vengono rimosse manualmente dalla cassetta, il contatore delle banconote nella cassetta sarà errato."
+        },
+        "workcond": "error"
+    },
+    "309": {
+        "title": {
+            "en": "Cassette C jam",
+            "it": "Jam cassetto C"
+        },
+        "description": {
+            "en": "The cassette photo sensors detect a wrong transition time. Open the safe and the tray with the cassette causing the error When one or more notes are manually removed from the cassette the cassette note counter will be wrong.",
+            "it": "Il fotosensore del cassetto ha rilevato un trasporto errato. Aprire la cassaforte e la gabbia con la cassetta che causa l'errore. Quando una o più banconote vengono rimosse manualmente dalla cassetta, il contatore delle banconote nella cassetta sarà errato."
+        },
+        "workcond": "error"
+    },
+    "25": {
+        "title": {
+            "en": "Cassette D jam",
+            "it": "Jam cassetto D"
+        },
+        "description": {
+            "en": "The cassette photo sensors detect a wrong transition time. Open the safe and the tray with the cassette causing the error When one or more notes are manually removed from the cassette the cassette note counter will be wrong.",
+            "it": "Il fotosensore del cassetto ha rilevato un trasporto errato. Aprire la cassaforte e la gabbia con la cassetta che causa l'errore. Quando una o più banconote vengono rimosse manualmente dalla cassetta, il contatore delle banconote nella cassetta sarà errato."
+        },
+        "workcond": "error"
+    },
+    "310": {
+        "title": {
+            "en": "Cassette D jam",
+            "it": "Jam cassetto D"
+        },
+        "description": {
+            "en": "The cassette photo sensors detect a wrong transition time. Open the safe and the tray with the cassette causing the error When one or more notes are manually removed from the cassette the cassette note counter will be wrong.",
+            "it": "Il fotosensore del cassetto ha rilevato un trasporto errato. Aprire la cassaforte e la gabbia con la cassetta che causa l'errore. Quando una o più banconote vengono rimosse manualmente dalla cassetta, il contatore delle banconote nella cassetta sarà errato."
+        },
+        "workcond": "error"
+    },
+    "26": {
+        "title": {
+            "en": "Cassette E jam",
+            "it": "Jam cassetto E"
+        },
+        "description": {
+            "en": "The cassette photo sensors detect a wrong transition time. Open the safe and the tray with the cassette causing the error When one or more notes are manually removed from the cassette the cassette note counter will be wrong.",
+            "it": "Il fotosensore del cassetto ha rilevato un trasporto errato. Aprire la cassaforte e la gabbia con la cassetta che causa l'errore. Quando una o più banconote vengono rimosse manualmente dalla cassetta, il contatore delle banconote nella cassetta sarà errato."
+        },
+        "workcond": "error"
+    },
+    "311": {
+        "title": {
+            "en": "Cassette E jam",
+            "it": "Jam cassetto E"
+        },
+        "description": {
+            "en": "The cassette photo sensors detect a wrong transition time. Open the safe and the tray with the cassette causing the error When one or more notes are manually removed from the cassette the cassette note counter will be wrong.",
+            "it": "Il fotosensore del cassetto ha rilevato un trasporto errato. Aprire la cassaforte e la gabbia con la cassetta che causa l'errore. Quando una o più banconote vengono rimosse manualmente dalla cassetta, il contatore delle banconote nella cassetta sarà errato."
+        },
+        "workcond": "error"
+    },
+     "27": {
+        "title": {
+            "en": "Cassette F jam",
+            "it": "Jam cassetto F"
+        },
+        "description": {
+            "en": "The cassette photo sensors detect a wrong transition time. Open the safe and the tray with the cassette causing the error When one or more notes are manually removed from the cassette the cassette note counter will be wrong.",
+            "it": "Il fotosensore del cassetto ha rilevato un trasporto errato. Aprire la cassaforte e la gabbia con la cassetta che causa l'errore. Quando una o più banconote vengono rimosse manualmente dalla cassetta, il contatore delle banconote nella cassetta sarà errato."
+        },
+        "workcond": "error"
+    },
+    "312": {
+        "title": {
+            "en": "Cassette F jam",
+            "it": "Jam cassetto F"
+        },
+        "description": {
+            "en": "The cassette photo sensors detect a wrong transition time. Open the safe and the tray with the cassette causing the error When one or more notes are manually removed from the cassette the cassette note counter will be wrong.",
+            "it": "Il fotosensore del cassetto ha rilevato un trasporto errato. Aprire la cassaforte e la gabbia con la cassetta che causa l'errore. Quando una o più banconote vengono rimosse manualmente dalla cassetta, il contatore delle banconote nella cassetta sarà errato."
+        },
+        "workcond": "error"
+    },
+    "28": {
+        "title": {
+            "en": "Cassette G jam",
+            "it": "Jam cassetto G"
+        },
+        "description": {
+            "en": "The cassette photo sensors detect a wrong transition time. Open the safe and the tray with the cassette causing the error When one or more notes are manually removed from the cassette the cassette note counter will be wrong.",
+            "it": "Il fotosensore del cassetto ha rilevato un trasporto errato. Aprire la cassaforte e la gabbia con la cassetta che causa l'errore. Quando una o più banconote vengono rimosse manualmente dalla cassetta, il contatore delle banconote nella cassetta sarà errato."
+        },
+        "workcond": "error"
+    },
+    "313": {
+        "title": {
+            "en": "Cassette G jam",
+            "it": "Jam cassetto G"
+        },
+        "description": {
+            "en": "The cassette photo sensors detect a wrong transition time. Open the safe and the tray with the cassette causing the error When one or more notes are manually removed from the cassette the cassette note counter will be wrong.",
+            "it": "Il fotosensore del cassetto ha rilevato un trasporto errato. Aprire la cassaforte e la gabbia con la cassetta che causa l'errore. Quando una o più banconote vengono rimosse manualmente dalla cassetta, il contatore delle banconote nella cassetta sarà errato."
+        },
+        "workcond": "error"
+    },
+    "29": {
+        "title": {
+            "en": "Cassette H jam",
+            "it": "Jam cassetto H"
+        },
+        "description": {
+            "en": "The cassette photo sensors detect a wrong transition time. Open the safe and the tray with the cassette causing the error When one or more notes are manually removed from the cassette the cassette note counter will be wrong.",
+            "it": "Il fotosensore del cassetto ha rilevato un trasporto errato. Aprire la cassaforte e la gabbia con la cassetta che causa l'errore. Quando una o più banconote vengono rimosse manualmente dalla cassetta, il contatore delle banconote nella cassetta sarà errato."
+        },
+        "workcond": "error"
+    },
+    "314": {
+        "title": {
+            "en": "Cassette H jam",
+            "it": "Jam cassetto H"
+        },
+        "description": {
+            "en": "The cassette photo sensors detect a wrong transition time. Open the safe and the tray with the cassette causing the error When one or more notes are manually removed from the cassette the cassette note counter will be wrong.",
+            "it": "Il fotosensore del cassetto ha rilevato un trasporto errato. Aprire la cassaforte e la gabbia con la cassetta che causa l'errore. Quando una o più banconote vengono rimosse manualmente dalla cassetta, il contatore delle banconote nella cassetta sarà errato."
+        },
+        "workcond": "error"
+    },
+    "315": {
+        "title": {
+            "en": "Cassette I jam",
+            "it": "Jam cassetto I"
+        },
+        "description": {
+            "en": "The cassette photo sensors detect a wrong transition time. Open the safe and the tray with the cassette causing the error When one or more notes are manually removed from the cassette the cassette note counter will be wrong.",
+            "it": "Il fotosensore del cassetto ha rilevato un trasporto errato. Aprire la cassaforte e la gabbia con la cassetta che causa l'errore. Quando una o più banconote vengono rimosse manualmente dalla cassetta, il contatore delle banconote nella cassetta sarà errato."
+        },
+        "workcond": "error"
+    },
+    "316": {
+        "title": {
+            "en": "Cassette J jam",
+            "it": "Jam cassetto J"
+        },
+        "description": {
+            "en": "The cassette photo sensors detect a wrong transition time. Open the safe and the tray with the cassette causing the error When one or more notes are manually removed from the cassette the cassette note counter will be wrong.",
+            "it": "Il fotosensore del cassetto ha rilevato un trasporto errato. Aprire la cassaforte e la gabbia con la cassetta che causa l'errore. Quando una o più banconote vengono rimosse manualmente dalla cassetta, il contatore delle banconote nella cassetta sarà errato."
+        },
+        "workcond": "error"
+    },
+	"317": {
+        "title": {
+            "en": "Cassette K jam",
+            "it": "Jam cassetto K"
+        },
+        "description": {
+            "en": "The cassette photo sensors detect a wrong transition time. Open the safe and the tray with the cassette causing the error When one or more notes are manually removed from the cassette the cassette note counter will be wrong.",
+            "it": "Il fotosensore del cassetto ha rilevato un trasporto errato. Aprire la cassaforte e la gabbia con la cassetta che causa l'errore. Quando una o più banconote vengono rimosse manualmente dalla cassetta, il contatore delle banconote nella cassetta sarà errato."
+        },
+        "workcond": "error"
+    },
+	"318": {
+        "title": {
+            "en": "Cassette L jam",
+            "it": "Jam cassetto L"
+        },
+        "description": {
+            "en": "The cassette photo sensors detect a wrong transition time. Open the safe and the tray with the cassette causing the error When one or more notes are manually removed from the cassette the cassette note counter will be wrong.",
+            "it": "Il fotosensore del cassetto ha rilevato un trasporto errato. Aprire la cassaforte e la gabbia con la cassetta che causa l'errore. Quando una o più banconote vengono rimosse manualmente dalla cassetta, il contatore delle banconote nella cassetta sarà errato."
+        },
+        "workcond": "error"
+    },
+    "40": {
+        "title": {
+            "en": "Missing note on cassette A",
+            "it": "Banconote mancanti cassetto A"
+        },
+        "description": {
+            "en": "The number of ‘Sorter Off’ operations directed to the cassette is greater than the number of notes arrived in the same cassette. The note can be at the bottom of the safe or in a different cassette. Open the safe and the tray with the cassette.",
+            "it": "Il numero delle banconote indirizzate al cassetto è maggiore del numero di banconote che hanno raggiunto il cassetto di destinazione. Le banconote possono essere sul fondo della cassaforte in un cassetto errato. Apri la porta della cassaforte e la gabbia per verificare la presenza di banconote lungo la traccia."
+        },
+        "workcond": "error"
+    },
+    "319": {
+        "title": {
+            "en": "Missing note on cassette A",
+            "it": "Banconote mancanti cassetto A"
+        },
+        "description": {
+            "en": "The number of ‘Sorter Off’ operations directed to the cassette is greater than the number of notes arrived in the same cassette. The note can be at the bottom of the safe or in a different cassette. Open the safe and the tray with the cassette.",
+            "it": "Il numero delle banconote indirizzate al cassetto è maggiore del numero di banconote che hanno raggiunto il cassetto di destinazione. Le banconote possono essere sul fondo della cassaforte in un cassetto errato. Apri la porta della cassaforte e la gabbia per verificare la presenza di banconote lungo la traccia."
+        },
+        "workcond": "error"
+    },
+    "41": {
+        "title": {
+            "en": "Missing note on cassette B",
+            "it": "Banconote mancanti cassetto B"
+        },
+        "description": {
+            "en": "The number of ‘Sorter Off’ operations directed to the cassette is greater than the number of notes arrived in the same cassette. The note can be at the bottom of the safe or in a different cassette. Open the safe and the tray with the cassette.",
+            "it": "Il numero delle banconote indirizzate al cassetto è maggiore del numero di banconote che hanno raggiunto il cassetto di destinazione. Le banconote possono essere sul fondo della cassaforte in un cassetto errato. Apri la porta della cassaforte e la gabbia per verificare la presenza di banconote lungo la traccia."
+        },
+        "workcond": "error"
+    },
+    "320": {
+        "title": {
+            "en": "Missing note on cassette B",
+            "it": "Banconote mancanti cassetto B"
+        },
+        "description": {
+            "en": "The number of ‘Sorter Off’ operations directed to the cassette is greater than the number of notes arrived in the same cassette. The note can be at the bottom of the safe or in a different cassette. Open the safe and the tray with the cassette.",
+            "it": "Il numero delle banconote indirizzate al cassetto è maggiore del numero di banconote che hanno raggiunto il cassetto di destinazione. Le banconote possono essere sul fondo della cassaforte in un cassetto errato. Apri la porta della cassaforte e la gabbia per verificare la presenza di banconote lungo la traccia."
+        },
+        "workcond": "error"
+    },
+    "42": {
+        "title": {
+            "en": "Missing note on cassette C",
+            "it": "Banconote mancanti cassetto C"
+        },
+        "description": {
+            "en": "The number of ‘Sorter Off’ operations directed to the cassette is greater than the number of notes arrived in the same cassette. The note can be at the bottom of the safe or in a different cassette. Open the safe and the tray with the cassette.",
+            "it": "Il numero delle banconote indirizzate al cassetto è maggiore del numero di banconote che hanno raggiunto il cassetto di destinazione. Le banconote possono essere sul fondo della cassaforte in un cassetto errato. Apri la porta della cassaforte e la gabbia per verificare la presenza di banconote lungo la traccia."
+        },
+        "workcond": "error"
+    },
+    "321": {
+        "title": {
+            "en": "Missing note on cassette C",
+            "it": "Banconote mancanti cassetto C"
+        },
+        "description": {
+            "en": "The number of ‘Sorter Off’ operations directed to the cassette is greater than the number of notes arrived in the same cassette. The note can be at the bottom of the safe or in a different cassette. Open the safe and the tray with the cassette.",
+            "it": "Il numero delle banconote indirizzate al cassetto è maggiore del numero di banconote che hanno raggiunto il cassetto di destinazione. Le banconote possono essere sul fondo della cassaforte in un cassetto errato. Apri la porta della cassaforte e la gabbia per verificare la presenza di banconote lungo la traccia."
+        },
+        "workcond": "error"
+    },
+    "43": {
+        "title": {
+            "en": "Missing note on cassette D",
+            "it": "Banconote mancanti cassetto D"
+        },
+        "description": {
+            "en": "The number of ‘Sorter Off’ operations directed to the cassette is greater than the number of notes arrived in the same cassette. The note can be at the bottom of the safe or in a different cassette. Open the safe and the tray with the cassette.",
+            "it": "Il numero delle banconote indirizzate al cassetto è maggiore del numero di banconote che hanno raggiunto il cassetto di destinazione. Le banconote possono essere sul fondo della cassaforte in un cassetto errato. Apri la porta della cassaforte e la gabbia per verificare la presenza di banconote lungo la traccia."
+        },
+        "workcond": "error"
+    },
+    "322": {
+        "title": {
+            "en": "Missing note on cassette D",
+            "it": "Banconote mancanti cassetto D"
+        },
+        "description": {
+            "en": "The number of ‘Sorter Off’ operations directed to the cassette is greater than the number of notes arrived in the same cassette. The note can be at the bottom of the safe or in a different cassette. Open the safe and the tray with the cassette.",
+            "it": "Il numero delle banconote indirizzate al cassetto è maggiore del numero di banconote che hanno raggiunto il cassetto di destinazione. Le banconote possono essere sul fondo della cassaforte in un cassetto errato. Apri la porta della cassaforte e la gabbia per verificare la presenza di banconote lungo la traccia."
+        },
+        "workcond": "error"
+    },
+    "44": {
+        "title": {
+            "en": "Missing note on cassette E",
+            "it": "Banconote mancanti cassetto E"
+        },
+        "description": {
+            "en": "The number of ‘Sorter Off’ operations directed to the cassette is greater than the number of notes arrived in the same cassette. The note can be at the bottom of the safe or in a different cassette. Open the safe and the tray with the cassette.",
+            "it": "Il numero delle banconote indirizzate al cassetto è maggiore del numero di banconote che hanno raggiunto il cassetto di destinazione. Le banconote possono essere sul fondo della cassaforte in un cassetto errato. Apri la porta della cassaforte e la gabbia per verificare la presenza di banconote lungo la traccia."
+        },
+        "workcond": "error"
+    },
+    "323": {
+        "title": {
+            "en": "Missing note on cassette E",
+            "it": "Banconote mancanti cassetto E"
+        },
+        "description": {
+            "en": "The number of ‘Sorter Off’ operations directed to the cassette is greater than the number of notes arrived in the same cassette. The note can be at the bottom of the safe or in a different cassette. Open the safe and the tray with the cassette.",
+            "it": "Il numero delle banconote indirizzate al cassetto è maggiore del numero di banconote che hanno raggiunto il cassetto di destinazione. Le banconote possono essere sul fondo della cassaforte in un cassetto errato. Apri la porta della cassaforte e la gabbia per verificare la presenza di banconote lungo la traccia."
+        },
+        "workcond": "error"
+    },
+    "45": {
+        "title": {
+            "en": "Missing note on cassette F",
+            "it": "Banconote mancanti cassetto F"
+        },
+        "description": {
+            "en": "The number of ‘Sorter Off’ operations directed to the cassette is greater than the number of notes arrived in the same cassette. The note can be at the bottom of the safe or in a different cassette. Open the safe and the tray with the cassette.",
+            "it": "Il numero delle banconote indirizzate al cassetto è maggiore del numero di banconote che hanno raggiunto il cassetto di destinazione. Le banconote possono essere sul fondo della cassaforte in un cassetto errato. Apri la porta della cassaforte e la gabbia per verificare la presenza di banconote lungo la traccia."
+        },
+        "workcond": "error"
+    },
+    "324": {
+        "title": {
+            "en": "Missing note on cassette F",
+            "it": "Banconote mancanti cassetto F"
+        },
+        "description": {
+            "en": "The number of ‘Sorter Off’ operations directed to the cassette is greater than the number of notes arrived in the same cassette. The note can be at the bottom of the safe or in a different cassette. Open the safe and the tray with the cassette.",
+            "it": "Il numero delle banconote indirizzate al cassetto è maggiore del numero di banconote che hanno raggiunto il cassetto di destinazione. Le banconote possono essere sul fondo della cassaforte in un cassetto errato. Apri la porta della cassaforte e la gabbia per verificare la presenza di banconote lungo la traccia."
+        },
+        "workcond": "error"
+    },
+    "46": {
+        "title": {
+            "en": "Missing note on cassette G",
+            "it": "Banconote mancanti cassetto G"
+        },
+        "description": {
+            "en": "The number of ‘Sorter Off’ operations directed to the cassette is greater than the number of notes arrived in the same cassette. The note can be at the bottom of the safe or in a different cassette. Open the safe and the tray with the cassette.",
+            "it": "Il numero delle banconote indirizzate al cassetto è maggiore del numero di banconote che hanno raggiunto il cassetto di destinazione. Le banconote possono essere sul fondo della cassaforte in un cassetto errato. Apri la porta della cassaforte e la gabbia per verificare la presenza di banconote lungo la traccia."
+        },
+        "workcond": "error"
+    },
+    "325": {
+        "title": {
+            "en": "Missing note on cassette G",
+            "it": "Banconote mancanti cassetto G"
+        },
+        "description": {
+            "en": "The number of ‘Sorter Off’ operations directed to the cassette is greater than the number of notes arrived in the same cassette. The note can be at the bottom of the safe or in a different cassette. Open the safe and the tray with the cassette.",
+            "it": "Il numero delle banconote indirizzate al cassetto è maggiore del numero di banconote che hanno raggiunto il cassetto di destinazione. Le banconote possono essere sul fondo della cassaforte in un cassetto errato. Apri la porta della cassaforte e la gabbia per verificare la presenza di banconote lungo la traccia."
+        },
+        "workcond": "error"
+    },
+    "47": {
+        "title": {
+            "en": "Missing note on cassette H",
+            "it": "Banconote mancanti cassetto H"
+        },
+        "description": {
+            "en": "The number of ‘Sorter Off’ operations directed to the cassette is greater than the number of notes arrived in the same cassette. The note can be at the bottom of the safe or in a different cassette. Open the safe and the tray with the cassette.",
+            "it": "Il numero delle banconote indirizzate al cassetto è maggiore del numero di banconote che hanno raggiunto il cassetto di destinazione. Le banconote possono essere sul fondo della cassaforte in un cassetto errato. Apri la porta della cassaforte e la gabbia per verificare la presenza di banconote lungo la traccia."
+        },
+        "workcond": "error"
+    },
+    "326": {
+        "title": {
+            "en": "Missing note on cassette H",
+            "it": "Banconote mancanti cassetto H"
+        },
+        "description": {
+            "en": "The number of ‘Sorter Off’ operations directed to the cassette is greater than the number of notes arrived in the same cassette. The note can be at the bottom of the safe or in a different cassette. Open the safe and the tray with the cassette.",
+            "it": "Il numero delle banconote indirizzate al cassetto è maggiore del numero di banconote che hanno raggiunto il cassetto di destinazione. Le banconote possono essere sul fondo della cassaforte in un cassetto errato. Apri la porta della cassaforte e la gabbia per verificare la presenza di banconote lungo la traccia."
+        },
+        "workcond": "error"
+    },
+    "327": {
+        "title": {
+            "en": "Missing note on cassette I",
+            "it": "Banconote mancanti cassetto I"
+        },
+        "description": {
+            "en": "The number of ‘Sorter Off’ operations directed to the cassette is greater than the number of notes arrived in the same cassette. The note can be at the bottom of the safe or in a different cassette. Open the safe and the tray with the cassette.",
+            "it": "Il numero delle banconote indirizzate al cassetto è maggiore del numero di banconote che hanno raggiunto il cassetto di destinazione. Le banconote possono essere sul fondo della cassaforte in un cassetto errato. Apri la porta della cassaforte e la gabbia per verificare la presenza di banconote lungo la traccia."
+        },
+        "workcond": "error"
+    },
+    "328": {
+        "title": {
+            "en": "Missing note on cassette J",
+            "it": "Banconote mancanti cassetto J"
+        },
+        "description": {
+            "en": "The number of ‘Sorter Off’ operations directed to the cassette is greater than the number of notes arrived in the same cassette. The note can be at the bottom of the safe or in a different cassette. Open the safe and the tray with the cassette.",
+            "it": "Il numero delle banconote indirizzate al cassetto è maggiore del numero di banconote che hanno raggiunto il cassetto di destinazione. Le banconote possono essere sul fondo della cassaforte in un cassetto errato. Apri la porta della cassaforte e la gabbia per verificare la presenza di banconote lungo la traccia."
+        },
+        "workcond": "error"
+    },
+    "52": {
+        "title": {
+            "en": "Lower track transfer jam to CD80",
+            "it": "Inceppamento trasferimento inferiore traccia su CD80"
+        },
+        "description": {
+            "en": "During a transfer operation an imbalance is detected between the number of notes in a specific cassette and the number of “diverted” commands directed to the same cassette. During a transfer operation the number of notes in the path is not correct or the note transition time exceeds the limit. Open the safe, open the cassette trays, check all the note paths , if necessary remove the cassette and check the note position.",
+            "it": "Durante un'operazione di trasferimento viene rilevato uno squilibrio tra il numero di note in una specifica cassetta e il numero di comandi 'deviati' diretti alla stessa cassetta. Durante un'operazione di trasferimento il numero di note nel percorso non è corretto o il tempo di transizione della nota supera il limite. Aprire la cassaforte, aprire i vassoi delle cassette, controllare tutti i percorsi delle banconote, se necessario rimuovere la cassetta e controllare la posizione delle banconote."
+        },
+        "workcond": "error"
+    },
+    "330": {
+        "title": {
+            "en": "Lower track transfer jam to CD80",
+            "it": "Inceppamento trasferimento inferiore traccia su CD80"
+        },
+        "description": {
+            "en": "During a transfer operation an imbalance is detected between the number of notes in a specific cassette and the number of “diverted” commands directed to the same cassette. During a transfer operation the number of notes in the path is not correct or the note transition time exceeds the limit. Open the safe, open the cassette trays, check all the note paths , if necessary remove the cassette and check the note position.",
+            "it": "Durante un'operazione di trasferimento viene rilevato uno squilibrio tra il numero di note in una specifica cassetta e il numero di comandi 'deviati' diretti alla stessa cassetta. Durante un'operazione di trasferimento il numero di note nel percorso non è corretto o il tempo di transizione della nota supera il limite. Aprire la cassaforte, aprire i vassoi delle cassette, controllare tutti i percorsi delle banconote, se necessario rimuovere la cassetta e controllare la posizione delle banconote."
+        },
+        "workcond": "error"
+    },
+    "331": {
+        "title": {
+            "en": "Cassette K jam",
+            "it": "Jam cassetto K"
+        },
+        "description": {
+            "en": "The cassette photo sensors detect a wrong transition time. Open the safe and the tray with the cassette causing the error. When one or more notes are manually removed from the cassette the cassette note counter will be wrong.",
+            "it": "I fotosensori del casseto rilevano un tempo di transizione errato. Aprire la cassaforte e il vassoio con il cassetto che causa l'errore. Quando una o più banconota vengono rimosse manualmente dalla cassetta, il contatore delle stesse nella cassetta sarà sbagliato."
+        },
+        "workcond": "error"
+    },
+    "332": {
+        "title": {
+            "en": "Cassette L jam",
+            "it": "Jam cassetto L"
+        },
+        "description": {
+            "en": "The cassette photo sensors detect a wrong transition time. Open the safe and the tray with the cassette causing the error. When one or more notes are manually removed from the cassette the cassette note counter will be wrong.",
+            "it": "I fotosensori del casseto rilevano un tempo di transizione errato. Aprire la cassaforte e il vassoio con il cassetto che causa l'errore. Quando una o più banconota vengono rimosse manualmente dalla cassetta, il contatore delle stesse nella cassetta sarà sbagliato."
+        },
+        "workcond": "error"
+    },
+    "333": {
+        "title": {
+            "en": "Cassette M jam",
+            "it": "Jam cassetto M"
+        },
+        "description": {
+            "en": "The cassette photo sensors detect a wrong transition time. Open the safe and the tray with the cassette causing the error. When one or more notes are manually removed from the cassette the cassette note counter will be wrong.",
+            "it": "I fotosensori del casseto rilevano un tempo di transizione errato. Aprire la cassaforte e il vassoio con il cassetto che causa l'errore. Quando una o più banconota vengono rimosse manualmente dalla cassetta, il contatore delle stesse nella cassetta sarà sbagliato."
+        },
+        "workcond": "error"
+    },
+    "334": {
+        "title": {
+            "en": "Cassette N jam",
+            "it": "Jam cassetto N"
+        },
+        "description": {
+            "en": "The cassette photo sensors detect a wrong transition time. Open the safe and the tray with the cassette causing the error. When one or more notes are manually removed from the cassette the cassette note counter will be wrong.",
+            "it": "I fotosensori del casseto rilevano un tempo di transizione errato. Aprire la cassaforte e il vassoio con il cassetto che causa l'errore. Quando una o più banconota vengono rimosse manualmente dalla cassetta, il contatore delle stesse nella cassetta sarà sbagliato."
+        },
+        "workcond": "error"
+    },
+    "335": {
+        "title": {
+            "en": "Cassette O jam",
+            "it": "Jam cassetto O"
+        },
+        "description": {
+            "en": "The cassette photo sensors detect a wrong transition time. Open the safe and the tray with the cassette causing the error. When one or more notes are manually removed from the cassette the cassette note counter will be wrong.",
+            "it": "I fotosensori del casseto rilevano un tempo di transizione errato. Aprire la cassaforte e il vassoio con il cassetto che causa l'errore. Quando una o più banconota vengono rimosse manualmente dalla cassetta, il contatore delle stesse nella cassetta sarà sbagliato."
+        },
+        "workcond": "error"
+    },
+    "336": {
+        "title": {
+            "en": "Cassette P jam",
+            "it": "Jam cassetto P"
+        },
+        "description": {
+            "en": "The cassette photo sensors detect a wrong transition time. Open the safe and the tray with the cassette causing the error. When one or more notes are manually removed from the cassette the cassette note counter will be wrong.",
+            "it": "I fotosensori del casseto rilevano un tempo di transizione errato. Aprire la cassaforte e il vassoio con il cassetto che causa l'errore. Quando una o più banconota vengono rimosse manualmente dalla cassetta, il contatore delle stesse nella cassetta sarà sbagliato."
+        },
+        "workcond": "error"
+    },
+    "341": {
+        "title": {
+            "en": "Missing note on cassette K",
+            "it": "note mancanti cassetto K"
+        },
+        "description": {
+            "en": "The number of ‘Sorter Off’ operations directed to the cassette is greater than the number of notes arrived in the same cassette. The note can be at the bottom of the safe or in a different cassette. Open the safe and the tray with the cassette causing the error. Check and undo the latest operation.",
+            "it": "Il numero di operazioni 'Sorter Off' dirette alla cassetta è maggiore del numero di banconote arrivate nello stesso cassetto. La banconota può essere in fondo alla cassaforte o in un cassetto diverso. Aprire la cassaforte e il vassoio con il cassetto che causa l'errore. Controlla e annulla l'ultima operazione."
+        },
+        "workcond": "error"
+    },
+    "342": {
+        "title": {
+            "en": "Missing note on cassette L",
+            "it": "note mancanti cassetto L"
+        },
+        "description": {
+            "en": "The number of ‘Sorter Off’ operations directed to the cassette is greater than the number of notes arrived in the same cassette. The note can be at the bottom of the safe or in a different cassette. Open the safe and the tray with the cassette causing the error. Check and undo the latest operation.",
+            "it": "Il numero di operazioni 'Sorter Off' dirette alla cassetta è maggiore del numero di banconote arrivate nello stesso cassetto. La banconota può essere in fondo alla cassaforte o in un cassetto diverso. Aprire la cassaforte e il vassoio con il cassetto che causa l'errore. Controlla e annulla l'ultima operazione."
+        },
+        "workcond": "error"
+    },
+    "343": {
+        "title": {
+            "en": "Missing note on cassette M",
+            "it": "note mancanti cassetto M"
+        },
+        "description": {
+            "en": "The number of ‘Sorter Off’ operations directed to the cassette is greater than the number of notes arrived in the same cassette. The note can be at the bottom of the safe or in a different cassette. Open the safe and the tray with the cassette causing the error. Check and undo the latest operation.",
+            "it": "Il numero di operazioni 'Sorter Off' dirette alla cassetta è maggiore del numero di banconote arrivate nello stesso cassetto. La banconota può essere in fondo alla cassaforte o in un cassetto diverso. Aprire la cassaforte e il vassoio con il cassetto che causa l'errore. Controlla e annulla l'ultima operazione."
+        },
+        "workcond": "error"
+    },
+    "344": {
+        "title": {
+            "en": "Missing note on cassette N",
+            "it": "note mancanti cassetto N"
+        },
+        "description": {
+            "en": "The number of ‘Sorter Off’ operations directed to the cassette is greater than the number of notes arrived in the same cassette. The note can be at the bottom of the safe or in a different cassette. Open the safe and the tray with the cassette causing the error. Check and undo the latest operation.",
+            "it": "Il numero di operazioni 'Sorter Off' dirette alla cassetta è maggiore del numero di banconote arrivate nello stesso cassetto. La banconota può essere in fondo alla cassaforte o in un cassetto diverso. Aprire la cassaforte e il vassoio con il cassetto che causa l'errore. Controlla e annulla l'ultima operazione."
+        },
+        "workcond": "error"
+    },
+    "345": {
+        "title": {
+            "en": "Missing note on cassette O",
+            "it": "note mancanti cassetto O"
+        },
+        "description": {
+            "en": "The number of ‘Sorter Off’ operations directed to the cassette is greater than the number of notes arrived in the same cassette. The note can be at the bottom of the safe or in a different cassette. Open the safe and the tray with the cassette causing the error. Check and undo the latest operation.",
+            "it": "Il numero di operazioni 'Sorter Off' dirette alla cassetta è maggiore del numero di banconote arrivate nello stesso cassetto. La banconota può essere in fondo alla cassaforte o in un cassetto diverso. Aprire la cassaforte e il vassoio con il cassetto che causa l'errore. Controlla e annulla l'ultima operazione."
+        },
+        "workcond": "error"
+    },
+    "346": {
+        "title": {
+            "en": "Missing note on cassette P",
+            "it": "note mancanti cassetto P"
+        },
+        "description": {
+            "en": "The number of ‘Sorter Off’ operations directed to the cassette is greater than the number of notes arrived in the same cassette. The note can be at the bottom of the safe or in a different cassette. Open the safe and the tray with the cassette causing the error. Check and undo the latest operation.",
+            "it": "Il numero di operazioni 'Sorter Off' dirette alla cassetta è maggiore del numero di banconote arrivate nello stesso cassetto. La banconota può essere in fondo alla cassaforte o in un cassetto diverso. Aprire la cassaforte e il vassoio con il cassetto che causa l'errore. Controlla e annulla l'ultima operazione."
+        },
+        "workcond": "error"
+    },
+    "15": {
+        "title": {
+            "en": "Misfeeding",
+            "it": "Misfeeding"
+        },
+        "description": {
+            "en": "The thickness sensor does not detect any input note after more feeding cycles. Check the input notes position and repeat the command.",
+            "it": "Il sensore principale non rileva alcuna banconota in ingresso dopo più cicli di alimentazione. Verificare la posizione delle banconote di input e ripetere il comando."
+        },
+        "workcond": "error"
+    },
+    "401": {
+        "title": {
+            "en": "Misfeeding",
+            "it": "Misfeeding"
+        },
+        "description": {
+            "en": "The thickness sensor does not detect any input note after more feeding cycles. Check the input notes position and repeat the command.",
+            "it": "Il sensore principale non rileva alcuna banconota in ingresso dopo più cicli di alimentazione. Verificare la posizione delle banconote di input e ripetere il comando."
+        },
+        "workcond": "error"
+    },
+    "32": {
+        "title": {
+            "en": "Cassette A out of service",
+            "it": "Casseto A fuori servizio"
+        },
+        "description": {
+            "en": "One of the cassettes doesn’t reply on the “485” line. Check the connection and if necessary replace the electronic board.",
+            "it": "Uno dei cassetti non risponde sulla riga '485'. Verificare il collegamento e se necessario sostituire la scheda elettronica."
+        },
+        "workcond": "error"
+    },
+    "402": {
+        "title": {
+            "en": "Cassette A out of service",
+            "it": "Casseto A fuori servizio"
+        },
+        "description": {
+            "en": "One of the cassettes doesn’t reply on the “485” line. Check the connection and if necessary replace the electronic board.",
+            "it": "Uno dei cassetti non risponde sulla riga '485'. Verificare il collegamento e se necessario sostituire la scheda elettronica."
+        },
+        "workcond": "error"
+    },
+    "33": {
+        "title": {
+            "en": "Cassette B out of service",
+            "it": "Casseto B fuori servizio"
+        },
+        "description": {
+            "en": "One of the cassettes doesn’t reply on the “485” line. Check the connection and if necessary replace the electronic board.",
+            "it": "Uno dei cassetti non risponde sulla riga '485'. Verificare il collegamento e se necessario sostituire la scheda elettronica."
+        },
+        "workcond": "error"
+    },
+    "403": {
+        "title": {
+            "en": "Cassette B out of service",
+            "it": "Casseto B fuori servizio"
+        },
+        "description": {
+            "en": "One of the cassettes doesn’t reply on the “485” line. Check the connection and if necessary replace the electronic board.",
+            "it": "Uno dei cassetti non risponde sulla riga '485'. Verificare il collegamento e se necessario sostituire la scheda elettronica."
+        },
+        "workcond": "error"
+    },
+    "34": {
+        "title": {
+            "en": "Cassette C out of service",
+            "it": "Casseto C fuori servizio"
+        },
+        "description": {
+            "en": "One of the cassettes doesn’t reply on the “485” line. Check the connection and if necessary replace the electronic board.",
+            "it": "Uno dei cassetti non risponde sulla riga '485'. Verificare il collegamento e se necessario sostituire la scheda elettronica."
+        },
+        "workcond": "error"
+    },
+    "404": {
+        "title": {
+            "en": "Cassette C out of service",
+            "it": "Casseto C fuori servizio"
+        },
+        "description": {
+            "en": "One of the cassettes doesn’t reply on the “485” line. Check the connection and if necessary replace the electronic board.",
+            "it": "Uno dei cassetti non risponde sulla riga '485'. Verificare il collegamento e se necessario sostituire la scheda elettronica."
+        },
+        "workcond": "error"
+    },
+    "35": {
+        "title": {
+            "en": "Cassette D out of service",
+            "it": "Casseto D fuori servizio"
+        },
+        "description": {
+            "en": "One of the cassettes doesn’t reply on the “485” line. Check the connection and if necessary replace the electronic board.",
+            "it": "Uno dei cassetti non risponde sulla riga '485'. Verificare il collegamento e se necessario sostituire la scheda elettronica."
+        },
+        "workcond": "error"
+    },
+    "405": {
+        "title": {
+            "en": "Cassette D out of service",
+            "it": "Casseto D fuori servizio"
+        },
+        "description": {
+            "en": "One of the cassettes doesn’t reply on the “485” line. Check the connection and if necessary replace the electronic board.",
+            "it": "Uno dei cassetti non risponde sulla riga '485'. Verificare il collegamento e se necessario sostituire la scheda elettronica."
+        },
+        "workcond": "error"
+    },
+    "36": {
+        "title": {
+            "en": "Cassette E out of service",
+            "it": "Casseto E fuori servizio"
+        },
+        "description": {
+            "en": "One of the cassettes doesn’t reply on the “485” line. Check the connection and if necessary replace the electronic board.",
+            "it": "Uno dei cassetti non risponde sulla riga '485'. Verificare il collegamento e se necessario sostituire la scheda elettronica."
+        },
+        "workcond": "error"
+    },
+    "406": {
+        "title": {
+            "en": "Cassette E out of service",
+            "it": "Casseto E fuori servizio"
+        },
+        "description": {
+            "en": "One of the cassettes doesn’t reply on the “485” line. Check the connection and if necessary replace the electronic board.",
+            "it": "Uno dei cassetti non risponde sulla riga '485'. Verificare il collegamento e se necessario sostituire la scheda elettronica."
+        },
+        "workcond": "error"
+    },
+    "37": {
+        "title": {
+            "en": "Cassette F out of service",
+            "it": "Casseto F fuori servizio"
+        },
+        "description": {
+            "en": "One of the cassettes doesn’t reply on the “485” line. Check the connection and if necessary replace the electronic board.",
+            "it": "Uno dei cassetti non risponde sulla riga '485'. Verificare il collegamento e se necessario sostituire la scheda elettronica."
+        },
+        "workcond": "error"
+    },
+    "407": {
+        "title": {
+            "en": "Cassette F out of service",
+            "it": "Casseto F fuori servizio"
+        },
+        "description": {
+            "en": "One of the cassettes doesn’t reply on the “485” line. Check the connection and if necessary replace the electronic board.",
+            "it": "Uno dei cassetti non risponde sulla riga '485'. Verificare il collegamento e se necessario sostituire la scheda elettronica."
+        },
+        "workcond": "error"
+    },
+    "38": {
+        "title": {
+            "en": "Cassette G out of service",
+            "it": "Casseto G fuori servizio"
+        },
+        "description": {
+            "en": "One of the cassettes doesn’t reply on the “485” line. Check the connection and if necessary replace the electronic board.",
+            "it": "Uno dei cassetti non risponde sulla riga '485'. Verificare il collegamento e se necessario sostituire la scheda elettronica."
+        },
+        "workcond": "error"
+    },
+    "408": {
+        "title": {
+            "en": "Cassette G out of service",
+            "it": "Casseto G fuori servizio"
+        },
+        "description": {
+            "en": "One of the cassettes doesn’t reply on the “485” line. Check the connection and if necessary replace the electronic board.",
+            "it": "Uno dei cassetti non risponde sulla riga '485'. Verificare il collegamento e se necessario sostituire la scheda elettronica."
+        },
+        "workcond": "error"
+    },
+    "39": {
+        "title": {
+            "en": "Cassette H out of service",
+            "it": "Casseto H fuori servizio"
+        },
+        "description": {
+            "en": "One of the cassettes doesn’t reply on the “485” line. Check the connection and if necessary replace the electronic board.",
+            "it": "Uno dei cassetti non risponde sulla riga '485'. Verificare il collegamento e se necessario sostituire la scheda elettronica."
+        },
+        "workcond": "error"
+    },
+    "409": {
+        "title": {
+            "en": "Cassette H out of service",
+            "it": "Casseto H fuori servizio"
+        },
+        "description": {
+            "en": "One of the cassettes doesn’t reply on the “485” line. Check the connection and if necessary replace the electronic board.",
+            "it": "Uno dei cassetti non risponde sulla riga '485'. Verificare il collegamento e se necessario sostituire la scheda elettronica."
+        },
+        "workcond": "error"
+    },
+    "410": {
+        "title": {
+            "en": "Cassette I out of service",
+            "it": "Casseto I fuori servizio"
+        },
+        "description": {
+            "en": "One of the cassettes doesn’t reply on the “485” line. Check the connection and if necessary replace the electronic board.",
+            "it": "Uno dei cassetti non risponde sulla riga '485'. Verificare il collegamento e se necessario sostituire la scheda elettronica."
+        },
+        "workcond": "error"
+    },
+    "411": {
+        "title": {
+            "en": "Cassette J out of service",
+            "it": "Casseto J fuori servizio"
+        },
+        "description": {
+            "en": "One of the cassettes doesn’t reply on the “485” line. Check the connection and if necessary replace the electronic board.",
+            "it": "Uno dei cassetti non risponde sulla riga '485'. Verificare il collegamento e se necessario sostituire la scheda elettronica."
+        },
+        "workcond": "error"
+    },
+    "48": {
+        "title": {
+            "en": "Internal error",
+            "it": "Errore interno"
+        },
+        "description": {
+            "en": "Internal serial error (not longer used)",
+            "it": "Errore seriale interno"
+        },
+        "workcond": "error"
+    },
+    "414": {
+        "title": {
+            "en": "Internal error",
+            "it": "Errore interno"
+        },
+        "description": {
+            "en": "Internal serial error (not longer used)",
+            "it": "Errore seriale interno"
+        },
+        "workcond": "error"
+    },
+    "49": {
+        "title": {
+            "en": "Note overflow",
+            "it": "Note overflow"
+        },
+        "description": {
+            "en": "The note reader does not define a target for the note in transit within the limit. The “cover open” status is activated. Open the cover check the notes in the path, close and restart.",
+            "it": "Il lettore di banconote non definisce una destinzione per la banconota in transito entro il limite. Lo stato 'coperchio aperto' è attivato. Apri il coperchio controlla le banconote nel percorso, chiudi e riavvia."
+        },
+        "workcond": "error"
+    },
+    "415": {
+        "title": {
+            "en": "Note overflow",
+            "it": "Note overflow"
+        },
+        "description": {
+            "en": "The note reader does not define a target for the note in transit within the limit. The “cover open” status is activated. Open the cover check the notes in the path, close and restart.",
+            "it": "Il lettore di banconote non definisce una destinzione per la banconota in transito entro il limite. Lo stato 'coperchio aperto' è attivato. Apri il coperchio controlla le banconote nel percorso, chiudi e riavvia."
+        },
+        "workcond": "error"
+    },
+    "50": {
+        "title": {
+            "en": "Count error",
+            "it": "Errore durante il conteggio"
+        },
+        "description": {
+            "en": "At the end of a withdrawal operation the delivered notes do not match the requested ones.",
+            "it": "Al termine di un'operazione di ritiro le note consegnate non corrispondono a quelle richieste."
+        },
+        "workcond": "error"
+    },
+    "416": {
+        "title": {
+            "en": "Count error",
+            "it": "Errore durante il conteggio"
+        },
+        "description": {
+            "en": "At the end of a withdrawal operation the delivered notes do not match the requested ones.",
+            "it": "Al termine di un'operazione di ritiro le note consegnate non corrispondono a quelle richieste."
+        },
+        "workcond": "error"
+    },
+    "417": {
+        "title": {
+            "en": "Feeder Wrong status",
+            "it": "Feeder Stato errato"
+        },
+        "description": {
+            "en": "Wrong reply code on FEEDER",
+            "it": "Codice di risposta sbagliato sul FEEDER"
+        },
+        "workcond": "error"
+    },
+    "418": {
+        "title": {
+            "en": "Reader Comm Error",
+            "it": "Errore di comunicazione Reader"
+        },
+        "description": {
+            "en": "RS232 problem from Banknote reader to Controller REAL TIME",
+            "it": "Problema RS232 dal lettore di banconote al controller REAL TIME"
+        },
+        "workcond": "error"
+    },
+    "419": {
+        "title": {
+            "en": "Safe Comm Error",
+            "it": "Errore di comunicazione Cassaforte"
+        },
+        "description": {
+            "en": "RS232 problem from Lower Controller to Controller REAL TIME",
+            "it": "Problema RS232 dal controller inferiore al controller REAL TIME"
+        },
+        "workcond": "error"
+    },
+    "420": {
+        "title": {
+            "en": "Safe Failure",
+            "it": "Errore Cassaforte"
+        },
+        "description": {
+            "en": "Safe Failure. Reboot the device.",
+            "it": "Errore cassaforte. Riavviare la macchina."
+        },
+        "workcond": "error"
+    },
+    "421": {
+        "title": {
+            "en": "Cassette K out of service",
+            "it": "Casseto K fuori servizio"
+        },
+        "description": {
+            "en": "One of the cassettes doesn’t reply on the “485” line. Check the connection and if necessary replace the electronic board.",
+            "it": "Uno dei cassetti non risponde sulla riga '485'. Verificare il collegamento e se necessario sostituire la scheda elettronica"
+        },
+        "workcond": "error"
+    },
+    "422": {
+        "title": {
+            "en": "Cassette L out of service",
+            "it": "Casseto L fuori servizio"
+        },
+        "description": {
+            "en": "One of the cassettes doesn’t reply on the “485” line. Check the connection and if necessary replace the electronic board.",
+            "it": "Uno dei cassetti non risponde sulla riga '485'. Verificare il collegamento e se necessario sostituire la scheda elettronica"
+        },
+        "workcond": "error"
+    },
+    "423": {
+        "title": {
+            "en": "Cassette M out of service",
+            "it": "Casseto M fuori servizio"
+        },
+        "description": {
+            "en": "One of the cassettes doesn’t reply on the “485” line. Check the connection and if necessary replace the electronic board.",
+            "it": "Uno dei cassetti non risponde sulla riga '485'. Verificare il collegamento e se necessario sostituire la scheda elettronica."
+        },
+        "workcond": "error"
+    },
+    "424": {
+        "title": {
+            "en": "Cassette N out of service",
+            "it": "Casseto N fuori servizio"
+        },
+        "description": {
+            "en": "One of the cassettes doesn’t reply on the “485” line. Check the connection and if necessary replace the electronic board.",
+            "it": "Uno dei cassetti non risponde sulla riga '485'. Verificare il collegamento e se necessario sostituire la scheda elettronica"
+        },
+        "workcond": "error"
+    },
+    "425": {
+        "title": {
+            "en": "Cassette O out of service",
+            "it": "Casseto O fuori servizio"
+        },
+        "description": {
+            "en": "One of the cassettes doesn’t reply on the “485” line. Check the connection and if necessary replace the electronic board.",
+            "it": "Uno dei cassetti non risponde sulla riga '485'. Verificare il collegamento e se necessario sostituire la scheda elettronica"
+        },
+        "workcond": "error"
+    },
+    "426": {
+        "title": {
+            "en": "Cassette P out of service",
+            "it": "Casseto P fuori servizio"
+        },
+        "description": {
+            "en": "One of the cassettes doesn’t reply on the “485” line. Check the connection and if necessary replace the electronic board.",
+            "it": "Uno dei cassetti non risponde sulla riga '485'. Verificare il collegamento e se necessario sostituire la scheda elettronica"
+        },
+        "workcond": "error"
+    },
+    "53": {
+        "title": {
+            "en": "Shutter Failure",
+            "it": "Errore Schutter"
+        },
+        "description": {
+            "en": "Error occurred during shutter movement",
+            "it": "Si è verificato un errore durante il movimento dello shutter"
+        },
+        "workcond": "error"
+    },
+    "429": {
+        "title": {
+            "en": "Shutter Failure",
+            "it": "Errore Schutter"
+        },
+        "description": {
+            "en": "Error occurred during shutter movement",
+            "it": "Si è verificato un errore durante il movimento dello shutter"
+        },
+        "workcond": "error"
+    },
+	"430": {
+        "title": {
+            "en": "Upper lock failure ",
+            "it": "Errore Upper lock"
+        },
+        "description": {
+            "en": "Upper lock mechanism failure.Resend upper lock movement",
+            "it": "Si è verificato un errore durante il movimento dell' Upper lock"
+        },
+        "workcond": "error"
+    },
+	"78": {
+        "title": {
+            "en": "Photo sensor fault",
+            "it": "Errore del foto sensore"
+        },
+        "description": {
+            "en": "Error during photo operation",
+            "it": "Errore durante lettura/scrittura foto sensore"
+        },
+        "workcond": "error"
+    },
+	"238": {
+        "title": {
+            "en": "Photo sensor fault",
+            "it": "Errore del foto sensore"
+        },
+        "description": {
+            "en": "Error during photo operation",
+            "it": "Errore durante lettura/scrittura foto sensore"
+        },
+        "workcond": "error"
+    },
+	"907": {
+        "title": {
+            "en": "Timeout in Communication",
+            "it": "Timeout nella comunicazione"
+        },
+        "description": {
+            "en": "",
+            "it": ""
+        },
+        "workcond": ""
+    },
+    "941": {
+        "title": {
+            "en": "Error in NIL/RTC communication",
+            "it": "Errore nella comunicazione NIL/RTC"
+        },
+        "description": {
+            "en": "",
+            "it": ""
+        },
+        "workcond": ""
+    },
+	"981": {
+        "title": {
+            "en": "Download in progress",
+            "it": "Download in corso"
+        },
+        "description": {
+            "en": "Download in progress,please wait",
+            "it": "Download in corso,prego attendere"
+        },
+        "workcond": "error"
+    },
+	 "983": {
+        "title": {
+            "en": "Write File error (probably memory full)",
+            "it": "Errore scrittura(probabile memoria piena"
+        },
+        "description": {
+            "en": "",
+            "it": ""
+        },
+        "workcond": ""
+    },
+	 "985": {
+        "title": {
+            "en": "Zip file not correct",
+            "it": "Zip file NON corretto"
+        },
+        "description": {
+            "en": "",
+            "it": ""
+        },
+        "workcond": ""
+    },
+    "1050": {
+        "title": {
+            "en": "Function communication device error",
+            "it": "Errore di Comunicazione"
+        },
+        "description": {
+            "en": "",
+            "it": ""
+        },
+        "workcond": ""
+    },
+    "1051": {
+        "title": {
+            "en": "Connection KO (invalid Handle)",
+            "it": "Connessione KO (Handle invalido)"
+        },
+        "description": {
+            "en": "",
+            "it": ""
+        },
+        "workcond": ""
+    },
+    "1052": {
+        "title": {
+            "en": "Alredy Connected , please Disconnect first",
+            "it": "Connessione gia' presente , disconnetersi ed effettuarne una nuova"
+        },
+        "description": {
+            "en": "",
+            "it": ""
+        },
+        "workcond": ""
+    },
+	"1053": {
+        "title": {
+            "en": "Syntax error on connect operation",
+            "it": "Parametri di connessione errati"
+        },
+        "description": {
+            "en": "",
+            "it": ""
+        },
+        "workcond": ""
+    },
+	"1054": {
+        "title": {
+            "en": "WriteFile Function on device has failed",
+            "it": "Funzione WriteFile fallita"
+        },
+        "description": {
+            "en": "",
+            "it": ""
+        },
+        "workcond": ""
+    },
+	"1055": {
+        "title": {
+            "en": "ReadFile Function on device has failed",
+            "it": "Funzione ReadFile fallita"
+        },
+        "description": {
+            "en": "",
+            "it": ""
+        },
+        "workcond": ""
+    },
+    "1056": {
+        "title": {
+            "en": "Error on TCP/IP socket connection routines",
+            "it": "Errore di Connessione"
+        },
+        "description": {
+            "en": "",
+            "it": ""
+        },
+        "workcond": ""
+    },
+	"1057": {
+        "title": {
+            "en": "Write on LAN has failed",
+            "it": "Scrittura su LAN fallita"
+        },
+        "description": {
+            "en": "",
+            "it": ""
+        },
+        "workcond": ""
+    },
+	"1058": {
+        "title": {
+            "en": "Read on LAN has failed",
+            "it": "Lettura su LAN fallita"
+        },
+        "description": {
+            "en": "",
+            "it": ""
+        },
+        "workcond": ""
+    },
+    "1059": {
+        "title": {
+            "en": "TimeOut Expired",
+            "it": "TimeOut Scaduto"
+        },
+        "description": {
+            "en": "",
+            "it": ""
+        },
+        "workcond": ""
+    },
+	 "1060": {
+        "title": {
+            "en": "Buffer of reply command has been exeed",
+            "it": "Buffer risposta allocato con dimensione errata"
+        },
+        "description": {
+            "en": "",
+            "it": ""
+        },
+        "workcond": ""
+    },
+	 "1061": {
+        "title": {
+            "en": "Trasmission error, wrong BCC/char",
+            "it": "Errato BCC"
+        },
+        "description": {
+            "en": "",
+            "it": ""
+        },
+        "workcond": ""
+    },
+	 "1062": {
+        "title": {
+            "en": "Trasmission error, wrong protocol",
+            "it": "Protocollo di trasmissione errato"
+        },
+        "description": {
+            "en": "",
+            "it": ""
+        },
+        "workcond": ""
+    },
+	 "1063": {
+        "title": {
+            "en": "Command in progress",
+            "it": "Comando in corso"
+        },
+        "description": {
+            "en": "",
+            "it": ""
+        },
+        "workcond": ""
+    },
+	 "1064": {
+        "title": {
+            "en": "Command in progress",
+            "it": "Comando in corso"
+        },
+        "description": {
+            "en": "",
+            "it": ""
+        },
+        "workcond": ""
+    },
+	 "1065": {
+        "title": {
+            "en": "Command in progress",
+            "it": "Comando in corso"
+        },
+        "description": {
+            "en": "",
+            "it": ""
+        },
+        "workcond": ""
+    },
+    "1066": {
+        "title": {
+            "en": "Lan Connection refused(probably Nil not started)",
+            "it": "Connessione Lan rifiutata( Nil non avviato)"
+        },
+        "description": {
+            "en": "",
+            "it": ""
+        },
+        "workcond": ""
+    },
+	 "1067": {
+        "title": {
+            "en": "CMLINK Syntax Error",
+            "it": "Errrore di sintassi sulla CMLINK"
+        },
+        "description": {
+            "en": "",
+            "it": ""
+        },
+        "workcond": ""
+    },
+	 "1068": {
+        "title": {
+            "en": "LAN 10054 - Connection reset by peer",
+            "it": "Connessione resettata"
+        },
+        "description": {
+            "en": "",
+            "it": ""
+        },
+        "workcond": ""
+    },
+	 "1069": {
+        "title": {
+            "en": "layer Close session by client in LanServer",
+            "it": "Sessione chiusa da LanServer"
+        },
+        "description": {
+            "en": "",
+            "it": ""
+        },
+        "workcond": ""
+    },
+	 "1070": {
+        "title": {
+            "en": "LibUsb not found",
+            "it": "LibUsb non trovata"
+        },
+        "description": {
+            "en": "",
+            "it": ""
+        },
+        "workcond": ""
+    },
+	 "1071": {
+        "title": {
+            "en": "LibUsb Error generic",
+            "it": "LibUsb errore generico"
+        },
+        "description": {
+            "en": "",
+            "it": ""
+        },
+        "workcond": ""
+    },
+	"1700": {
+        "title": {
+            "en": "Library not initilized",
+            "it": "Librearia non inizializzata"
+        },
+        "description": {
+            "en": "",
+            "it": ""
+        },
+        "workcond": ""
+    },
+    "1701": {
+        "title": {
+            "en": "Open not Done",
+            "it": "Open non riuscita"
+        },
+        "description": {
+            "en": "",
+            "it": ""
+        },
+        "workcond": ""
+    },
+    "1710": {
+        "title": {
+            "en": "Invalid library versioning",
+            "it": "Versione libreria non valida"
+        },
+        "description": {
+            "en": "",
+            "it": ""
+        },
+        "workcond": ""
+    },
+    "1711": {
+        "title": {
+            "en": "Missing connection type",
+            "it": "Parametro connection type mancante"
+        },
+        "description": {
+            "en": "",
+            "it": ""
+        },
+        "workcond": ""
+    },
+    "1712": {
+        "title": {
+            "en": "Invalid connection type",
+            "it": "Parametro connection type invalido"
+        },
+        "description": {
+            "en": "",
+            "it": ""
+        },
+        "workcond": ""
+    },
+    "1713": {
+        "title": {
+            "en": "Missing Protocol Set",
+            "it": "Parametro Protocol Set mancante"
+        },
+        "description": {
+            "en": "",
+            "it": ""
+        },
+        "workcond": ""
+    },
+    "1714": {
+        "title": {
+            "en": "Invalid Protocol Set",
+            "it": "Parametro Protocol Set Invalido"
+        },
+        "description": {
+            "en": "",
+            "it": ""
+        },
+        "workcond": ""
+    },
+    "1715": {
+        "title": {
+            "en": "Missing Ip address",
+            "it": "Ip address mancante"
+        },
+        "description": {
+            "en": "",
+            "it": ""
+        },
+        "workcond": ""
+    },
+    "1716": {
+        "title": {
+            "en": "Missing Ip port",
+            "it": "Ip port mancante"
+        },
+        "description": {
+            "en": "",
+            "it": ""
+        },
+        "workcond": ""
+    },
+    "1717": {
+        "title": {
+            "en": "Missing Usb Serial Number",
+            "it": "Usb Serial Number mancante"
+        },
+        "description": {
+            "en": "",
+            "it": ""
+        },
+        "workcond": ""
+    },
+    "1718": {
+        "title": {
+            "en": "Missing Com Name",
+            "it": "Com Name mancante"
+        },
+        "description": {
+            "en": "",
+            "it": ""
+        },
+        "workcond": ""
+    },
+    "1719": {
+        "title": {
+            "en": "Missing Com Baudrate",
+            "it": "Com Baudrate mancante"
+        },
+        "description": {
+            "en": "",
+            "it": ""
+        },
+        "workcond": ""
+    },
+    "1720": {
+        "title": {
+            "en": "Missing Com Parity",
+            "it": "Com Parity mancante"
+        },
+        "description": {
+            "en": "",
+            "it": ""
+        },
+        "workcond": ""
+    },
+    "1721": {
+        "title": {
+            "en": "Missing Com Databits",
+            "it": "Com Databits mancante"
+        },
+        "description": {
+            "en": "",
+            "it": ""
+        },
+        "workcond": ""
+    },
+    "1722": {
+        "title": {
+            "en": "Missing Com StopBits",
+            "it": "Com StopBits mancante"
+        },
+        "description": {
+            "en": "",
+            "it": ""
+        },
+        "workcond": ""
+    },
+    "1723": {
+        "title": {
+            "en": "Missing OpSide",
+            "it": "OpSide mancante"
+        },
+        "description": {
+            "en": "",
+            "it": ""
+        },
+        "workcond": ""
+    },
+    "1724": {
+        "title": {
+            "en": "Invalid OpSide",
+            "it": "OpSide invalido"
+        },
+        "description": {
+            "en": "",
+            "it": ""
+        },
+        "workcond": ""
+    },
+    "1725": {
+        "title": {
+            "en": "Missing Cmd Mode",
+            "it": "Cmd Mode mancante"
+        },
+        "description": {
+            "en": "",
+            "it": ""
+        },
+        "workcond": ""
+    },
+    "1726": {
+        "title": {
+            "en": "Invalid Cmd Mode",
+            "it": "Cmd Mode invalido"
+        },
+        "description": {
+            "en": "",
+            "it": ""
+        },
+        "workcond": ""
+    },
+    "1727": {
+        "title": {
+            "en": "Invalid Parity",
+            "it": "Parity invalido"
+        },
+        "description": {
+            "en": "",
+            "it": ""
+        },
+        "workcond": ""
+    },
+    "1728": {
+        "title": {
+            "en": "Missing Nr Elements",
+            "it": "Nr Elements mancante"
+        },
+        "description": {
+            "en": "",
+            "it": ""
+        },
+        "workcond": ""
+    },
+    "1729": {
+        "title": {
+            "en": "Invalid Nr Elements",
+            "it": "Nr Elements Invalido"
+        },
+        "description": {
+            "en": "",
+            "it": ""
+        },
+        "workcond": ""
+    },
+    "1730": {
+        "title": {
+            "en": "Drawer Id Missing",
+            "it": "Drawer Id mancante"
+        },
+        "description": {
+            "en": "",
+            "it": ""
+        },
+        "workcond": ""
+    },
+    "1731": {
+        "title": {
+            "en": "Drawer Id Invalid",
+            "it": "Drawer Id invalido"
+        },
+        "description": {
+            "en": "",
+            "it": ""
+        },
+        "workcond": ""
+    },
+    "1732": {
+        "title": {
+            "en": "Password Missing",
+            "it": "Password mancante"
+        },
+        "description": {
+            "en": "",
+            "it": ""
+        },
+        "workcond": ""
+    },
+    "1733": {
+        "title": {
+            "en": "EndOperation Missing",
+            "it": "EndOperation mancante"
+        },
+        "description": {
+            "en": "",
+            "it": ""
+        },
+        "workcond": ""
+    },
+    "1734": {
+        "title": {
+            "en": "EndOperation Invalid",
+            "it": "EndOperation invalido"
+        },
+        "description": {
+            "en": "",
+            "it": ""
+        },
+        "workcond": ""
+    },
+    "1735": {
+        "title": {
+            "en": "BoundleCountigMode Missing",
+            "it": "BoundleCountigMode mancante"
+        },
+        "description": {
+            "en": "",
+            "it": ""
+        },
+        "workcond": ""
+    },
+	"1736": {
+        "title": {
+            "en": "DateTime ,seconds parameter invalid",
+            "it": "DateTime ,secondi parametro invalido"
+        },
+        "description": {
+            "en": "",
+            "it": ""
+        },
+        "workcond": ""
+    },
+	"1737": {
+        "title": {
+            "en": "DateTime ,minutes parameter invalid",
+            "it": "DateTime ,minuti parametro invalido"
+        },
+        "description": {
+            "en": "",
+            "it": ""
+        },
+        "workcond": ""
+    },
+	"1738": {
+        "title": {
+            "en": "DateTime ,hours parameter invalid",
+            "it": "DateTime ,ore parametro invalido"
+        },
+        "description": {
+            "en": "",
+            "it": ""
+        },
+        "workcond": ""
+    },
+	"1739": {
+        "title": {
+            "en": "DateTime ,week day parameter invalid",
+            "it": "DateTime ,giorno della settimana parametro invalido"
+        },
+        "description": {
+            "en": "",
+            "it": ""
+        },
+        "workcond": ""
+    },
+	"1740": {
+        "title": {
+            "en": "DateTime ,day parameter invalid",
+            "it": "DateTime ,giorno parametro invalido"
+        },
+        "description": {
+            "en": "",
+            "it": ""
+        },
+        "workcond": ""
+    },
+	"1741": {
+        "title": {
+            "en": "DateTime ,month parameter invalid",
+            "it": "DateTime ,mese parametro invalido"
+        },
+        "description": {
+            "en": "",
+            "it": ""
+        },
+        "workcond": ""
+    },
+	"1742": {
+        "title": {
+            "en": "DateTime ,year parameter invalid",
+            "it": "DateTime ,anno parametro invalido"
+        },
+        "description": {
+            "en": "",
+            "it": ""
+        },
+        "workcond": ""
+    },
+	"1744": {
+        "title": {
+            "en": "Reader Denomination missing",
+            "it": "denominazione mancante sul Lettore"
+        },
+        "description": {
+            "en": "",
+            "it": ""
+        },
+        "workcond": ""
+    },
+	"1745": {
+        "title": {
+            "en": "ARCAsetCassetteSettings , invalid parameter configType",
+            "it": "ARCAsetCassetteSettings , parametero invalido configType"
+        },
+        "description": {
+            "en": "",
+            "it": ""
+        },
+        "workcond": ""
+    },
+	"1746": {
+        "title": {
+            "en": "ARCADeviceStatus , invalid parameter statusType",
+            "it": "ARCADeviceStatus , parametero invalido statusType"
+        },
+        "description": {
+            "en": "",
+            "it": ""
+        },
+        "workcond": ""
+    },
+	"1747": {
+        "title": {
+            "en": "ARCACount , invalid parameter boundleCountingMode",
+            "it": "ARCACount , parametero invalido boundleCountingMode"
+        },
+        "description": {
+            "en": "",
+            "it": ""
+        },
+        "workcond": ""
+    },
+	"1748": {
+        "title": {
+            "en": "ARCADeposit , invalid parameter forcedMode",
+            "it": "ARCADeposit , parametero invalido forcedMode"
+        },
+        "description": {
+            "en": "",
+            "it": ""
+        },
+        "workcond": ""
+    },
+	"1749": {
+        "title": {
+            "en": "ARCAexeAlarm , invalid parameter type",
+            "it": "ARCAexeAlarm , parametero invalido type"
+        },
+        "description": {
+            "en": "",
+            "it": ""
+        },
+        "workcond": ""
+    },
+	"1750": {
+        "title": {
+            "en": "invalid inData parameter",
+            "it": "parametro inData non valido"
+        },
+        "description": {
+            "en": "",
+            "it": ""
+        },
+        "workcond": ""
+    },
+	"1788": {
+        "title": {
+            "en": "Output buffer truncated for dimension",
+            "it": "Buffer di output truncato causa dimensione non corretta"         
+        },
+        "description": {
+            "en": "",
+            "it": ""
+        },
+        "workcond": ""
+    },
+	"1789": {
+        "title": {
+            "en": "Output buffer allocated with errate dimension",
+            "it": "Buffer di output allocato con dimensione non corretta"         
+        },
+        "description": {
+            "en": "",
+            "it": ""
+        },
+        "workcond": ""
+    },
+    "1790": {
+        "title": {
+            "en": "Invalid HConnect",
+            "it": "HConnect invalido"
+        },
+        "description": {
+            "en": "",
+            "it": ""
+        },
+        "workcond": ""
+    },
+	"1791": {
+        "title": {
+            "en": "Invalid json data",
+            "it": "json di input invalido"
+        },
+        "description": {
+            "en": "",
+            "it": ""
+        },
+        "workcond": ""
+    },
+	"1792": {
+        "title": {
+            "en": "Invalid parameter",
+            "it": "parametro di input non valido"
+        },
+        "description": {
+            "en": "",
+            "it": ""
+        },
+        "workcond": ""
+    },
+	"1793": {
+        "title": {
+            "en": "No ARCA machine found",
+            "it": "Periferica ARCA non trovata"
+        },
+        "description": {
+            "en": "",
+            "it": ""
+        },
+        "workcond": ""
+    },
+    "1798": {
+        "title": {
+            "en": "DevLnk unknow reply",
+            "it": "DevLnk reply sconosciuto"
+        },
+        "description": {
+            "en": "",
+            "it": ""
+        },
+        "workcond": ""
+    },
+    "1799": {
+        "title": {
+            "en": "Device unknow reply",
+            "it": "Device reply sconosciuto"
+        },
+        "description": {
+            "en": "",
+            "it": ""
+        },
+        "workcond": ""
+    },
+	"6009": {
+        "title": {
+            "en": "File creation error",
+            "it": "Errore nella creazione del file"
+        },
+        "description": {
+            "en": "",
+            "it": ""
+        },
+        "workcond": ""
+    },
+	"6010": {
+        "title": {
+            "en": "ARCAUpdateVersion missing updateMode parameter",
+            "it": "ARCAUpdateVersion parametro updateMode mancante"
+        },
+        "description": {
+            "en": "",
+            "it": ""
+        },
+        "workcond": ""
+    },
+	"6011": {
+        "title": {
+            "en": "missing parameter",
+            "it": "parametro mancante"
+        },
+        "description": {
+            "en": "",
+            "it": ""
+        },
+        "workcond": ""
+    },
+	"6012": {
+        "title": {
+            "en": "File write error",
+            "it": "Errore nella scrittura del file"
+        },
+        "description": {
+            "en": "",
+            "it": ""
+        },
+        "workcond": ""
+    },
+	"6013": {
+        "title": {
+            "en": "ARCAsetDelays invalid parameter",
+            "it": "ARCAsetDelays parametro invalido"
+        },
+        "description": {
+            "en": "",
+            "it": ""
+        },
+        "workcond": ""
+    },
+	"6016": {
+        "title": {
+            "en": "Creation Lan buffer error",
+            "it": "Errore nella creazione buffer LAN"
+        },
+        "description": {
+            "en": "",
+            "it": ""
+        },
+        "workcond": ""
+    },
+	"6017": {
+        "title": {
+            "en": "Read buffer LAN error",
+            "it": "Errore nella lettura buffer LAN"
+        },
+        "description": {
+            "en": "",
+            "it": ""
+        },
+        "workcond": ""
+    },
+	"6018": {
+        "title": {
+            "en": "Creation buffer error",
+            "it": "Errore nella creazione buffer"
+        },
+        "description": {
+            "en": "",
+            "it": ""
+        },
+        "workcond": ""
+    },
+	"6019": {
+        "title": {
+            "en": "Read buffer error",
+            "it": "Errore nella lettura buffer"
+        },
+        "description": {
+            "en": "",
+            "it": ""
+        },
+        "workcond": ""
+    },
+	"6020": {
+        "title": {
+            "en": "ARCAexeFileTransfer size_file null",
+            "it": "ARCAexeFileTransfer size_file null"
+        },
+        "description": {
+            "en": "",
+            "it": ""
+        },
+        "workcond": ""
+    },
+	"6023": {
+        "title": {
+            "en": "Open file error",
+            "it": "Error on open file"
+        },
+        "description": {
+            "en": "",
+            "it": ""
+        },
+        "workcond": ""
+    },
+	"6024": {
+        "title": {
+            "en": "Invalid download parameter",
+            "it": "Parametro di download invalido"
+        },
+        "description": {
+            "en": "",
+            "it": ""
+        },
+        "workcond": ""
+    },
+	"6025": {
+        "title": {
+            "en": "Invalid Lan parameter",
+            "it": "Parametro di download invalido"
+        },
+        "description": {
+            "en": "",
+            "it": ""
+        },
+        "workcond": ""
+    },
+	"6026": {
+        "title": {
+            "en": "ARCAsetReaderSettings invalid type parameter",
+            "it": "ARCAsetReaderSettings invalido parametro type"
+        },
+        "description": {
+            "en": "",
+            "it": ""
+        },
+        "workcond": ""
+    },
+    "ver" : {
+        "title": {
+            "en": "Version",
+            "it": "Versione"
+        },
+        "description": {
+            "en": "0.2.0",
+            "it": "0.2.0"
+        },
+        "workcond": ""
+    }
+}

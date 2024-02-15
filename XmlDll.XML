@@ -1,0 +1,274 @@
+<?xml version="1.0"?>
+<doc>
+    <assembly>
+        <name>XmlDll</name>
+    </assembly>
+    <members>
+        <member name="T:XmlDll.TestType">
+            <summary>
+            Standard type of test used in production. They must be used to create the correct xml root node
+            </summary>
+        </member>
+        <member name="F:XmlDll.TestType.PrimoCollaudo">
+            <summary>
+            It must be used for the first test (primo collaudo)
+            </summary>
+        </member>
+        <member name="F:XmlDll.TestType.TraspSup">
+            <summary>
+            It must be used for the upper transport test
+            </summary>
+        </member>
+        <member name="F:XmlDll.TestType.SecondoCollaudo">
+            <summary>
+            It must be used for the functional test (Secondo Collaudo)
+            </summary>
+        </member>
+        <member name="F:XmlDll.TestType.CQA">
+            <summary>
+            It must be used for the CQA
+            </summary>
+        </member>
+        <member name="F:XmlDll.TestType.EndUserCustomization">
+            <summary>
+            It must be used for the End User Customization
+            </summary>
+        </member>
+        <member name="F:XmlDll.TestType.CC3R">
+            <summary>
+            It must be used for the CC3R
+            </summary>
+        </member>
+        <member name="T:XmlDll.Log">
+            <summary>
+            List of standard attributes for each single xml node
+            </summary>
+        </member>
+        <member name="F:XmlDll.Log.DateStart">
+            <summary>
+            Test date start
+            </summary>
+        </member>
+        <member name="F:XmlDll.Log.TimeStart">
+            <summary>
+            Test time start
+            </summary>
+        </member>
+        <member name="F:XmlDll.Log.TimeEnd">
+            <summary>
+            Test time finish
+            </summary>
+        </member>
+        <member name="F:XmlDll.Log.Family">
+            <summary>
+            Product family
+            </summary>
+        </member>
+        <member name="F:XmlDll.Log.ProductCode">
+            <summary>
+            Product code in test
+            </summary>
+        </member>
+        <member name="F:XmlDll.Log.ClientName">
+            <summary>
+            Client name associated to the product in test
+            </summary>
+        </member>
+        <member name="F:XmlDll.Log.ClientId">
+            <summary>
+            Client ID associated to the product in test
+            </summary>
+        </member>
+        <member name="F:XmlDll.Log.Result">
+            <summary>
+            Result of the test (usually TRUE/OK/PASS or FALSE/KO/FAULT)
+            </summary>
+        </member>
+        <member name="F:XmlDll.Log.SerialNumber">
+            <summary>
+            Product or module Serial Number in test
+            </summary>
+        </member>
+        <member name="F:XmlDll.Log.SwVersion">
+            <summary>
+            Version of the software used during the test
+            </summary>
+        </member>
+        <member name="F:XmlDll.Log.Station">
+            <summary>
+            Station name (or PC name) used for testing the product
+            </summary>
+        </member>
+        <member name="F:XmlDll.Log.User">
+            <summary>
+            User name that test the product
+            </summary>
+        </member>
+        <member name="T:XmlDll.XMLFile">
+            <summary>
+            Managing XML file to save the test log file
+            </summary>
+        </member>
+        <member name="F:XmlDll.XMLFile.productList">
+            <summary>
+            List of Serial Number present in XML file
+            </summary>
+        </member>
+        <member name="F:XmlDll.XMLFile.modulesList">
+            <summary>
+            List of Modules present in the actual Serial Number in XML file
+            </summary>
+        </member>
+        <member name="F:XmlDll.XMLFile.testsList">
+            <summary>
+            List of Tests present in the actual Serial Number in XML file
+            </summary>
+        </member>
+        <member name="F:XmlDll.XMLFile.errorsList">
+            <summary>
+            List of Errors present in the actual Serial Number in XML file
+            </summary>
+        </member>
+        <member name="M:XmlDll.XMLFile.#ctor(System.String,System.String)">
+            <summary>
+            Creating new log xml file or open it if exists
+            </summary>
+            <param name="xmlFileName">File name </param>
+            <param name="xmlRootName"></param>
+        </member>
+        <member name="M:XmlDll.XMLFile.Sort">
+            <summary>
+            Sort XML file by Product Serial Number
+            </summary>
+        </member>
+        <member name="M:XmlDll.XMLFile.GetAllList">
+            <summary>
+            Get all node list and fill it in 
+            </summary>
+        </member>
+        <member name="M:XmlDll.XMLFile.GetProductsList">
+            <summary>
+            Returns a list of Product serial number nodes present in the XML file
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:XmlDll.XMLFile.GetModulesList">
+            <summary>
+            Returns a list of Module nodes present in the XML file for the actual serial number
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:XmlDll.XMLFile.GetErrorsList">
+            <summary>
+            Returns a list of Error nodes present in the XML file for the actual serial number
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:XmlDll.XMLFile.GetTestsList">
+            <summary>
+            Returns a list of Test nodes present in the XML file for the actual serial number
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:XmlDll.XMLFile.AddProduct(System.String)">
+            <summary>
+            Add a node with the product Serial Number to the XML file
+            </summary>
+            <param name="productSN">Product serial number, the first charapter must be a letter</param>
+            <returns></returns>
+        </member>
+        <member name="M:XmlDll.XMLFile.AddProduct(System.String,System.Object[])">
+            <summary>
+            Add a node with the product Serial Number and attributes to the XML file
+            </summary>
+            <param name="productSN">Product serial number, the first charapter must be a letter</param>
+            <param name="attributes">Attribute Name and attribute Value, example: "result","true"</param>
+            <returns></returns>
+        </member>
+        <member name="M:XmlDll.XMLFile.AddModule(System.String,System.String)">
+            <summary>
+            Add a node module to the product Serial Number node
+            </summary>
+            <param name="moduleName">Module Name have to start with a letter</param>
+            <param name="productSN">optional, Serial number to add the module</param>
+        </member>
+        <member name="M:XmlDll.XMLFile.AddModule(System.String,System.Object[])">
+            <summary>
+            Add a node module to the product Serial Number node with attributes
+            </summary>
+            <param name="moduleName">Module Name have to start with a letter</param>
+            <param name="attributes">Attribute Name and attribute Value, example: "result","true"</param>
+        </member>
+        <member name="M:XmlDll.XMLFile.AddTest(System.String,System.String)">
+            <summary>
+            Add a node Test to the product Serial Number node
+            </summary>
+            <param name="testName">Test Name have to start with a letter</param>
+            <param name="productSN">optional, Serial number to add the Test</param>
+        </member>
+        <member name="M:XmlDll.XMLFile.AddTest(System.String,System.Object[])">
+            <summary>
+            Add a node module to the product Serial Number node with attributes
+            </summary>
+            <param name="testName">Test Name have to start with a letter</param>
+            <param name="attributes">Attribute Name and attribute Value, example: "result","true"</param>
+        </member>
+        <member name="M:XmlDll.XMLFile.AddError(System.String,System.String)">
+            <summary>
+            Add a node Error to the product Serial Number node
+            </summary>
+            <param name="errName">Error Name have to start with a letter</param>
+            <param name="productSN">optional, Serial number to add the Test</param>
+        </member>
+        <member name="M:XmlDll.XMLFile.AddError(System.String,System.Object[])">
+            <summary>
+            Add a node Error to the product Serial Number node with attributes
+            </summary>
+            <param name="errName">Error Name have to start with a letter</param>
+            <param name="attributes">Attribute Name and attribute Value, example: "result","true"</param>
+        </member>
+        <member name="M:XmlDll.XMLFile.AddModuleAttribute(System.String,System.String,System.String,System.String)">
+            <summary>
+            Add attributes to a specific module
+            </summary>
+            <param name="moduleName">Name of the module present in the current SN</param>
+            <param name="attributeName">Name of attribute</param>
+            <param name="attributeValue">Value of attribute</param>
+            <param name="productSN">optional, Serial number to add the Attribute</param>
+        </member>
+        <member name="M:XmlDll.XMLFile.AddProductAttribute(System.String,System.String,System.String)">
+            <summary>
+            Add attributes to a specific Product
+            </summary>
+            <param name="attributeName">Name of attribute</param>
+            <param name="attributeValue">Value of attribute</param>
+            <param name="productSN">optional, Serial number to add the Attribute</param>
+        </member>
+        <member name="M:XmlDll.XMLFile.AddProductAttribute(System.String,System.String,System.Object[])">
+            <summary>
+            Add attributes to a specific Product
+            </summary>
+            <param name="attributeName">Name of attribute</param>
+            <param name="attributeValue">Value of attribute</param>
+            <param name="attributes">optional, other attributes to add (name, value)</param>
+        </member>
+        <member name="M:XmlDll.XMLFile.AddErrorAttribute(System.String,System.String,System.String,System.String)">
+            <summary>
+            Add attributes to a specific Error
+            </summary>
+            <param name="errName"></param>
+            <param name="attributeName">Name of attribute</param>
+            <param name="attributeValue">Value of attribute</param>
+            <param name="productSN">optional, Serial number to add the Attribute</param>
+        </member>
+        <member name="M:XmlDll.XMLFile.AddTestAttribute(System.String,System.String,System.String,System.String)">
+            <summary>
+            Add attributes to a specific Test
+            </summary>
+            <param name="testName"></param>
+            <param name="attributeName">Name of attribute</param>
+            <param name="attributeValue">Value of attribute</param>
+            <param name="productSN">optional, Serial number to add the Attribute</param>
+        </member>
+    </members>
+</doc>
