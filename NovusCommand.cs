@@ -22,7 +22,7 @@ namespace Novus
         // VARIABLES
         public Novus_Json novus = new Novus_Json();
         public string logPath = "C:\\";
-        public int hCon = 0;
+        public static int hCon = 0;
         public bool dllInitialized = false;
 
         #region DLL IMPORT
@@ -30,6 +30,7 @@ namespace Novus
         [UnmanagedFunctionPointer(CallingConvention.Cdecl)]
         public delegate void EventCallback(string data);
 
+        public event EventHandler ArcaEventReceived;
 
 
         #region ArcaLibLog
@@ -38,6 +39,12 @@ namespace Novus
         #endregion
 
         #region ArcaDevInt
+        //[UnmanagedFunctionPointer(CallingConvention.Cdecl)]
+        //public delegate void DownloadCallback(string data);
+
+        [DllImport("ARCADevsvc.dll", CallingConvention = CallingConvention.Cdecl)]
+        public static extern int ARCADevSvcSingleCommand(int hConnect, string inData);
+
         [DllImport("ARCADevInt.dll", CallingConvention = CallingConvention.Cdecl)]
         public static extern int ARCAInitialize(float version, StringBuilder inData);
 
@@ -52,6 +59,9 @@ namespace Novus
 
         [DllImport("ARCADevInt.dll", CallingConvention = CallingConvention.Cdecl)]
         public static extern int ARCADeviceStatus(int hConnect, StringBuilder inData, int lloutData, StringBuilder outData);
+
+        [DllImport("ARCADevInt.dll", CallingConvention = CallingConvention.Cdecl)]
+        public static extern int ARCAInitAsyncEvent(int hConnect, StringBuilder inData, int lloutData, StringBuilder outData);
 
         [DllImport("ARCADevInt.dll", CallingConvention = CallingConvention.Cdecl)]
         public static extern int ARCAOpen(int hConnect, StringBuilder inData, int lloutData, StringBuilder outData);
@@ -379,6 +389,71 @@ namespace Novus
             return reply;
         }
 
+        public int InitializeSrv(string logPath)
+        {
+            int reply;
+            dllInitialized = false;
+            novus.InDataInitialize = new Novus_Json.CinDataInitialize();
+            novus.InDataInitialize.pathtrace = logPath;
+            StringBuilder inData = new StringBuilder(JsonConvert.SerializeObject(novus.InDataInitialize));
+            reply = ARCAInitializeSrv(LIBRARY_VERSION_1_0, inData);
+            if (reply == 0)
+                dllInitialized = true;
+            return reply;
+        }
+
+
+
+        /// <summary>
+        /// Connectio to NOVUS
+        /// </summary>
+        /// <returns></returns>
+        public int ConnectEvent(Novus_Json.CinDataConnect inDataConnect)
+        {
+            int reply = 0;
+
+            novus.OutDataConnect = new Novus_Json.CoutReplyCode();
+
+            StringBuilder inData = new StringBuilder(JsonConvert.SerializeObject(inDataConnect));
+            StringBuilder outData = new StringBuilder(STRDIM_LITTLE);
+
+            reply = ARCAConnect(inData, NovusFactoryTool.Form1.cbEvent, ref hCon, STRDIM_LITTLE, outData);
+            JObject jConnect = JObject.Parse(outData.ToString());
+            var obj = (JObject)jConnect;
+            var userObj = JObject.Parse(outData.ToString());
+
+            novus.OutDataConnect = new Novus_Json.CoutReplyCode();
+            foreach (var prop in obj.Properties())
+            {
+                switch (prop.Name)
+                {
+                    case "reply":
+                        Console.WriteLine((string)jConnect["reply"]["replyCode"]);
+                        Console.WriteLine((string)jConnect["reply"]["replyCodeDescription"]);
+                        break;
+                }
+            }
+            novus.OutDataConnect = JsonConvert.DeserializeObject<Novus_Json.CoutReplyCode>(outData.ToString());
+
+
+            Object jsonEvent = new JObject
+            {
+                { "enableEvent", "true" },
+                { "disableEvent", "false" },
+                { "errors", "false" },
+                { "pocketsEvent", "false" },
+                { "safeEvent", "false" },
+                { "keepAliveEvent", "false" }
+            };
+
+            inData.Clear();
+            inData.Append(Convert.ToString(jsonEvent));
+
+            int rc_not_used = ARCAInitAsyncEvent(hCon, inData, STRDIM_LITTLE, outData);
+
+            return reply;
+        }
+
         /// <summary>
         /// Connectio to NOVUS
         /// </summary>
@@ -571,9 +646,9 @@ namespace Novus
         {
             int reply=-1;
             novus.inDataTraceTransfer = new Novus_Json.CinDataeExeTraceTransfer();
-            novus.inDataTraceTransfer.transferType = "Download";
-            novus.inDataTraceTransfer.transferMode = "Service";
-            novus.inDataTraceTransfer.transferFile = "Log";
+            novus.inDataTraceTransfer.TransferType = "Download";
+            novus.inDataTraceTransfer.TransferMode = "Service";
+            novus.inDataTraceTransfer.TransferFile = "Log";
             novus.inDataTraceTransfer.ZipfileName =  filename;
             StringBuilder inData = new StringBuilder();
             inData = new StringBuilder(JsonConvert.SerializeObject(novus.inDataTraceTransfer));
@@ -602,6 +677,14 @@ namespace Novus
             int reply;
             StringBuilder outData = new StringBuilder(STRDIM_LITTLE);
             reply = ARCAgetDeviceDateTime(hCon, null, STRDIM_LITTLE, outData);
+            return reply;
+        }
+
+        public int AbilitaSSH()
+        {
+            int reply;
+            string send = "T,1,6,3,1";
+            reply = ARCADevSvcSingleCommand(hCon, send);
             return reply;
         }
     }

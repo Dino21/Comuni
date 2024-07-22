@@ -86,9 +86,9 @@ namespace Novus
 
         public class CinDataeExeTraceTransfer
         {
-            public string transferType;
-            public string transferMode;
-            public string transferFile;
+            public string TransferType;
+            public string TransferMode;
+            public string TransferFile;
             public string ZipfileName;
         }
         public CinDataeExeTraceTransfer inDataTraceTransfer;

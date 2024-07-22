@@ -36,12 +36,19 @@ namespace myArcaNameSpace
             public int clientID;
             public int cassetteNumber;
             public string cassetteName;
+            public string cdfInternalName;
             public string cdfCode;
             public int idReaderCfg;
             public int idCassetteCfg;
+            public int idUnitCfg;
             public string alarmType;
+            public string assetShortFilename;
+            public string assetTallFilename;
             public string assetCode;
-            public string digitalDistCode;
+            public string ddInternalName;
+            public string ddCode;
+            public string ddTransitionCode;
+            public string ddTransitionFilename;
             public string machineType;
             public string serialNumber;
             public string cmName;
@@ -66,6 +73,10 @@ namespace myArcaNameSpace
             public int allBnDeposited;
             public int singleTestBnDep;
             public int singleTestBnPrel;
+            public string upperLock;
+            public string lowerLock;
+            public string readingStation;
+            public string barcodeReader;
         }
         
         public struct SR5000Feeder
@@ -115,6 +126,7 @@ namespace myArcaNameSpace
             public string optCfg;
             public string optOneCfg;
             public string optTwoCfg;
+            public string optThreeCfg;
         }
         public struct SLanConfig
         {
@@ -159,6 +171,7 @@ namespace myArcaNameSpace
         public struct SUTM
         {
             public SReader reader;
+            public string type;
             public string code;
             public string tl;
             public string xmlFileName;
@@ -182,8 +195,46 @@ namespace myArcaNameSpace
             public SUim uim;
             public SPhotoList photo;
             public SBin bin;
+            public SModuleInfo[] infoModules;
+            public SReaderInfo infoReader;
+            public SCassetteInfo[] infoCassette;
         }
 
+        public struct SReaderInfo
+        {
+            public string name;
+            public string commander;
+            public string validator;
+            public string nios;
+            public string tape;
+            public string magnetico;
+            public string suite;
+            public string boardSerial;
+        }
+        public struct SCassetteInfo
+        {
+            public string name;
+            public string version;
+            public string release;
+            public string boardSerial;
+            public string moduleSerial;
+            public string concName;
+            public string concVer;
+            public string concRel;
+            public string bootVer;
+            public string bootRel;
+        }
+        public struct SModuleInfo
+        {
+            public string name;
+            public string version;
+            public string release;
+            public string moduleSerial;
+            public string boardSerial;
+            public string bootVer;
+            public string bootRel;
+
+        }
         public struct SBin
         {
             public short number;
@@ -300,7 +351,8 @@ namespace myArcaNameSpace
             public short deceleration;
             public short durataCicloVelCost;
             public short durataTotale;
-            public short jitter;
+            public short jitterNeg;
+            public short jitterPos;
             public short timing;
             public short meanSpeed;
             public short stallCurrMaint;
@@ -486,6 +538,10 @@ namespace myArcaNameSpace
             AllSystem=0x00,
             UpperArea = 0x01
         }
+
+        public string dataSent;
+        public string dataReceived;
+
         public SCommand Preset = new SCommand();
         public SCommand Deposit = new SCommand();
         public SCommand Dispense = new SCommand();
@@ -584,8 +640,11 @@ namespace myArcaNameSpace
         public SCommand GetOpbBoardBinType = new SCommand();
         public SCommand GetFeederReport = new SCommand();
         public SCommand GetPhBinCalibration = new SCommand();
+        public SCommand GetPowerState = new SCommand();
+        public SCommand CheckMotorMoving = new SCommand();
+        public SCommand CheckLtmCableConnection = new SCommand();
 
-        public SUICommand UiSetSolidLight = new SUICommand();
+        public SUICommand UiSetSolidLight = new SUICommand(); 
         public SUICommand UiGetStatus = new SUICommand();
         public SUICommand UiGetFwRelease = new SUICommand();
         public SUICommand UiStartLightEffect = new SUICommand();
@@ -596,7 +655,17 @@ namespace myArcaNameSpace
 
         //public SCommand  = new SCommand();
         #endregion
+
+        public UtmProtocol(ref LibUsbDotNet.UsbDevice myUsbDevice)
+        {
+            InitializeCommands();
+        }
         public UtmProtocol()
+        {
+            InitializeCommands();
+        }
+
+        void InitializeCommands()
         {
             Preset.msgId = 0x01;
             Preset.msgOpCode = new byte[] { 0x00, 0x01 };
@@ -610,7 +679,7 @@ namespace myArcaNameSpace
             Counting.msgId = 0x01;
             Counting.msgOpCode = new byte[] { 0x00, 0x04 };
             Counting.bytesAnswer = 0x02;
-            Counting.timeOut = 1000;
+            Counting.timeOut = 3000;
             Recovery.msgId = 0x01;
             Recovery.msgOpCode = new byte[] { 0x00, 0x05 };
             Recovery.bytesAnswer = 0x02;
@@ -653,6 +722,7 @@ namespace myArcaNameSpace
             UpdateFirmware.msgId = 0x01;
             UpdateFirmware.msgOpCode = new byte[] { 0x00, 0x12 };
             UpdateFirmware.bytesAnswer = 0x02;
+            UpdateFirmware.timeOut = 1000;
             InitializeDrum.msgId = 0x01;
             InitializeDrum.msgOpCode = new byte[] { 0x00, 0x13 };
             InitializeDrum.bytesAnswer = 0x02;
@@ -857,7 +927,7 @@ namespace myArcaNameSpace
             OperatePower.msgId = 0x01;
             OperatePower.msgOpCode = new byte[] { 0x01, 0x32 };
             OperatePower.bytesAnswer = 0x02;
-            OperatePower.timeOut = 500;
+            OperatePower.timeOut = 5000;
             SetReferenceValue.msgId = 0x01;
             SetReferenceValue.msgOpCode = new byte[] { 0x01, 0x33 };
             SetReferenceValue.bytesAnswer = 0x02;
@@ -913,6 +983,16 @@ namespace myArcaNameSpace
             GetPhBinCalibration.msgId = 0x01;
             GetPhBinCalibration.msgOpCode = new byte[] { 0x01, 0x48 };
             GetPhBinCalibration.bytesAnswer = 6;
+            GetPowerState.msgId = 0x01;
+            GetPowerState.msgOpCode = new byte[] { 0x01, 0x49 };
+            GetPowerState.bytesAnswer = 2;
+            CheckMotorMoving.msgId = 0x01;
+            CheckMotorMoving.msgOpCode = new byte[] { 0x01, 0x4A };
+            CheckMotorMoving.bytesAnswer = 4;
+            CheckMotorMoving.timeOut = 6000;
+            CheckLtmCableConnection.msgId = 0x01;
+            CheckLtmCableConnection.msgOpCode = new byte[] { 0x01, 0x4B };
+            CheckLtmCableConnection.bytesAnswer = 3;
 
             UiSetSolidLight.opCode = 0x4A;
             UiSetSolidLight.bytesAnswer = 0x00;
@@ -937,6 +1017,29 @@ namespace myArcaNameSpace
             UiReadLightEffect.timeOut = 100;
         }
 
+        public byte[] SendCommand(SCommand command, params byte[] parameters)
+        {
+            // recupero le informazioni sul comando da inviare
+            byte[] frame = MakeCmd(command.msgId, command.msgOpCode, parameters);
+            if (command.timeOut == 0)
+                command.timeOut = 500;
+            int nBytes = 0;
+
+            // preparo le stringhe da scrivere nel comScope
+            dataReceived = "RCV:";
+            dataSent = "SND:" + command.msgId.ToString("X2") + " " + command.msgOpCode[0].ToString("X2") + " " + command.msgOpCode[1].ToString("X2") + " ";
+            for (int i = 0; i < parameters.Length; i++)
+                dataSent += parameters[i].ToString("X2") + " ";
+
+            // se la porta USB è chiusa la apro
+
+            // apertura porte R/W
+
+            return frame;
+
+
+
+        }
         public byte[] MakeCmd(SCommand command, byte[] data = null)
         {
             byte[] frame = MakeCmd(command.msgId, command.msgOpCode, data);
@@ -5522,6 +5625,26 @@ namespace myArcaNameSpace
                             }
             xDocument.Save(xmlFilename);
         }
+        public void XmlEditElementAttributeOfElementOfElement(string granFatherElement, string fatherElement, string elementName, string attributeName, string newAttributeValue)
+        {
+            XmlDocument xDocument = new XmlDocument();
+            xDocument.Load(xmlFilename);
+            XmlNode root1 = xDocument.DocumentElement;
+            for (int gf = 0; gf < root1.ChildNodes.Count; gf++)
+                if (root1.ChildNodes[gf].Name == granFatherElement)
+                    for (int f = 0; f < root1.ChildNodes[gf].ChildNodes.Count; f++)
+                        if (root1.ChildNodes[gf].ChildNodes[f].Name == fatherElement)
+                            for (int e=0; e < root1.ChildNodes[gf].ChildNodes[f].ChildNodes.Count;e++)
+                                if (root1.ChildNodes[gf].ChildNodes[f].ChildNodes[e].Name == elementName)
+                                    for (int a = 0; a < root1.ChildNodes[gf].ChildNodes[f].ChildNodes[e].Attributes.Count; a++)
+                                    {
+                                        if (root1.ChildNodes[gf].ChildNodes[f].ChildNodes[e].Attributes[a].Name == attributeName)
+                                            root1.ChildNodes[gf].ChildNodes[f].ChildNodes[e].Attributes[a].Value = newAttributeValue;
+                                        if (root1.ChildNodes[gf].ChildNodes[f].ChildNodes[e].Attributes[a].Name == "time_end")
+                                            root1.ChildNodes[gf].ChildNodes[f].ChildNodes[e].Attributes[a].Value = DateTime.Now.ToLongTimeString();
+                                    }
+            xDocument.Save(xmlFilename);
+        }
 
         public void XmlEditFwElementAttribute(string elementName, string attributeName, string newAttributeValue)
         {
@@ -6101,6 +6224,12 @@ namespace myArcaNameSpace
         public const string ENTER = "ENTER";
         public const string OPEN = "OPEN";
         public const string CLOSED = "CLOSED";
+
+        public const byte STX = 0x02;
+        public const byte ETX = 0x03;
+        public const byte EOT = 0x04;
+        public const byte ACK = 0x06;
+        public const byte NAK = 0x15;
     }
     public class CC3R
     {
@@ -6865,40 +6994,6 @@ namespace CM18tool
         {
             value = value.ToUpper();
             uint result = Convert.ToUInt32(value, 16);// 0;
-            //string temp = "";
-            //uint molt = 0;
-            //if (value != "NO ANSWER")
-            //{
-            //    for (int i = 1; i <= value.Length; i++)
-            //    {
-            //        temp = value.Substring(value.Length - i, 1);
-            //        switch (temp)
-            //        {
-            //            case "A":
-            //                molt = 10;
-            //                break;
-            //            case "B":
-            //                molt = 11;
-            //                break;
-            //            case "C":
-            //                molt = 12;
-            //                break;
-            //            case "D":
-            //                molt = 13;
-            //                break;
-            //            case "E":
-            //                molt = 14;
-            //                break;
-            //            case "F":
-            //                molt = 15;
-            //                break;
-            //            default:
-            //                molt = Convert.ToUInt32(temp);
-            //                break;
-            //        }
-            //        result += Convert.ToUInt32(Math.Pow(16, i - 1) * molt);
-            //    }
-            //}
             return result;
 
         }
@@ -6908,41 +7003,6 @@ namespace CM18tool
             long bits = Convert.ToInt64(value, 16);
             double result = BitConverter.Int64BitsToDouble(bits);
 
-            //double result = 0;
-            //string temp = "";
-            //double molt = 0;
-            //if (value != "NO ANSWER")
-            //{
-            //    for (int i = 1; i <= value.Length; i++)
-            //    {
-            //        temp = value.Substring(value.Length - i, 1);
-            //        switch (temp)
-            //        {
-            //            case "A":
-            //                molt = 10;
-            //                break;
-            //            case "B":
-            //                molt = 11;
-            //                break;
-            //            case "C":
-            //                molt = 12;
-            //                break;
-            //            case "D":
-            //                molt = 13;
-            //                break;
-            //            case "E":
-            //                molt = 14;
-            //                break;
-            //            case "F":
-            //                molt = 15;
-            //                break;
-            //            default:
-            //                molt = Convert.ToInt16(temp);
-            //                break;
-            //        }
-            //        result += Convert.ToDouble(Math.Pow(16, i - 1) * molt);
-            //    }
-            //}
             return result;
         }
         /// <summary>

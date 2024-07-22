@@ -46,7 +46,51 @@ namespace INI
         {
             WritePrivateProfileString(section ?? EXE, key, value, theFile);
         }
+        
+        public void SetValueArray (string section, string key, string[] values)
+        {
+            string[] lines = File.ReadAllLines(theFile);
+            int sectionId = -1;
+            for (int i = 0; i < lines.Length; i++)
+            {
+                if (lines[i].Trim().Equals($"[{section}]"))
+                {
+                    sectionId = i;
+                    break;
+                }
+            }
 
+            if (sectionId == -1)
+            {
+                using (StreamWriter writer = File.AppendText(theFile))
+                {
+                    writer.WriteLine();
+                    writer.WriteLine($"[{section}]");
+                    for (int i = 0; i < values.Length; i++)
+                    {
+                        writer.WriteLine($"{key}={values[i]}");
+                    }
+                }
+            }
+            else
+            {
+                using (StreamWriter writer = new StreamWriter(theFile))
+                {
+                    for (int i = 0; i <= sectionId; i++)
+                    {
+                        writer.WriteLine(lines[i]);
+                    }
+                    for (int i = 0; i < values.Length; i++)
+                    {
+                        writer.WriteLine($"{key}={values[i]}");
+                    }
+                    for (int i = sectionId + 1; i < lines.Length; i++)
+                    {
+                        writer.WriteLine(lines[i]);
+                    }
+                }
+            }
+        }
         /// <summary>
         /// Initializes a new instance of the <see cref="IniFile"/> class.
         /// </summary>

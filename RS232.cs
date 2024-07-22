@@ -124,7 +124,7 @@ namespace CM18tool
                     goto endCommand;
                 }
                 bytesReceived = mySerial.BytesToRead;
-                Arca.WaitingTime(100);
+                System.Threading.Thread.Sleep(100);
             } while (mySerial.BytesToRead == 0 && commandAnswer == "") ;
             if (commandAnswer != "")
                 goto endCommand;
@@ -132,17 +132,19 @@ namespace CM18tool
             mySerial.Read(dataReceived, 0, mySerial.BytesToRead);
             for (int i = 0; i < dataReceived.Length; i++)
             {
-                commandAnswer += Arca.Dec2Hex(dataReceived[i], 2);
+                commandAnswer += Dec2Hex(dataReceived[i], 2);
             }
-            commandAnswer = Arca.Hex2Ascii(commandAnswer);
+            commandAnswer = Hex2Ascii(commandAnswer);
 
             endCommand:
             DataReceived(commandAnswer, null);
+            
             return commandAnswer;
 
 
 
         }
+        
 
         public string SendCommand(string command,string FwData, int nByteAnswer = 1, int timeOut = 5000)
         {
@@ -151,7 +153,7 @@ namespace CM18tool
             string tmp = "";
             for (int i = 0; i < FwData.Length; i++)
             {
-                tmp += Arca.Ascii2Hex(FwData.Substring(i, 1));
+                tmp += Ascii2Hex(FwData.Substring(i, 1));
             }
             commandSent = command + tmp;
             command += tmp;
@@ -187,7 +189,7 @@ namespace CM18tool
             //frmComScope.lstComScope.Items.Add("SND: " + command);
             DataSent(command, null);
             mySerial.Write(commandToSend, 0, command.Length / 2);
-            Arca.WaitingTime(100);
+            System.Threading.Thread.Sleep(100);
             if (nByteAnswer > 0)
             {
                 //serialRead:
@@ -199,18 +201,18 @@ namespace CM18tool
                         goto endCommand;
                     }
                     bytesReceived = mySerial.BytesToRead;
-                    Arca.WaitingTime(100);
+                    System.Threading.Thread.Sleep(100);
                 } while (bytesReceived < nByteAnswer);  //while (bytesReceived == 0); //} while (bytesReceived < nByteAnswer);
                 byte[] dataReceived = new byte[bytesReceived];
                 mySerial.Read(dataReceived, 0, bytesReceived);
                 for (int i = 0; i < dataReceived.Length; i++)
                 {
-                    commandAnswer += Arca.Dec2Hex(dataReceived[i], 2);
+                    commandAnswer += Dec2Hex(dataReceived[i], 2);
                 }
             }
             else
             {
-                Arca.WaitingTime(timeOut);
+                System.Threading.Thread.Sleep(timeOut);
             }
 
             endCommand:
@@ -254,7 +256,7 @@ namespace CM18tool
             //frmComScope.lstComScope.Items.Add("SND: " + command);
             DataSent(command, null);
             mySerial.Write(commandToSend, 0, command.Length/2);
-            Arca.WaitingTime(100);
+            System.Threading.Thread.Sleep(100);
             if (nByteAnswer > 0)
             {
                 //serialRead:
@@ -266,18 +268,18 @@ namespace CM18tool
                         goto endCommand;
                     }
                     bytesReceived = mySerial.BytesToRead;
-                    Arca.WaitingTime(100);
+                    System.Threading.Thread.Sleep(100);
                 } while (bytesReceived < nByteAnswer);  //while (bytesReceived == 0); //} while (bytesReceived < nByteAnswer);
                 byte[] dataReceived = new byte[bytesReceived];
                 mySerial.Read(dataReceived, 0, bytesReceived);
                 for (int i = 0; i < dataReceived.Length; i++)
                 {
-                    commandAnswer += Arca.Dec2Hex(dataReceived[i], 2);
+                    commandAnswer += Dec2Hex(dataReceived[i], 2);
                 }
             }
             else
             {
-                Arca.WaitingTime(timeOut);
+                System.Threading.Thread.Sleep(timeOut);
             }
 
         endCommand:
@@ -320,7 +322,7 @@ namespace CM18tool
             //frmComScope.lstComScope.Items.Add("SND: " + command);
             DataSent(command, null);
             mySerial.Write(commandToSend, 0, command.Length / 2);
-            Arca.WaitingTime(100);
+            System.Threading.Thread.Sleep(100);
             if (nByteAnswer > 0)
             {
                 //serialRead:
@@ -332,24 +334,54 @@ namespace CM18tool
                         goto endCommand;
                     }
                     bytesReceived = mySerial.BytesToRead;
-                    Arca.WaitingTime(100);
+                    System.Threading.Thread.Sleep(100);
                 } while (bytesReceived < nByteAnswer);  //while (bytesReceived == 0); //} while (bytesReceived < nByteAnswer);
                 byte[] dataReceived = new byte[bytesReceived];
                 mySerial.Read(dataReceived, 0, bytesReceived);
                 for (int i = 0; i < dataReceived.Length; i++)
                 {
-                    commandAnswer += Arca.Dec2Hex(dataReceived[i], 2);
+                    commandAnswer += Dec2Hex(dataReceived[i], 2);
                 }
             }
             else
             {
-                Arca.WaitingTime(timeOut);
+                System.Threading.Thread.Sleep(timeOut);
             }
 
             endCommand:
             myTimer.Reset();
             DataReceived(commandAnswer, null);
             return commandAnswer;
+        }
+
+        string Ascii2Hex(string value)
+        {
+            StringBuilder sb = new StringBuilder();
+            byte[] inputBytes = Encoding.UTF8.GetBytes(value);
+            foreach (byte b in inputBytes)
+            {
+                sb.Append(string.Format("{0:X2}", b));
+            }
+            return sb.ToString();
+        }
+        string Hex2Ascii(string value)
+        {
+            string result = string.Empty;
+            if (value != "NO ANSWER")
+            {
+                for (int i = 0; i < value.Length; i += 2)
+                {
+                    string char2Convert = value.Substring(i, 2);
+                    int n = Convert.ToInt32(char2Convert, 16);
+                    char c = (char)n;
+                    result += c.ToString();
+                }
+            }
+            return result;
+        }
+        string Dec2Hex(int value, int bit = 0)
+        {
+            return value.ToString("X" + bit);
         }
     }
 }
