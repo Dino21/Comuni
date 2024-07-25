@@ -1827,14 +1827,17 @@ namespace myArcaNameSpace
             if (!mySerial.IsOpen)
                 mySerial.Open();
             byte[] frame = MakeFrameID(destinationID, MODULE_ID_UPPER_CTRL, CAN_MSG_CMD, CAN_DATA_COMPLETE, CMD_GET_MODULE_SN);
-        invioComando:
             byte[] temp = SendCommand(frame);
-            for (int i = 1; i < canFrame.data.Length; i++)
-            {
+            for (int i = 0; i < canFrame.data.Length; i++)
                 myList.Add(canFrame.data[i]);
-            }
+        incompleto:
             if (canFrame.dataComplete == "1")
-                goto invioComando;
+            {
+                temp = SendCommand(frame);
+                for (int i = 1; i < canFrame.data.Length; i++)
+                    myList.Add(canFrame.data[i]);
+                goto incompleto;
+            }
             mySerial.Close();
             result = myList.ToArray();
             return result;
