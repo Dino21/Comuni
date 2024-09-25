@@ -25,6 +25,36 @@ namespace MySQLUtils
             myDBConnection = new MySqlConnection(connectionString);
         }
 
+        public int GetLastID(string tableName, string idFieldName)
+        {
+            int result = -1;
+            try
+            {
+                result = Convert.ToInt16(GetStringValue("SELECT* FROM " + tableName + " ORDER BY " + idFieldName +" DESC LIMIT 1", idFieldName));
+                
+            }
+            catch (Exception)
+            {
+
+            }
+            return result;
+        }
+
+        public int AddRow(string tableName, string fieldNames, string fieldValues)
+        {
+            int result = -1;
+            try
+            {
+                mySqlString = "INSERT INTO " + tableName + " (" + fieldNames + ") VALUES (" + fieldValues + ")";
+                SetDBCommand(mySqlString);
+                result = myDBCommand.ExecuteNonQuery();
+            }
+            catch (Exception)
+            {
+            }
+            return result;
+        }
+
         public int ExecuteSqlCommand(string sqlString)
         {
             int result = -1;

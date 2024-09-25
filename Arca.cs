@@ -198,8 +198,22 @@ namespace myArcaNameSpace
             public SModuleInfo[] infoModules;
             public SReaderInfo infoReader;
             public SCassetteInfo[] infoCassette;
+            public SCertificationMeans[] certTest;
         }
-
+        public struct SCertificationMeans
+        {
+            public string destination;
+            public string denomination;
+            public double rateMean;
+            public double noteWidthMean;
+            public double noteHeightMean;
+            public double deltaAMean;
+            public double deltaBMean;
+            public double deltaCMean;
+            public double deltaDMean;
+            public double readerSkewMean;
+            public double trackSkewMean;
+        }
         public struct SReaderInfo
         {
             public string name;
@@ -385,6 +399,113 @@ namespace myArcaNameSpace
             public short deltaStackReject;
         }
 
+        public class CTransportReport
+        {
+            public short bnQty;
+            public CPhArrayReport[] photoArray;
+            public short skewMin;
+            public short skewMax;
+            public short skewMean;
+        }
+
+        public class CPhArrayReport
+        {
+            public byte phID;
+            public short skew;
+            public short deltaTime;
+        }
+        public class CReaderReport
+        {
+            public CNoteInfo[] note;
+        }
+        public struct SExtraInfo
+        {
+            public byte upHologram;
+            public byte lowHologram;
+            public byte error;
+        }
+        public struct SUnfitProcessFlag
+        {
+            public byte graff;
+            public byte contrast;
+            public byte format;
+            public byte corner;
+            public byte uvDeinked;
+            public byte tape;
+            public byte grid;
+            public byte soil;
+            public byte deysBorder;
+            public byte stain;
+            public byte closedTears;
+            public byte other;
+        }
+        public struct SRejectProcessFlag
+        {
+            public byte overrun;
+            public byte dim;
+            public byte @double;
+            public byte skew;
+            public byte uv;
+            public byte mag;
+            public byte ir;
+            public byte cls;
+            public byte genericErr;
+            public byte abort;
+            public byte localiz;
+            public byte other;
+            public byte denDisable;
+            public byte tooLong;
+            public byte tbd;
+            public byte extremeUnfit;
+
+        }
+        public struct SBnJudgment
+        {
+            public byte judgment;
+            public byte curBank;
+        }
+        public struct SBankChannelInfo
+        {
+            public byte denomination;
+            public byte way;
+        }
+        public class CNoteInfo
+        {
+            public short bnNum;
+            public SBnJudgment bnJud;
+            public SBankChannelInfo bankInfo;
+            public SRejectProcessFlag rejFlags;
+            public SUnfitProcessFlag unfitFlags;
+            public byte bnHeight;
+            public byte bnWidth;
+            public byte bnOffset;
+            public short skew;
+            public double rateTT;
+            public short timeTT;
+            public SExtraInfo extra;
+        }
+
+        public struct STransportReport
+        {
+            //public short bnPassed;
+            //public short barRead;
+            //public SSingleBarrier[] phArray;
+            //public SSingleBnReport[] bnReport;
+        }
+
+        public struct SSingleBnReport
+        {
+            public byte skewMin;
+            public byte skewMax;
+            public byte skewDelta;
+        }
+
+        public struct SSingleBarrier
+        {
+            public byte phArrayID;
+            public short skew;
+            public short delta;
+        }
         public struct SReader
         {
             public string serialNumber;
@@ -638,7 +759,7 @@ namespace myArcaNameSpace
         public SCommand GetModuleConfiguration = new SCommand();
         public SCommand TestReaderMagSensor = new SCommand();
         public SCommand GetOpbBoardBinType = new SCommand();
-        public SCommand GetFeederReport = new SCommand();
+        public SCommand GetTestingReport = new SCommand();
         public SCommand GetPhBinCalibration = new SCommand();
         public SCommand GetPowerState = new SCommand();
         public SCommand CheckMotorMoving = new SCommand();
@@ -939,7 +1060,7 @@ namespace myArcaNameSpace
             TestModeEnableDisable.bytesAnswer = 0x02;
             TransferBanknotes.msgId = 0x01;
             TransferBanknotes.msgOpCode = new byte[] { 0x01, 0x3B };
-            TransferBanknotes.bytesAnswer = 0x03;
+            TransferBanknotes.bytesAnswer = 0x02;
             TransferBanknotes.timeOut = 12000;
             CheckHorTranspSpeed.msgId = 0x01;
             CheckHorTranspSpeed.msgOpCode = new byte[] { 0x01, 0x3C };
@@ -976,10 +1097,10 @@ namespace myArcaNameSpace
             GetOpbBoardBinType.msgId = 0x01;
             GetOpbBoardBinType.msgOpCode = new byte[] { 0x01, 0x46 };
             GetOpbBoardBinType.bytesAnswer = 17;
-            GetFeederReport.msgId = 0x01;
-            GetFeederReport.msgOpCode = new byte[] { 0x01, 0x47 };
-            GetFeederReport.bytesAnswer = 9;
-            GetFeederReport.timeOut = 5000;
+            GetTestingReport.msgId = 0x01;
+            GetTestingReport.msgOpCode = new byte[] { 0x01, 0x47 };
+            GetTestingReport.bytesAnswer = 9;
+            GetTestingReport.timeOut = 5000;
             GetPhBinCalibration.msgId = 0x01;
             GetPhBinCalibration.msgOpCode = new byte[] { 0x01, 0x48 };
             GetPhBinCalibration.bytesAnswer = 6;
@@ -1828,7 +1949,7 @@ namespace myArcaNameSpace
                 mySerial.Open();
             byte[] frame = MakeFrameID(destinationID, MODULE_ID_UPPER_CTRL, CAN_MSG_CMD, CAN_DATA_COMPLETE, CMD_GET_MODULE_SN);
             byte[] temp = SendCommand(frame);
-            for (int i = 0; i < canFrame.data.Length; i++)
+            for (int i = 1; i < canFrame.data.Length; i++)
                 myList.Add(canFrame.data[i]);
         incompleto:
             if (canFrame.dataComplete == "1")
