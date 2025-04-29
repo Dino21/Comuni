@@ -14,6 +14,7 @@ using System.Xml;
 using CM18tool;
 using Newtonsoft.Json;
 using System.Timers;
+using System.Data;
 //using System.Collections;
 //using System.Reflection;
 //using System.Diagnostics;
@@ -78,7 +79,37 @@ namespace myArcaNameSpace
             public string readingStation;
             public string barcodeReader;
         }
-        
+
+        public class ModuleStatus
+        {
+            public byte moduleID;
+            public string moduleName;
+            public short dec;
+            public string hex;
+            public string name;
+            public string description;
+        }
+
+        public class CMachineStatus
+        {
+            public ModuleStatus rtc;
+            public ModuleStatus reader;
+            public ModuleStatus pho1;
+            public ModuleStatus pho2;
+            public ModuleStatus safe;
+            public ModuleStatus alm;
+            public ModuleStatus[] ddm;
+        }
+
+        public struct SR5000FeederDbCfg
+        {
+            public string code;
+            public string tl;
+            public string fwPHO2;
+            public string cdfName;
+            public int debugMode;
+            public int jumpPhAdj;
+        }
         public struct SR5000Feeder
         {
             public string code;
@@ -165,8 +196,11 @@ namespace myArcaNameSpace
             public string labelSerialNumber;
             public ushort status;
             public short cassetteNumber;
+            public string cageType;
             public Module.SPhoto cashL;
             public Module.SPhoto cashR;
+            public string safeFwFilename;
+            public string alarmFwFilename;
         }
         public struct SUTM
         {
@@ -198,22 +232,131 @@ namespace myArcaNameSpace
             public SModuleInfo[] infoModules;
             public SReaderInfo infoReader;
             public SCassetteInfo[] infoCassette;
-            public SCertificationMeans[] certTest;
+            //public SCertificationDetails[] certTest;
+            public STestBivio bivioTest;
+            public STestTrivio trivioTest;
+            public SSkewBehavior[] skewTrivio;
+            public STimingBehavior[] timingTrivio;
+            public STrackStatistics trackStatistics;
+            public string fwRtcFilename;
+            public string fwPh01Filename;
+            public string fwPh02Filename;
+            public string fwSafeFilename;
+            public string fwUiFilename;
         }
-        public struct SCertificationMeans
+
+        public struct SSingleTrackDetails
         {
+            public int qtyBn;
+            public float skMean;
+            public float skMax;
+            public double skDevStd;
+        }
+        public struct STrackStatistics
+        {
+            public SSingleTrackDetails trkOutput;
+            public SSingleTrackDetails trkReject;
+            public SSingleTrackDetails trkSafe;
+        }
+        
+
+        public struct STestBivio
+        {
+            public SBnTrackingDetails[] bnTracking;
+            public SSkewBehavior skFeederReader;
+            public SSkewBehavior skReaderSynctrv;
+            public SSkewBehavior skSyncoutStackout;
+            public SSkewBehavior skSyncoutStackrej;
+            public STimingBehavior timeFeederSynctrv;
+            public STimingBehavior timeSyncoutStackout;
+            public STimingBehavior timeSyncoutStackrej;
+        }
+
+        public struct STestTrivio
+        {
+            public SBnTrackingDetails[] bnTracking;
+            public SSkewBehavior skFeederReader;
+            public SSkewBehavior skReaderSynctrv;
+            public SSkewBehavior skSynctrvCash;
+            public SSkewBehavior skSyntrvSyncout;
+            public STimingBehavior timeFeederSynctrv;
+            public STimingBehavior timeSynctrvCash;
+            public STimingBehavior timeSyntrvSyncout;
+        }
+
+        public struct SBnTrackingDetails
+        {
+            public byte destination;
+            public string denomination;
+            public SPhotoArrayInfo[] phInfo;
+        }
+        public struct SPhotoArrayInfo
+        {
+            public byte idPhArray;
+            public short skew;
+            public short delta;
+        }
+        public struct SCertificationDetails
+        {
+            public SBnTrackingDetails[] bnTracking;
             public string destination;
             public string denomination;
+            public double rateMin;
             public double rateMean;
+            public double rateMax;
+            public double noteWidthMin;
             public double noteWidthMean;
+            public double noteWidthMax;
+            public double noteHeightMin;
             public double noteHeightMean;
+            public double noteHeightMax;
+            public double deltaAMin;
             public double deltaAMean;
+            public double deltaAMax;
+            public double deltaBMin;
             public double deltaBMean;
+            public double deltaBMax;
+            public double deltaCMin;
             public double deltaCMean;
+            public double deltaCMax;
+            public double deltaDMin;
             public double deltaDMean;
+            public double deltaDMax;
+            public double readerSkewMin;
             public double readerSkewMean;
+            public double readerSkewMax;
+            public double trackSkewMin;
             public double trackSkewMean;
+            public double trackSkewMax;
+            public double trackDeltaSkewMax;
         }
+
+        public struct SSkewBehavior
+        {
+            public SBnTrackingDetails[] bnTracking;
+            public string parameter;
+            public int qtyBn;
+            public double meanAbs;
+            public double mean;
+            public float stdDev;
+            public double asym;
+            public int qtyOutliersPos;
+            public int qtyOutliersNeg;
+            public int outlierPosRef;
+            public int outlierNegRef;
+        }
+
+        public struct STimingBehavior
+        {
+            public SBnTrackingDetails[] bnTracking;
+            public string parameter;
+            public int qtyBn;
+            public double mean;
+            public float stdDev;
+            public int qtyOutliersPos;
+            public int outlierPosRef;
+        }
+
         public struct SReaderInfo
         {
             public string name;
@@ -258,8 +401,44 @@ namespace myArcaNameSpace
 
         public struct SPhotoBoard
         {
-            public byte type;
+            public PhotoType type;
         }
+        public enum PhotoType : byte
+        {
+            NO_E2P = 0x01,
+            E2P_NOT_PROGRAMMED = 0x02,
+            E2P_PROGRAMMED = 0x03
+        }
+
+        public enum DenomValue:int
+        {
+            A = 1,
+            B = 2,
+            C = 5,
+            D = 10,
+            E = 20,
+            F = 25,
+            G = 50,
+            H = 100,
+            I = 200,
+            J = 500,
+            K = 1000,
+            L = 2000,
+            M = 5000,
+            N = 10000,
+            O = 20000,
+            P = 50000,
+            Q = 100000,
+            R = 250,
+            S = 200000,
+            T = 250000,
+            U = 500000,
+            V = 1000000,
+            W = 2000000,
+            X = 5000000,
+            Y = 10000000
+        }
+
 
         public struct SUpperModuleConfiguration
         {
@@ -375,6 +554,52 @@ namespace myArcaNameSpace
             public short stallCurrPreEcc;
         }
 
+        public struct SUploadShortStatistic
+        {
+            public short bnProcessed;
+            public short bnAcepted;
+            public short bnRejected;
+            public short bnSuspected;
+            public short bnUnclear;
+            public short bnUnfit;
+            public short rejClass;
+            public short rejIr;
+            public short rejMag;
+            public short rejUv;
+            public short rejSkew;
+            public short rejDouble;
+            public short rejDim;
+            public short rejOverrun;
+            public short rejGeneric;
+            public short rejAbort;
+            public short rejLocate;
+            public short rejOther;
+            public short rejChDisabled;
+            public short rejTooLong;
+            public short rejExtremeUnfit;
+            public short unfitSoiling;
+            public short unfitGrid;
+            public short unfitTape;
+            public short unfitUvDeink;
+            public short unfitCorner;
+            public short unfitFormat;
+            public short unfitContrast;
+            public short unfitGraffiti;
+            public short unfitDyeBordes;
+            public short unfitStain;
+            public short unfitClosedTears;
+            public short unfitOther;
+        }
+
+        public struct SDimBn
+        {
+            public byte frontWidth;
+            public byte frontHeight;
+            public byte rearWidth;
+            public byte rearHeight;
+            public byte category;
+        }
+
         public struct STransferBn
         {
             public STransferData[] bn;
@@ -399,6 +624,36 @@ namespace myArcaNameSpace
             public short deltaStackReject;
         }
 
+        public class CRangeTrackPhArray
+        {
+            public double skMeanMax;
+            public double skStdDevMax;
+            public double skPosOutliersRef;
+            public double skPosOutliersMaxQty;
+            public double skNegOutliersRef;
+            public double skNegOutliersMaxQty;
+            public double timeMeanMax;
+            public double timeStdDevMax;
+            public double timePosOutliersRef;
+            public double timePosOutliersMaxQty;
+        }
+
+        public class CFeederReport
+        {
+            public short nBn;
+            public short nStrobeOn;
+            public short nDouble;
+            public short nCalcRate;
+            public short[] rate;
+            public short nPhState;
+            public CFeedRptPhDetail[] phDetail;
+        }
+        public class CFeedRptPhDetail
+        {
+            public int time;
+            public byte photo;
+            public byte state;
+        }
         public class CTransportReport
         {
             public short bnQty;
@@ -413,6 +668,7 @@ namespace myArcaNameSpace
             public byte phID;
             public short skew;
             public short deltaTime;
+            public byte nBn;
         }
         public class CReaderReport
         {
@@ -594,6 +850,7 @@ namespace myArcaNameSpace
             public byte drainSelect;
             public double lvlVoid;
             public double lvlDoc;
+            public double lvlWork;
             public string name;
             public string result;
         }
@@ -606,16 +863,19 @@ namespace myArcaNameSpace
         public struct SFw
         {
             public string name;
-            public string release;
             public string version;
-            public string moduleSN;
+            public string release;
             public string boardSN;
+            public string moduleSN;
+            public string bootVer;
+            public string bootRel;
         }
         public struct SElectronicBoard
         {
             public string name;
             public string moduleSN;
             public string boardSN;
+            public short bootInfo;
             public SFw fw;
         }
     }
@@ -652,8 +912,9 @@ namespace myArcaNameSpace
             public byte[] msgOpCode;
             public int timeOut;
             public byte bytesAnswer;
+            public string cmdName;
         }
-
+        
         enum PresetArea
         {
             AllSystem=0x00,
@@ -703,7 +964,14 @@ namespace myArcaNameSpace
         public SCommand CheckCashDataError = new SCommand();
         public SCommand ResetCashDataError = new SCommand();
         public SCommand ReaderCalibration = new SCommand();
+        public SCommand ProgramModuleBoot = new SCommand();
+        public SCommand CheckSystemConsistency = new SCommand();
+        public SCommand ReadE2PBlockData = new SCommand();
+        public SCommand WriteE2PBlockData = new SCommand();
         public SCommand SystemReset = new SCommand();
+        public SCommand StorePhotoAdjInE2P = new SCommand();
+        public SCommand WritePhSetupFromBackup = new SCommand();
+        public SCommand GetModuleBootInformation = new SCommand();
         public SCommand GetSystemConfiguration = new SCommand();
         public SCommand GetStatus = new SCommand();
         public SCommand GetCashData = new SCommand();
@@ -720,6 +988,9 @@ namespace myArcaNameSpace
         public SCommand StressTest = new SCommand();
         public SCommand StartupCompleted = new SCommand();
         public SCommand ExportSystemTraceData = new SCommand();
+        public SCommand BinWarningInformation = new SCommand();
+        public SCommand NoteInformation = new SCommand();
+        public SCommand PowerDownWarning = new SCommand();
         public SCommand GetPhotoStatus = new SCommand();
         public SCommand PhotoAdjust = new SCommand();
         public SCommand GetPhotoParameters = new SCommand();
@@ -731,6 +1002,7 @@ namespace myArcaNameSpace
         public SCommand FactoryAdjust = new SCommand();
         public SCommand PhotoAdjustFactoryMode = new SCommand();
         public SCommand GetSwitchStatus = new SCommand();
+        public SCommand GetPhotoInformation = new SCommand();
         public SCommand GetDiverterParameters = new SCommand();
         public SCommand SetDiverterParameters = new SCommand();
         public SCommand OperateDiverter = new SCommand();
@@ -776,7 +1048,8 @@ namespace myArcaNameSpace
 
         //public SCommand  = new SCommand();
         #endregion
-
+        public List<SCommand> UtmCommands = new List<SCommand>();
+        
         public UtmProtocol(ref LibUsbDotNet.UsbDevice myUsbDevice)
         {
             InitializeCommands();
@@ -791,329 +1064,473 @@ namespace myArcaNameSpace
             Preset.msgId = 0x01;
             Preset.msgOpCode = new byte[] { 0x00, 0x01 };
             Preset.bytesAnswer = 0x02;
+            Preset.cmdName = "Preset";
             Deposit.msgId = 0x01;
             Deposit.msgOpCode = new byte[] { 0x00, 0x02 };
             Deposit.bytesAnswer = 0x02;
+            Deposit.cmdName = "Deposit";
             Dispense.msgId = 0x01;
             Dispense.msgOpCode = new byte[] { 0x00, 0x03 };
             Dispense.bytesAnswer = 0x02;
+            Dispense.cmdName = "Dispense";
             Counting.msgId = 0x01;
             Counting.msgOpCode = new byte[] { 0x00, 0x04 };
             Counting.bytesAnswer = 0x02;
             Counting.timeOut = 3000;
+            Counting.cmdName = "Counting";
             Recovery.msgId = 0x01;
             Recovery.msgOpCode = new byte[] { 0x00, 0x05 };
             Recovery.bytesAnswer = 0x02;
+            Recovery.cmdName = "Recovery";
             GetReport.msgId = 0x01;
             GetReport.msgOpCode = new byte[] { 0x00, 0x06 };
             GetReport.bytesAnswer = 0x80;// deposit=128(0x80) / dispence=38(0x26) / counting=63(0x3F)
+            GetReport.cmdName = "Get Report";
             GetLastDepositInfo.msgId = 0x01;
             GetLastDepositInfo.msgOpCode = new byte[] { 0x00, 0x07 };
             GetLastDepositInfo.bytesAnswer = 0x14;
+            GetLastDepositInfo.cmdName = "GetLastDepositInfo";
             Open.msgId = 0x01;
             Open.msgOpCode = new byte[] { 0x00, 0x08 };
             Open.bytesAnswer = 0x02;
+            Open.cmdName = "Open";
             Close.msgId = 0x01;
             Close.msgOpCode = new byte[] { 0x00, 0x09 };
             Close.bytesAnswer = 0x02;
+            Close.cmdName = "Close";
             SetCurrencies.msgId = 0x01;
             SetCurrencies.msgOpCode = new byte[] { 0x00, 0x0A };
             SetCurrencies.bytesAnswer = 0x02;
+            SetCurrencies.cmdName = "Set Currencies";
             GetCurrencies.msgId = 0x01;
             GetCurrencies.msgOpCode = new byte[] { 0x00, 0x0B };
             GetCurrencies.bytesAnswer = 0x2B;
+            GetCurrencies.cmdName = "Get Currencies";
             EnableCurrencies.msgId = 0x01;
             EnableCurrencies.msgOpCode = new byte[] { 0x00, 0x0C };
             EnableCurrencies.bytesAnswer = 0x02;
+            EnableCurrencies.cmdName = "Enable Currencies";
             EnableDenom.msgId = 0x01;
             EnableDenom.msgOpCode = new byte[] { 0x00, 0x0D };
             EnableDenom.bytesAnswer = 0x02;
+            EnableDenom.cmdName = "Enable Denom";
             SetDrumDenom.msgId = 0x01;
             SetDrumDenom.msgOpCode = new byte[] { 0x00, 0x0E };
             SetDrumDenom.bytesAnswer = 0x02;
+            SetDrumDenom.cmdName = "Set Drum Denomination";
             GetDrumDenom.msgId = 0x01;
             GetDrumDenom.msgOpCode = new byte[] { 0x00, 0x0F };
             GetDrumDenom.bytesAnswer = 0x0B;
+            GetDrumDenom.cmdName = "Get Drum Denomination";
             SetConfiguration.msgId = 0x01;
             SetConfiguration.msgOpCode = new byte[] { 0x00, 0x10 };
             SetConfiguration.bytesAnswer = 0x02;
+            SetConfiguration.cmdName = "Set Configuration";
             GetConfiguration.msgId = 0x01;
             GetConfiguration.msgOpCode = new byte[] { 0x00, 0x11 };
             GetConfiguration.bytesAnswer = 0x02;//allarmi=0x04 / dataora / cassetti / hub / unfit / cassetti
+            GetConfiguration.cmdName = "Get Configuration";
             UpdateFirmware.msgId = 0x01;
             UpdateFirmware.msgOpCode = new byte[] { 0x00, 0x12 };
             UpdateFirmware.bytesAnswer = 0x02;
             UpdateFirmware.timeOut = 1000;
+            UpdateFirmware.cmdName = "Update Firmware";
             InitializeDrum.msgId = 0x01;
             InitializeDrum.msgOpCode = new byte[] { 0x00, 0x13 };
             InitializeDrum.bytesAnswer = 0x02;
+            InitializeDrum.cmdName = "Initialize Drum";
             AssignDrumName.msgId = 0x01;
             AssignDrumName.msgOpCode = new byte[] { 0x00, 0x14 };
             AssignDrumName.bytesAnswer = 0x02;
+            AssignDrumName.cmdName = "Assign Drum Name";
             SetModuleInfo.msgId = 0x01;
             SetModuleInfo.msgOpCode = new byte[] { 0x00, 0x15 };
             SetModuleInfo.bytesAnswer = 0x02;
             SetModuleInfo.timeOut = 1500;
+            SetModuleInfo.cmdName = "Set Module Info";
             GetModuleInfo.msgId = 0x01;
             GetModuleInfo.msgOpCode = new byte[] { 0x00, 0x16 };
             GetModuleInfo.bytesAnswer = 0x30; // lettore=0x76 / cassetto=0x3A
+            GetModuleInfo.cmdName = "Get Module Info";
             TroyHorse.msgId = 0x01;
             TroyHorse.msgOpCode = new byte[] { 0x00, 0x17 };
             TroyHorse.bytesAnswer = 0x02; // + 2 + lunghezza risposta 
+            TroyHorse.cmdName = "Troy horse";
             LockUnlockUpperPart.msgId = 0x01;
             LockUnlockUpperPart.msgOpCode = new byte[] { 0x00, 0x18 };
             LockUnlockUpperPart.bytesAnswer = 0x02;
+            LockUnlockUpperPart.cmdName = "Lock Unlock Upper Part";
             ImportLog.msgId = 0x01;
             ImportLog.msgOpCode = new byte[] { 0x00, 0x19 };
             ImportLog.bytesAnswer = 0x05; // + lunghezza log (0-1024)
+            ImportLog.cmdName = "Import Log";
             GetUpperBlockState.msgId = 0x01;
             GetUpperBlockState.msgOpCode = new byte[] { 0x00, 0x1A };
             GetUpperBlockState.bytesAnswer = 0x03;
+            GetUpperBlockState.cmdName = "Get Upper Block State";
             GetDrumsPhysicalPos.msgId = 0x01;
             GetDrumsPhysicalPos.msgOpCode = new byte[] { 0x00, 0x1B };
             GetDrumsPhysicalPos.bytesAnswer = 0x09;
+            GetDrumsPhysicalPos.cmdName = "Get Drums Physical Pos";
             Reassign.msgId = 0x01;
             Reassign.msgOpCode = new byte[] { 0x00, 0x1C };
             Reassign.bytesAnswer = 0x04;
+            Reassign.cmdName = "Reassign";
             GetAllarmBoardType.msgId = 0x01;
             GetAllarmBoardType.msgOpCode = new byte[] { 0x00, 0x1D };
             GetAllarmBoardType.bytesAnswer = 0x03;
+            GetAllarmBoardType.cmdName = "Get Allarm Board Type";
             GetSystemLife.msgId = 0x01;
             GetSystemLife.msgOpCode = new byte[] { 0x00, 0x1E };
             GetSystemLife.bytesAnswer = 0x2C;
+            GetSystemLife.cmdName = "Get System Life";
             GetActiveCurrencies.msgId = 0x01;
             GetActiveCurrencies.msgOpCode = new byte[] { 0x00, 0x1F };
             GetActiveCurrencies.bytesAnswer = 0x04;
+            GetActiveCurrencies.cmdName = "Get Active Currencies";
             SetNumActiveCurr.msgId = 0x01;
             SetNumActiveCurr.msgOpCode = new byte[] { 0x00, 0x20 };
             SetNumActiveCurr.bytesAnswer = 0x02;
+            SetNumActiveCurr.cmdName = "Set Num Active Curr";
             GetNumActiveCurr.msgId = 0x01;
             GetNumActiveCurr.msgOpCode = new byte[] { 0x00, 0x21 };
             GetNumActiveCurr.bytesAnswer = 0x03;
+            GetNumActiveCurr.cmdName = "Get Num Active Curr";
             SetActiveCurr.msgId = 0x01;
             SetActiveCurr.msgOpCode = new byte[] { 0x00, 0x22 };
             SetActiveCurr.bytesAnswer = 0x02;
+            SetActiveCurr.cmdName = "Set Active Curr";
             SetSystemLife.msgId = 0x01;
             SetSystemLife.msgOpCode = new byte[] { 0x00, 0x23 };
             SetSystemLife.bytesAnswer = 0x02;
+            SetSystemLife.cmdName = "Set System Life";
             SetDrumName.msgId = 0x01;
             SetDrumName.msgOpCode = new byte[] { 0x00, 0x24 };
             SetDrumName.bytesAnswer = 0x02;
+            SetDrumName.cmdName = "Set Drum Name";
             GetNoteCounters.msgId = 0x01;
             GetNoteCounters.msgOpCode = new byte[] { 0x00, 0x25 };
             GetNoteCounters.bytesAnswer = 0x30;
+            GetNoteCounters.cmdName = "Get Note Counters";
             CheckCashDataError.msgId = 0x01;
             CheckCashDataError.msgOpCode = new byte[] { 0x00, 0x26 };
             CheckCashDataError.bytesAnswer = 0x03;
+            CheckCashDataError.cmdName = "Check Cash Data Error";
             ResetCashDataError.msgId = 0x01;
             ResetCashDataError.msgOpCode = new byte[] { 0x00, 0x27 };
             ResetCashDataError.bytesAnswer = 0x02;
+            ResetCashDataError.cmdName = "Reset Cash Data Error";
             ReaderCalibration.msgId = 0x01;
             ReaderCalibration.msgOpCode = new byte[] { 0x00, 0x28 };
             ReaderCalibration.bytesAnswer = 0x02;
+            ReaderCalibration.cmdName = "Reader Calibration";
             //set safe door electronic lock // 0x01 0x0029
             // move shutter // 0x01 0x002B
             // read shutter position // 0x01 0x002C
-            // program modules boot loader 0x01 0x002D
-            // check consistency of system configuration // 0x01 0x002E
+            ProgramModuleBoot.msgId = 0x01;
+            ProgramModuleBoot.msgOpCode = new byte[] { 0x00, 0x2D }; // 
+            ProgramModuleBoot.bytesAnswer = 5;
+            ProgramModuleBoot.cmdName = "Program Boot Loader";
+            CheckSystemConsistency.msgId = 0x01;
+            CheckSystemConsistency.msgOpCode = new byte[] { 0x00, 0x2E };
+            CheckSystemConsistency.bytesAnswer = 9;
+            CheckSystemConsistency.cmdName = "Check system configuration consistency";
             // red sn of bn in drum module // 0x01 0x002F
-            // get drum physical pos and mcu // 0x01 0x0030
-            // read E2P block data // 0x01 0x0031
-            // write E2P block data // 0x01 0x0032
+            GetDrumsPhysicalPos.msgId = 0x01;
+            GetDrumsPhysicalPos.msgOpCode = new byte[] { 0x00, 0x30 };
+            GetDrumsPhysicalPos.bytesAnswer = 17;
+            GetDrumsPhysicalPos.cmdName = "Get drums physical position and MCU";
+            ReadE2PBlockData.msgId = 0x01;
+            ReadE2PBlockData.msgOpCode = new byte[] { 0x00, 0x31 };
+            ReadE2PBlockData.bytesAnswer = 4;
+            ReadE2PBlockData.cmdName = "Read E2P block data";
+            WriteE2PBlockData.msgId = 0x01;
+            WriteE2PBlockData.msgOpCode = new byte[] { 0x00, 0x32 };
+            WriteE2PBlockData.bytesAnswer = 4;
+            WriteE2PBlockData.cmdName = "Write E2P block data";
             SystemReset.msgId = 0x01;
             SystemReset.msgOpCode = new byte[] { 0x00, 0x33 };
             SystemReset.bytesAnswer = 0x02;
+            SystemReset.cmdName = "System Reset";
+            StorePhotoAdjInE2P.msgId = 0x01;
+            StorePhotoAdjInE2P.msgOpCode = new byte[] { 0x00, 0x34 };
+            StorePhotoAdjInE2P.bytesAnswer = 0x02;
+            StorePhotoAdjInE2P.cmdName = "Store the specific photo adjust value in E2P";
+            WriteE2PBlockData.msgId = 0x01;
+            WriteE2PBlockData.msgOpCode = new byte[] { 0x00, 0x35 };
+            WriteE2PBlockData.bytesAnswer = 0x02;
+            WriteE2PBlockData.cmdName = "Write photo sensor setup from backup block data";
+            GetModuleBootInformation.msgId = 0x01;
+            GetModuleBootInformation.msgOpCode = new byte[] { 0x00, 0x36 };
+            GetModuleBootInformation.bytesAnswer = 0x06;
+            GetModuleBootInformation.cmdName = "Get module boot loader information";
             GetSystemConfiguration.msgId = 0x02;
             GetSystemConfiguration.msgOpCode = new byte[] { 0x00, 0x50 };
             GetSystemConfiguration.bytesAnswer = 0x08;
+            GetSystemConfiguration.cmdName = "Get System Configuration";
             GetStatus.msgId = 0x02;
             GetStatus.msgOpCode = new byte[] { 0x00, 0x51 };
             GetStatus.bytesAnswer = 0x04; // modulo
+            GetStatus.cmdName = "Get Status";
             GetCashData.msgId = 0x02;
             GetCashData.msgOpCode = new byte[] { 0x00, 0x52 };
             GetCashData.bytesAnswer = 0x0C;
+            GetCashData.cmdName = "Get Cash Data";
             GetCashCount.msgId = 0x02;
             GetCashCount.msgOpCode = new byte[] { 0x00, 0x53 };
             GetCashCount.bytesAnswer = 0x0A;
+            GetCashCount.cmdName = "Get Cash Count";
             Hello.msgId = 0x02;
             Hello.msgOpCode = new byte[] { 0x00, 0x54 };
             Hello.bytesAnswer = 0x02;
+            Hello.cmdName = "Hello";
             CheckStressTest.msgId = 0x02;
             CheckStressTest.msgOpCode = new byte[] { 0x00, 0x55 };
             CheckStressTest.bytesAnswer = 0x04; // +xx
+            CheckStressTest.cmdName = "Check Stress Test";
             StopCashOperation.msgId = 0x02;
             StopCashOperation.msgOpCode = new byte[] { 0x00, 0x56 };
             StopCashOperation.bytesAnswer = 0x02;
+            StopCashOperation.cmdName = "Stop Cash Operation";
             EndProcedure.msgId = 0x04;
             EndProcedure.msgOpCode = new byte[] { 0x00, 0x01 };
             EndProcedure.bytesAnswer = 0x02;
+            EndProcedure.cmdName = "End Operation";
             MechanicalPartOpenClose.msgId = 0x04;
             MechanicalPartOpenClose.msgOpCode = new byte[] { 0x00, 0x02 };
             MechanicalPartOpenClose.bytesAnswer = 0x02;
+            MechanicalPartOpenClose.cmdName = "Mechanical Part Open Close";
             NotePresenceInBin.msgId = 0x04;
             NotePresenceInBin.msgOpCode = new byte[] { 0x00, 0x03 };
             NotePresenceInBin.bytesAnswer = 0x02;
+            NotePresenceInBin.cmdName = "Note Presence In Bin";
             AlarmWarning.msgId = 0x04;
             AlarmWarning.msgOpCode = new byte[] { 0x00, 0x04 };
             AlarmWarning.bytesAnswer = 0x02;
+            AlarmWarning.cmdName = "Alarm Warning";
             Tamper.msgId = 0x04;
             Tamper.msgOpCode = new byte[] { 0x00, 0x05 };
             Tamper.bytesAnswer = 0x02;
+            Tamper.cmdName = "Tamper";
             TroyHorseReply.msgId = 0x04;
             TroyHorseReply.msgOpCode = new byte[] { 0x00, 0x06 };
             TroyHorseReply.bytesAnswer = 0x02;
+            TroyHorseReply.cmdName = "Troy Horse Reply";
             StressTest.msgId = 0x04;
             StressTest.msgOpCode = new byte[] { 0x00, 0x07 };
             StressTest.bytesAnswer = 0x02;
+            StressTest.cmdName = "Stress Test";
             CheckStressTest.msgId = 0x04;
             CheckStressTest.msgOpCode = new byte[] { 0x00, 0x08 };
             CheckStressTest.bytesAnswer = 0x02;
-            StopCashOperation.msgId = 0x04;
-            StopCashOperation.msgOpCode = new byte[] { 0x00, 0x09 };
-            StopCashOperation.bytesAnswer = 0x02;
+            CheckStressTest.cmdName = "Check Stress Test";
+            ExportSystemTraceData.msgId = 0x04;
+            ExportSystemTraceData.msgOpCode = new byte[] { 0x00, 0x09 };
+            ExportSystemTraceData.bytesAnswer = 0x02;
+            ExportSystemTraceData.cmdName = "Export System Trace Data";
+            BinWarningInformation.msgId = 0x04;
+            BinWarningInformation.msgOpCode = new byte[] { 0x00, 0x0A };
+            BinWarningInformation.bytesAnswer = 0x02;
+            BinWarningInformation.cmdName = "BIN Warning information";
+            NoteInformation.msgId = 0x04;
+            NoteInformation.msgOpCode = new byte[] { 0x00, 0x0B };
+            NoteInformation.bytesAnswer = 31;
+            NoteInformation.cmdName = "Note information";
+            PowerDownWarning.msgId = 0x04;
+            PowerDownWarning.msgOpCode = new byte[] { 0x00, 0x0C };
+            PowerDownWarning.bytesAnswer = 0x01;
+            PowerDownWarning.cmdName = "Power Down Warning";
             GetPhotoStatus.msgId = 0x01;
             GetPhotoStatus.msgOpCode = new byte[] { 0x01, 0x00 };
             GetPhotoStatus.bytesAnswer = 0x03;
+            GetPhotoStatus.cmdName = "Get Photo Status";
             PhotoAdjust.msgId = 0x01;
             PhotoAdjust.msgOpCode = new byte[] { 0x01, 0x01 };
             PhotoAdjust.bytesAnswer = 0x06;
+            PhotoAdjust.cmdName = "Photo Adjust";
             GetPhotoParameters.msgId = 0x01;
             GetPhotoParameters.msgOpCode = new byte[] { 0x01, 0x02 };
             GetPhotoParameters.bytesAnswer = 0x09;
+            GetPhotoParameters.cmdName = "Get Photo Parameters";
             SetPhotoParameters.msgId = 0x01;
             SetPhotoParameters.msgOpCode = new byte[] { 0x01, 0x03 };
             SetPhotoParameters.bytesAnswer = 0x02;
+            SetPhotoParameters.cmdName = "Set Photo Parameters";
             AdjustBin.msgId = 0x01;
             AdjustBin.msgOpCode = new byte[] { 0x01, 0x04 };
             AdjustBin.bytesAnswer = 0x02;
             AdjustBin.timeOut = 5000;
+            AdjustBin.cmdName = "Adjust Bin";
             PhotoAudit.msgId = 0x01;
             PhotoAudit.msgOpCode = new byte[] { 0x01, 0x05 };
             PhotoAudit.bytesAnswer = 0x05;
+            PhotoAudit.cmdName = "Photo Audit";
             FactoryAdjust.msgId = 0x01;
             FactoryAdjust.msgOpCode = new byte[] { 0x01, 0x06 };
             FactoryAdjust.bytesAnswer = 0x02;
             FactoryAdjust.timeOut = 1000;
+            FactoryAdjust.cmdName = "Factory Adjust";
             PhotoAdjustFactoryMode.msgId = 0x01;
             PhotoAdjustFactoryMode.msgOpCode = new byte[] { 0x01, 0x07 };
             PhotoAdjustFactoryMode.bytesAnswer = 0x0A;
+            PhotoAdjustFactoryMode.cmdName = "Photo Adjust Factory Mode";
             GetCassetteFunctionParameters.msgId = 0x03;
             GetCassetteFunctionParameters.msgOpCode = new byte[] { 0x01, 0x08 };
             GetCassetteFunctionParameters.bytesAnswer = 0x0E;
+            GetCassetteFunctionParameters.cmdName = "Get Cassette Function Parameters";
             GetPhotoCalibrationValues.msgId = 0x01;
             GetPhotoCalibrationValues.msgOpCode = new byte[] { 0x01, 0x09 };
             GetPhotoCalibrationValues.bytesAnswer = 0x0E;
+            GetPhotoCalibrationValues.cmdName = "Get Photo Calibration Values";
             GetSwitchStatus.msgId = 0x01;
             GetSwitchStatus.msgOpCode = new byte[] { 0x01, 0x0A };
             GetSwitchStatus.bytesAnswer = 0x03;
+            GetSwitchStatus.cmdName = "Get Switch Status";
+            GetPhotoInformation.msgId = 0x01;
+            GetPhotoInformation.msgOpCode = new byte[] { 0x01, 0x0B };
+            GetPhotoInformation.bytesAnswer = 16;
+            GetPhotoInformation.cmdName = "Get photo information";
             GetDiverterParameters.msgId = 0x01;
             GetDiverterParameters.msgOpCode = new byte[] { 0x01, 0x10 };
             GetDiverterParameters.bytesAnswer = 0x0C;
+            GetDiverterParameters.cmdName = "Get Diverter Parameters";
             SetDiverterParameters.msgId = 0x01;
             SetDiverterParameters.msgOpCode = new byte[] { 0x01, 0x11 };
             SetDiverterParameters.bytesAnswer = 0x02;
+            SetDiverterParameters.cmdName = "Set Diverter Parameters";
             OperateDiverter.msgId = 0x01;
             OperateDiverter.msgOpCode = new byte[] { 0x01, 0x12 };
             OperateDiverter.bytesAnswer = 0x04;
             OperateDiverter.timeOut = 2000;
+            OperateDiverter.cmdName = "Operate Diverter";
             TestDiverter.msgId = 0x01;
             TestDiverter.msgOpCode = new byte[] { 0x01, 0x13 };
             TestDiverter.bytesAnswer = 0x02;
+            TestDiverter.cmdName = "Test Diverter";
             GetMotorParameters.msgId = 0x01;
             GetMotorParameters.msgOpCode = new byte[] { 0x01, 0x20 };
             GetMotorParameters.bytesAnswer = 0x18;
+            GetMotorParameters.cmdName = "Get Motor Parameters";
             SetMotorParameters.msgId = 0x01;
             SetMotorParameters.msgOpCode = new byte[] { 0x01, 0x21 };
             SetMotorParameters.bytesAnswer = 0x02;
+            SetMotorParameters.cmdName = "Set Motor Parameters";
             OperateMotor.msgId = 0x01;
             OperateMotor.msgOpCode = new byte[] { 0x01, 0x22 };
             OperateMotor.bytesAnswer = 0x02;
+            OperateMotor.cmdName = "Operate Motor";
             StopMotor.msgId = 0x01;
             StopMotor.msgOpCode = new byte[] { 0x01, 0x23 };
             StopMotor.bytesAnswer = 0x02;
             StopMotor.timeOut = 5000;
+            StopMotor.cmdName = "Stop Motor";
             TestMotor.msgId = 0x01;
             TestMotor.msgOpCode = new byte[] { 0x01, 0x24 };
             TestMotor.bytesAnswer = 0x02;
+            TestMotor.cmdName = "Test Motor";
             GetFeedStrobeRevolutionNumber.msgId = 0x01;
             GetFeedStrobeRevolutionNumber.msgOpCode = new byte[] { 0x01, 0x25 };
             GetFeedStrobeRevolutionNumber.bytesAnswer = 0x08;
             GetFeedStrobeRevolutionNumber.timeOut = 10000;
+            GetFeedStrobeRevolutionNumber.cmdName = "Get Feed Strobe Revolution";
             GetPowerParameters.msgId = 0x01;
             GetPowerParameters.msgOpCode = new byte[] { 0x01, 0x30 };
             GetPowerParameters.bytesAnswer = 0x0B;
+            GetPowerParameters.cmdName = "Get Power Parameters";
             SetPowerParameters.msgId = 0x01;
             SetPowerParameters.msgOpCode = new byte[] { 0x01, 0x31 };
             SetPowerParameters.bytesAnswer = 0x02;
+            SetPowerParameters.cmdName = "Set Power Parameters";
             OperatePower.msgId = 0x01;
             OperatePower.msgOpCode = new byte[] { 0x01, 0x32 };
             OperatePower.bytesAnswer = 0x02;
             OperatePower.timeOut = 5000;
+            OperatePower.cmdName = "Operate Power";
             SetReferenceValue.msgId = 0x01;
             SetReferenceValue.msgOpCode = new byte[] { 0x01, 0x33 };
             SetReferenceValue.bytesAnswer = 0x02;
+            SetReferenceValue.cmdName = "Set Referemce Value";
             GetReferenceValue.msgId = 0x01;
             GetReferenceValue.msgOpCode = new byte[] { 0x01, 0x34 };
             GetReferenceValue.bytesAnswer = 0x04;
+            GetReferenceValue.cmdName = "Get Reference Value";
             TestModeEnableDisable.msgId = 0x01;
             TestModeEnableDisable.msgOpCode = new byte[] { 0x01, 0x3A };
             TestModeEnableDisable.bytesAnswer = 0x02;
+            TestModeEnableDisable.cmdName = "Test Mode Enable/Disable";
             TransferBanknotes.msgId = 0x01;
             TransferBanknotes.msgOpCode = new byte[] { 0x01, 0x3B };
             TransferBanknotes.bytesAnswer = 0x02;
             TransferBanknotes.timeOut = 12000;
+            TransferBanknotes.cmdName = "Transfer Banknotes";
             CheckHorTranspSpeed.msgId = 0x01;
             CheckHorTranspSpeed.msgOpCode = new byte[] { 0x01, 0x3C };
             CheckHorTranspSpeed.bytesAnswer = 0x08;
             CheckHorTranspSpeed.timeOut = 10000;
+            CheckHorTranspSpeed.cmdName = "Check Horizontal Transport Speed";
             TestCassetteModule.msgId = 0x01;
             TestCassetteModule.msgOpCode = new byte[] { 0x01, 0x3D };
             TestCassetteModule.bytesAnswer = 0x02;
+            TestCassetteModule.cmdName = "Test Cassette Module";
             OperateShutter.msgId = 0x01;
             OperateShutter.msgOpCode = new byte[] { 0x01, 0x3E };
             OperateShutter.bytesAnswer = 0x02;
+            OperateShutter.cmdName = "Operate Shutter";
             GetShutterPosition.msgId = 0x01;
             GetShutterPosition.msgOpCode = new byte[] { 0x01, 0x3F };
             GetShutterPosition.bytesAnswer = 0x03;
+            GetShutterPosition.cmdName = "Get Shutter Position";
             SetTestState.msgId = 0x01;
             SetTestState.msgOpCode = new byte[] { 0x01, 0x40 };
             SetTestState.bytesAnswer = 0x02;
+            SetTestState.cmdName = "Set Test State";
             GetTestState.msgId = 0x01;
             GetTestState.msgOpCode = new byte[] { 0x01, 0x41 };
             GetTestState.bytesAnswer = 0x04;
+            GetTestState.cmdName = "Get Test State";
             ResetE2P.msgId = 0x01;
             ResetE2P.msgOpCode = new byte[] { 0x01, 0x42 };
             ResetE2P.bytesAnswer = 0x02;
             ResetE2P.timeOut = 5000;
+            ResetE2P.cmdName = "Reset E2P";
             SetModuleConfiguration.msgId = 0x01;
             SetModuleConfiguration.msgOpCode = new byte[] { 0x01, 0x43 };
             SetModuleConfiguration.bytesAnswer = 0x02;
             SetModuleConfiguration.timeOut = 8000;
+            SetModuleConfiguration.cmdName = "Set Module Configuration";
             GetModuleConfiguration.msgId = 0x01;
             GetModuleConfiguration.msgOpCode = new byte[] { 0x01, 0x44 };
             GetModuleConfiguration.bytesAnswer = 0x03;
+            GetModuleConfiguration.cmdName = "Get Module Configuration";
             TestReaderMagSensor.msgId = 0x01;
             TestReaderMagSensor.msgOpCode = new byte[] { 0x01, 0x45 };
+            TestReaderMagSensor.cmdName = "Test Reader Mag Sensor";
             GetOpbBoardBinType.msgId = 0x01;
             GetOpbBoardBinType.msgOpCode = new byte[] { 0x01, 0x46 };
             GetOpbBoardBinType.bytesAnswer = 17;
+            GetOpbBoardBinType.cmdName = "Get Opb Board Bin Type";
             GetTestingReport.msgId = 0x01;
             GetTestingReport.msgOpCode = new byte[] { 0x01, 0x47 };
             GetTestingReport.bytesAnswer = 9;
             GetTestingReport.timeOut = 5000;
+            GetTestingReport.cmdName = "Get Testing Report";
             GetPhBinCalibration.msgId = 0x01;
             GetPhBinCalibration.msgOpCode = new byte[] { 0x01, 0x48 };
             GetPhBinCalibration.bytesAnswer = 6;
+            GetPhBinCalibration.cmdName = "Get Photo Bin Calibration";
             GetPowerState.msgId = 0x01;
             GetPowerState.msgOpCode = new byte[] { 0x01, 0x49 };
             GetPowerState.bytesAnswer = 2;
+            GetPowerState.cmdName = "Get Power State";
             CheckMotorMoving.msgId = 0x01;
             CheckMotorMoving.msgOpCode = new byte[] { 0x01, 0x4A };
             CheckMotorMoving.bytesAnswer = 4;
             CheckMotorMoving.timeOut = 6000;
+            CheckMotorMoving.cmdName = "Check Motor Moving";
             CheckLtmCableConnection.msgId = 0x01;
             CheckLtmCableConnection.msgOpCode = new byte[] { 0x01, 0x4B };
             CheckLtmCableConnection.bytesAnswer = 3;
+            CheckLtmCableConnection.cmdName = "Check Ltm Cable Connection";
 
             UiSetSolidLight.opCode = 0x4A;
             UiSetSolidLight.bytesAnswer = 0x00;
@@ -1136,6 +1553,121 @@ namespace myArcaNameSpace
             UiReadLightEffect.opCode = 0x4F;
             UiReadLightEffect.bytesAnswer = 0x0A;
             UiReadLightEffect.timeOut = 100;
+            UtmCommands.Add(Preset);
+            UtmCommands.Add(Deposit);
+            UtmCommands.Add(Dispense);
+            UtmCommands.Add(Counting);
+            UtmCommands.Add(Recovery);
+            UtmCommands.Add(GetReport);
+            UtmCommands.Add(GetLastDepositInfo);
+            UtmCommands.Add(Open);
+            UtmCommands.Add(Close);
+            UtmCommands.Add(SetCurrencies);
+            UtmCommands.Add(GetCurrencies);
+            UtmCommands.Add(EnableCurrencies);
+            UtmCommands.Add(EnableDenom);
+            UtmCommands.Add(SetDrumDenom);
+            UtmCommands.Add(GetDrumDenom);
+            UtmCommands.Add(SetConfiguration);
+            UtmCommands.Add(GetConfiguration);
+            UtmCommands.Add(UpdateFirmware);
+            UtmCommands.Add(InitializeDrum);
+            UtmCommands.Add(AssignDrumName);
+            UtmCommands.Add(SetModuleInfo);
+            UtmCommands.Add(GetModuleInfo);
+            UtmCommands.Add(TroyHorse);
+            UtmCommands.Add(LockUnlockUpperPart);
+            UtmCommands.Add(ImportLog);
+            UtmCommands.Add(GetUpperBlockState);
+            UtmCommands.Add(GetDrumsPhysicalPos);
+            UtmCommands.Add(Reassign);
+            UtmCommands.Add(GetAllarmBoardType);
+            UtmCommands.Add(GetSystemLife);
+            UtmCommands.Add(GetActiveCurrencies);
+            UtmCommands.Add(SetNumActiveCurr);
+            UtmCommands.Add(GetNumActiveCurr);
+            UtmCommands.Add(SetActiveCurr);
+            UtmCommands.Add(SetSystemLife);
+            UtmCommands.Add(SetDrumName);
+            UtmCommands.Add(GetNoteCounters);
+            UtmCommands.Add(CheckCashDataError);
+            UtmCommands.Add(ReaderCalibration);
+            UtmCommands.Add(SystemReset);
+            UtmCommands.Add(GetPhotoStatus);
+            UtmCommands.Add(PhotoAdjust);
+            UtmCommands.Add(GetPhotoParameters);
+            UtmCommands.Add(SetPhotoParameters);
+            UtmCommands.Add(AdjustBin);
+            UtmCommands.Add(PhotoAudit);
+            UtmCommands.Add(FactoryAdjust);
+            UtmCommands.Add(PhotoAdjustFactoryMode);
+            UtmCommands.Add(GetCassetteFunctionParameters);
+            UtmCommands.Add(GetPhotoCalibrationValues);
+            UtmCommands.Add(GetSwitchStatus);
+            UtmCommands.Add(GetDiverterParameters);
+            UtmCommands.Add(SetDiverterParameters);
+            UtmCommands.Add(OperateDiverter);
+            UtmCommands.Add(TestDiverter);
+            UtmCommands.Add(GetMotorParameters);
+            UtmCommands.Add(SetMotorParameters);
+            UtmCommands.Add(OperateMotor);
+            UtmCommands.Add(StopMotor);
+            UtmCommands.Add(TestMotor);
+            UtmCommands.Add(GetFeedStrobeRevolutionNumber);
+            UtmCommands.Add(GetPowerParameters);
+            UtmCommands.Add(SetPowerParameters);
+            UtmCommands.Add(OperatePower);
+            UtmCommands.Add(SetReferenceValue);
+            UtmCommands.Add(GetReferenceValue);
+            UtmCommands.Add(TestModeEnableDisable);
+            UtmCommands.Add(TransferBanknotes);
+            UtmCommands.Add(CheckHorTranspSpeed);
+            UtmCommands.Add(TestCassetteModule);
+            UtmCommands.Add(OperateShutter);
+            UtmCommands.Add(GetShutterPosition);
+            UtmCommands.Add(SetTestState);
+            UtmCommands.Add(GetTestState);
+            UtmCommands.Add(ResetE2P);
+            UtmCommands.Add(SetModuleConfiguration);
+            UtmCommands.Add(GetModuleConfiguration);
+            UtmCommands.Add(TestReaderMagSensor);
+            UtmCommands.Add(GetOpbBoardBinType);
+            UtmCommands.Add(GetTestingReport);
+            UtmCommands.Add(GetPhBinCalibration);
+            UtmCommands.Add(GetPowerState);
+            UtmCommands.Add(CheckMotorMoving);
+            UtmCommands.Add(CheckLtmCableConnection);
+            UtmCommands.Add(GetSystemConfiguration);
+            UtmCommands.Add(GetStatus);
+            UtmCommands.Add(GetCashData);
+            UtmCommands.Add(GetCashCount);
+            UtmCommands.Add(Hello);
+            UtmCommands.Add(CheckStressTest);
+            UtmCommands.Add(StopCashOperation);
+            UtmCommands.Add(EndProcedure);
+            UtmCommands.Add(MechanicalPartOpenClose);
+            UtmCommands.Add(NotePresenceInBin);
+            UtmCommands.Add(AlarmWarning);
+            UtmCommands.Add(Tamper);
+            UtmCommands.Add(TroyHorseReply);
+            UtmCommands.Add(StressTest);
+            UtmCommands.Add(CheckStressTest);
+            UtmCommands.Add(StopCashOperation);
+            
+        }
+
+        public byte[] SendCommand(byte msgId, byte[] msgOpCode, int timeout, int nBytes, params byte[] parameters)
+        {
+            // recupero le informazioni sul comando da inviare
+            byte[] frame = MakeCmd(msgId, msgOpCode, parameters);
+            if (timeout == 0)
+                timeout = 500;
+            // preparo le stringhe da scrivere nel comScope
+            dataReceived = "RCV:";
+            dataSent = "SND:" + msgId.ToString("X2") + " " + msgOpCode[0].ToString("X2") + " " + msgOpCode[1].ToString("X2") + " ";
+            for (int i = 0; i < parameters.Length; i++)
+                dataSent += parameters[i].ToString("X2") + " ";
+            return frame;
         }
 
         public byte[] SendCommand(SCommand command, params byte[] parameters)
@@ -1144,22 +1676,14 @@ namespace myArcaNameSpace
             byte[] frame = MakeCmd(command.msgId, command.msgOpCode, parameters);
             if (command.timeOut == 0)
                 command.timeOut = 500;
-            int nBytes = 0;
+            //int nBytes = 0;
 
             // preparo le stringhe da scrivere nel comScope
             dataReceived = "RCV:";
             dataSent = "SND:" + command.msgId.ToString("X2") + " " + command.msgOpCode[0].ToString("X2") + " " + command.msgOpCode[1].ToString("X2") + " ";
             for (int i = 0; i < parameters.Length; i++)
                 dataSent += parameters[i].ToString("X2") + " ";
-
-            // se la porta USB è chiusa la apro
-
-            // apertura porte R/W
-
             return frame;
-
-
-
         }
         public byte[] MakeCmd(SCommand command, byte[] data = null)
         {
@@ -1512,14 +2036,18 @@ namespace myArcaNameSpace
         {
             //mySerial.Open();
             byte[] received = new byte[mySerial.BytesToRead];
-            if (received.Length > 0)
+            if (received.Length > 1)
             {
                 received = new byte[mySerial.BytesToRead];
                 mySerial.Read(received, 0, mySerial.BytesToRead);
-                DataReceived(BitConverter.ToString(TranslateFrame(received)), null);
+                TranslateFrame(received);
+                byte[] evento = new byte[canFrame.eventData.Length + 1];
+                evento[0] = Convert.ToByte(canFrame.sourceID);
+                Array.Copy(canFrame.eventData,0, evento,1, canFrame.eventData.Length);
+                DataReceived(BitConverter.ToString(evento), null);
             }
             //mySerial.Close();
-            return canFrame.data;
+            return canFrame.eventData;
         }
 
         public void SendBytes(byte[] dataToSend, int byteAnswer = 0)
@@ -1575,8 +2103,9 @@ namespace myArcaNameSpace
                         switch (canFrame.messageType)
                         {
                             case "0": // EVENT
-                                for (int i = received[idFrame + 6]; i < datiLenght; i++)
-                                    dataEvent.Add(received[idFrame + 6 + i]);
+                                //for (int i = received[idFrame + 6]; i < datiLenght; i++) // modificato per intercettare gli eventi durante il collaudo dei cassetti
+                                for (int i = idFrame + 6; i < datiLenght + idFrame + 6; i++)
+                                    dataEvent.Add(received[i]);
                                 break;
                             case "1": // CMD
                             case "2": // REPLY
@@ -1633,6 +2162,10 @@ namespace myArcaNameSpace
             switch (destinationID)
             {
                 case MODULE_ID_BROADCAST:
+                case MODULE_ID_CASS_A:
+                case MODULE_ID_CASS_B:
+                case MODULE_ID_CASS_C:
+                case MODULE_ID_CASS_D:
                     frame = MakeFrameID(destinationID, MODULE_ID_UPPER_CTRL, CAN_MSG_CMD, CAN_DATA_COMPLETE, CMD_RESTORE_E2P);
                     break;
                 case MODULE_ID_SAFE:
@@ -1672,7 +2205,7 @@ namespace myArcaNameSpace
         {
             if(!mySerial.IsOpen)
                 mySerial.Open();
-            byte[] frame = MakeFrameID(destinationID, MODULE_ID_UPPER_CTRL, CAN_MSG_CMD, CAN_DATA_COMPLETE, CMD_GET_STATUS);
+            byte[] frame = MakeFrameID(destinationID, MODULE_ID_UPPER_CTRL, CAN_MSG_CMD, CAN_DATA_COMPLETE, CMD_GET_STATUS); // 
             byte[] result = SendCommand(frame);
             mySerial.Close();
             return result;
@@ -1949,7 +2482,7 @@ namespace myArcaNameSpace
                 mySerial.Open();
             byte[] frame = MakeFrameID(destinationID, MODULE_ID_UPPER_CTRL, CAN_MSG_CMD, CAN_DATA_COMPLETE, CMD_GET_MODULE_SN);
             byte[] temp = SendCommand(frame);
-            for (int i = 1; i < canFrame.data.Length; i++)
+            for (int i = 0; i < canFrame.data.Length; i++)
                 myList.Add(canFrame.data[i]);
         incompleto:
             if (canFrame.dataComplete == "1")
@@ -4094,8 +4627,7 @@ namespace myArcaNameSpace
 
         public string CmdUploadDimBn(byte bnIndex = 0x00)
         {
-            byte[] command = { 0xD3, 0x06, 0x06, 0x00};
-            command[3] = bnIndex;
+            byte[] command = { 0xD3, 0x06, 0x06, Convert.ToByte(bnIndex)};
             comPort.OpenCom();
             comPort.SendCommandByte(command, 5, 15000); //timeout=100 modificato 06.09.23
             comPort.CloseCom();
@@ -4159,15 +4691,7 @@ namespace myArcaNameSpace
             return comPort.commandAnswer;
         }
 
-        public string CmdDimBnUpload(int index)
-        {
-            byte[] command = { 0xD3, 0x06, 0x06, Convert.ToByte(index) };
-            comPort.OpenCom();
-            comPort.SendCommandByte(command, 5, 200);
-            comPort.CloseCom();
-            return comPort.commandAnswer;
-        }
-
+        
         public string CmdBoardId()
         {
             byte[] command = { 0xE3, 0x0A };
@@ -4764,7 +5288,7 @@ namespace myArcaNameSpace
 
         public byte[] CmdStreamImageUpload (int imageW, int imageH, int idStream, int idBn = 255)
         {
-            Arca.WaitingTime(200);
+            //Arca.WaitingTime(200);
             byte[] answer;
             byte[] command = { 0xD3, 0x06, 0x05, Convert.ToByte(idBn), Convert.ToByte(idStream) };
             comPort.OpenCom();
@@ -5108,6 +5632,8 @@ namespace myArcaNameSpace
         {
             xmlFilename = "XML\\" + filename;
             xSettings.Indent = true;
+            if (!Directory.Exists(".\\XML"))
+                Directory.CreateDirectory("XML");
             xFile = XmlWriter.Create(xmlFilename, xSettings);
             xFile.WriteStartDocument();
             xFile.WriteStartElement("FT");
@@ -6592,12 +7118,46 @@ namespace myArcaNameSpace
     #endregion
 }
 
+namespace SesamiFramework
+{
+    public class SesamiColors
+    {
+        public Color DarkGrey = Color.FromArgb(255, 37, 37, 45); // 0x25252D
+        public Color LightGray = Color.FromArgb(255, 238, 238, 238); // 0xEEEEEE
+        public Color White = Color.FromArgb(255, 255, 255, 255); // 0xFFFFFF
+        public Color Aqua = Color.FromArgb(255, 92, 229, 219); // 0x5CE5DB
+        public Color Purple = Color.FromArgb(255, 166, 166, 255); // 0xA6A6FF
+        public Color Yellow = Color.FromArgb(255, 231, 242, 24); // 0xE7F218
+        public Color Grey1 = Color.FromArgb(255, 25, 25, 31); // 0x19191F
+        public Color Grey2 = Color.FromArgb(255, 37, 37, 45); // 0x25252D
+        public Color Grey3 = Color.FromArgb(255, 54, 54, 62); // 0x36363E
+        public Color Grey4 = Color.FromArgb(255, 63, 63,70 ); // 0x3F3F46
+        public Color Grey5 = Color.FromArgb(255, 102, 102, 108); // 0x66666C
+        public Color Grey6 = Color.FromArgb(255, 124, 124, 129); // 0x7C7C81
+        public Color Grey7 = Color.FromArgb(255, 146, 146, 150); // 0x929296
+        public Color Grey8 = Color.FromArgb(255, 211, 211, 213); // 0xD3D3D5
+        public Color Grey9 = Color.FromArgb(255, 238, 238, 238); // 0xEEEEEE
+        public Color Grey10 = Color.FromArgb(255, 246, 246, 247); // 0xF6F6F7
+        public Color Aqua1 = Color.FromArgb(255, 0, 166, 153); // 0x00A699
+        public Color Aqua2 = Color.FromArgb(255, 92, 229, 219); // 0x5CE5DB
+        public Color Aqua3 = Color.FromArgb(255, 178, 255, 249); // 0xB2FFF9
+        public Color Aqua4 = Color.FromArgb(255, 217, 251, 248); // 0xD9FBF8
 
+        public Color Purple1 = Color.FromArgb(255, 138, 138, 229); // 0x8A8AE5
+        public Color Purple2 = Color.FromArgb(255, 166, 166, 255); // 0xA6A6FF
+        public Color Purple3 = Color.FromArgb(255, 191, 191, 255); // 0xBFBFFF
+        public Color Purple4 = Color.FromArgb(255, 228, 228, 255); // 0xE4E4FF
+
+        public Color Yellow1 = Color.FromArgb(255, 231, 242, 24); // 0xE7F218
+        public Color Yellow2 = Color.FromArgb(255, 244, 248, 156); // 0xF4F89C
+    }
+}
 
 namespace CM18tool
 {
     public class Arca
     {
+        public static SesamiFramework.SesamiColors sesamiColors = new SesamiFramework.SesamiColors();
         public static int keyCodePressed = 0;
         public static INI.IniFile iniMessage;
         public static Color messageColor = Color.FromArgb(255, 255, 255, 255); //0x00000000
@@ -7114,6 +7674,23 @@ namespace CM18tool
             return result;
         }
 
+        public static byte Hex2Byte(string value)
+        {
+            byte result = 0;
+            try
+            {
+                if (value.Length == 0)
+                    value = "0";
+                value = value.ToUpper();
+                result = Convert.ToByte(value, 16);
+            }
+            catch (Exception ex)
+            {
+                System.Windows.Forms.MessageBox.Show(ex.Message);
+            }
+            return result;
+        }
+
         public static UInt32 Hex2Uint(string value)
         {
             value = value.ToUpper();
@@ -7207,6 +7784,160 @@ namespace CM18tool
                     }
                 }
             }
+            return result;
+        }
+
+
+        public static int CalcOutlierPos (byte[] array)
+        {
+            int result = 0;
+            double mean = CalcMean(array);
+
+            return result;
+        }
+
+        public static double[] CalcOutliers(byte[] values)
+        {
+            double[] result = new double[values.Length];
+            double mean = CalcMean(values);
+            double devStd = CalcDevStd(values);
+            for (int i = 0; i < values.Length; i++)
+                result[i] = (values[i] - mean) / devStd;
+
+            return result;
+        }
+
+        public static double[] CalcOutliers(short[] values)
+        {
+            double[] result = new double[values.Length];
+            double mean = CalcMean(values);
+            double devStd = CalcDevStd(values);
+            for (int i = 0; i < values.Length; i++)
+                result[i] = (values[i] - mean) / devStd;
+
+            return result;
+        }
+
+        public static double CalcAsimmetry(short[] array)
+        {
+            double skewness = 0;
+            int n = array.Length;
+            if (n < 3)
+                return 0;
+            // calcola la media aritmetica
+            double mean = CalcMean(array);
+
+            // calcola gli scarti dalla media (xi - u)
+            // calcola gli scarti dalla media al quadrato (xi - u)2
+            // calcola gli scarti dalla media al cubo (xi - u)3
+            // calcola il terzo momento centrale (u3)
+            double[] scartiC = new double[n];
+            double sommaMomento = 0;
+            for (int i = 0; i < n; i++)
+            {
+                scartiC[i] = Math.Pow(array[i] - mean, 3);
+                sommaMomento += scartiC[i];
+            }
+            double momentoC = sommaMomento / n;
+
+            // calcola la deviazione standard (s)
+            double devStd = Arca.CalcDevStd(array);
+
+            // calcola la deviazione standard alla terza (s3)
+            double devStdC = Math.Pow(devStd, 3);
+
+            // calcola l'indice di asimmetria di Fisher (y1)
+            skewness = momentoC / devStdC; //Math.Pow(n, 2) / ((n - 1) * (n - 2)) * (momentoC / devStdC);
+
+            return skewness;
+        }
+
+        public static double CalcAsimmetry (byte[] array)
+        {
+            int n = array.Length;
+            if (n < 3)
+                return 0;
+            double mean = 0;
+            double variance = 0;
+            // media
+            mean = CalcMean(array);
+            for (int i = 0; i < n; i++)
+                variance += Math.Pow(array[i] - mean, 2);
+            variance /= n;
+            double stdDev = Math.Sqrt(variance);
+
+            double result = 0;
+            for (int i = 0; i < n; i++)
+                result += Math.Pow((array[i] - mean) / stdDev,3);
+            result *= n / ((n - 1) * (n - 2));
+
+            return result;
+        }
+
+        public static double CalcDevStd(byte[] array)
+        {
+            double result = 0, sum = 0, mean = 0;
+            double values = array.Length;
+            for (int i = 0; i < values; i++)
+                sum += array[i];
+            mean = sum / values;
+            sum = 0;
+            for (int i = 0; i < array.Length; i++)
+            {
+                 sum += Math.Pow((array[i] - mean), 2) / values;
+            }
+            result = Math.Sqrt(sum);
+            return result;
+        }
+        public static double CalcDevStd(short[] array)
+        {
+            double result = 0, sum = 0, mean = 0;
+            double values = array.Length;
+            for (int i = 0; i < values; i++)
+                sum += array[i];
+            mean = sum / values;
+            sum = 0;
+            for (int i = 0; i < array.Length; i++)
+                sum += Math.Pow((array[i] - mean), 2);
+            result = Math.Sqrt(sum/values);
+            return result;
+        }
+
+        public static double CalcMean(byte[] array,  byte absValues = 0)
+        {
+            double result = 0;
+            if (absValues != 0)
+                for (int i = 0; i < array.Length; i++)
+                    result += Math.Abs(array[i]);
+            else
+                for (int i = 0; i < array.Length; i++)
+                    result += array[i];
+            result = result / (double)array.Length;
+            return result;
+        }
+        public static double CalcMean(short[] array, byte absValues = 0)
+        {
+            double result = 0;
+            if (absValues != 0)
+                for (int i = 0; i < array.Length; i++)
+                    result += Math.Abs(array[i]);
+            else
+                for (int i = 0; i < array.Length; i++)
+                    result += array[i];
+            result = result / (double)array.Length;
+            return result;
+        }
+
+        public static double CalcMean(int[] array, byte absValues = 0)
+        {
+            double result = 0;
+            if (absValues != 0)
+                for (int i = 0; i < array.Length; i++)
+                    result += Math.Abs(array[i]);
+            else
+                for (int i = 0; i < array.Length; i++)
+                    result += array[i];
+            result = result / (double)array.Length;
             return result;
         }
 
@@ -7348,7 +8079,7 @@ namespace CM18tool
             if (value.Length < 8)
                 answer = (byte)Bin2Dec(value.Substring(0));
             else
-                answer = (byte)Bin2Dec(value.Substring(0, 8));
+                answer = (byte)Bin2Dec(value.Substring(0, value.Length));
             return answer;
         }
 
@@ -7620,22 +8351,17 @@ namespace CM18tool
         public static short ByteArray2Short(byte[] source, int offset, int length, int byteOrder = 0)
         {
             short answer = 0;
+            byte[] value = new byte[length];
+            if (byteOrder == 0)
+                for (int i = 0; i < value.Length; i++)
+                    value[i] = source[offset + i];
+            else
+                for (int i = 0; i < value.Length; i++)
+                    value[i] = source[offset + length - 1 - i];
+
+            answer = BitConverter.ToInt16(value, 0);
+            return answer;
             
-            switch (byteOrder)
-            {
-                case 0://little endian
-                    for (int i = offset; i < offset + length; i++)
-                        answer += (short)(source[i] * (short)Math.Pow(256, i - offset));
-                    return answer;
-                case 1: // big endian
-                    for (int i = offset; i < offset + length; i++)
-                    {
-                        answer += (short)(source[i] * (short)Math.Pow(256, (length - 1) - (i - offset)));
-                    }
-                    return answer;
-                default:
-                    return 0;
-            }
         }
 
         public static short[] ByteArray2ShortArray(byte[] source, int byteOrder = 0)
@@ -7794,6 +8520,26 @@ namespace CM18tool
         }
 
         public static float SigmaCalculator(int[] values)
+        {
+            float result = 100;
+            float sum = 0;
+            float sum2 = 0;
+            float mean = 0;
+            for (int i = 0; i < values.Length; i++)
+            {
+                sum += values[i];
+            }
+            mean = sum / values.Length;
+
+            for (int i = 0; i < values.Length; i++)
+            {
+                sum2 += (float)Math.Pow(values[i] - mean, 2);
+            }
+            result = (float)Math.Sqrt(sum2 / values.Length);
+            return result;
+        }
+
+        public static float SigmaCalculator(short[] values)
         {
             float result = 100;
             float sum = 0;
@@ -7994,7 +8740,6 @@ namespace CM18tool
 
         public static string WaitingKey(string specificKey = "")
         {
-            System.Windows.Forms.Application.DoEvents();
             keyCodePressed = 0;
             bool pressed = false;
             int specificValue = 1000;
@@ -8016,10 +8761,8 @@ namespace CM18tool
             do
             {
                 System.Windows.Forms.Application.DoEvents();
-                if (specificValue == 1000 && keyCodePressed != 0)
-                { pressed = true; }
-                if (specificValue == keyCodePressed)
-                { pressed = true; }
+                if ((specificValue == 1000 && keyCodePressed != 0) || specificValue == keyCodePressed)
+                    pressed = true;
             } while (pressed == false);
 
             switch (keyCodePressed)
@@ -8052,7 +8795,7 @@ namespace CM18tool
         public static void WriteMessage(System.Windows.Forms.Label label,string message, Color Colors = default(Color))
         {
             label.Text = message;
-            //if (Colors == default(Color)) { Colors=Color.Green; }
+            if (Colors == default(Color)) { Colors=Color.White; }
             label.ForeColor = Colors;
             label.Refresh();
         }
@@ -8129,4 +8872,5 @@ namespace CM18tool
         }
     }
 }
+
 

@@ -45,10 +45,10 @@ namespace Novus
         [DllImport("ARCADevsvc.dll", CallingConvention = CallingConvention.Cdecl)]
         public static extern int ARCADevSvcSingleCommand(int hConnect, string inData);
 
-        [DllImport("ARCADevInt.dll", CallingConvention = CallingConvention.Cdecl)]
+        [DllImport("ARCAdevint.dll", CallingConvention = CallingConvention.Cdecl)]
         public static extern int ARCAInitialize(float version, StringBuilder inData);
 
-        [DllImport("ARCADevInt.dll", CallingConvention = CallingConvention.Cdecl)]
+        [DllImport("ARCAdevint.dll", CallingConvention = CallingConvention.Cdecl)]
         public static extern int ARCAConnect(StringBuilder inData, EventCallback ec, ref int hConnect, int lloutData, StringBuilder outData);
 
         [DllImport("ARCADevInt.dll", CallingConvention = CallingConvention.Cdecl)]
@@ -435,16 +435,30 @@ namespace Novus
             }
             novus.OutDataConnect = JsonConvert.DeserializeObject<Novus_Json.CoutReplyCode>(outData.ToString());
 
-
             Object jsonEvent = new JObject
             {
-                { "enableEvent", "true" },
-                { "disableEvent", "false" },
-                { "errors", "false" },
-                { "pocketsEvent", "false" },
-                { "safeEvent", "false" },
-                { "keepAliveEvent", "false" }
+                { "cashFlowEvent", "true" },
+                { "coversEvent", "true" },
+                { "downloadEvent", "true" },
+                { "errorsEvent", "true" },
+                { "keepAliveEvent", "true" },
+                { "lockEvent", "true" },
+                { "operationEvent","true"},
+                { "pocketsEvent","true"},
+                { "qrCodeEvent","true"},
+                { "remindersEvent","true"}
+
             };
+
+            //Object jsonEvent = new JObject
+            //{
+            //    { "enableEvent", "true" },
+            //    { "disableEvent", "false" },
+            //    { "errors", "false" },
+            //    { "pocketsEvent", "false" },
+            //    { "safeEvent", "false" },
+            //    { "keepAliveEvent", "false" }
+            //};
 
             inData.Clear();
             inData.Append(Convert.ToString(jsonEvent));
