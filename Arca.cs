@@ -1,20 +1,24 @@
-﻿using System;
+﻿//using Dino;
+using CM18tool;
+using INI;
+using Newtonsoft.Json;
+using Newtonsoft.Json.Linq;
+using System;
 using System.Collections.Generic;
+using System.Data;
+using System.Diagnostics;
+using System.Drawing;
+using System.IO;
+using System.IO.Ports;
 using System.Linq;
+using System.Runtime.InteropServices;
 using System.Text;
 using System.Threading.Tasks;
-using System.IO.Ports;
-using System.Drawing;
-using System.Diagnostics;
-using System.Runtime.InteropServices;
-using System.IO;
-using INI;
-using System.Xml;
-//using Dino;
-using CM18tool;
-using Newtonsoft.Json;
 using System.Timers;
-using System.Data;
+//using System.Windows.Controls;
+using System.Xml;
+using System.Runtime.InteropServices;
+
 //using System.Collections;
 //using System.Reflection;
 //using System.Diagnostics;
@@ -258,7 +262,7 @@ namespace myArcaNameSpace
             public SSingleTrackDetails trkReject;
             public SSingleTrackDetails trkSafe;
         }
-        
+
 
         public struct STestBivio
         {
@@ -410,7 +414,7 @@ namespace myArcaNameSpace
             E2P_PROGRAMMED = 0x03
         }
 
-        public enum DenomValue:int
+        public enum DenomValue : int
         {
             A = 1,
             B = 2,
@@ -883,19 +887,19 @@ namespace myArcaNameSpace
     public class UtmProtocol
     {
         #region REPLY CODE
-        const byte REPLY_OK                 = 0x0000; // Successo, comando eseguito
-        const byte REPLY_PROC_NOT_ALLOWED   = 0x0001; // Procedura non consentita
-        const byte REPLY_MSGID_KO           = 0x0002; // Identificativo messaggio (MsgId) non valido
-        const byte REPLY_MSGOPCODE_KO       = 0x0003; // Codice operativo (MsgOpCode) non valido
-        const byte REPLY_NOBN_INPUT_BIN     = 0x0004; // Banconote non presenti nella bocchetta di input
-        const byte REPLY_BN_INOUTPUT_BIN    = 0x0005; // Banconote presenti nella bocchetta di output
-        const byte REPLY_BN_INREJECT_BIN    = 0x0006; // Banconote presenti nella bocchetta di reject
-        const byte REPLY_INVALID_PAR        = 0x0007; // Parametro del comando non valido
-        const byte REPLY_BUSY               = 0x0008; // Procedura già in corso
-        const byte REPLY_CMD_NOT_ALLOWED    = 0x0009; // Comando non consentito
-        const byte REPLY_SESSION_CLOSED     = 0x000A; // Sessione di lavoro chiusa
-        const byte REPLY_WRONG_LEN_PAR      = 0x000B; // Lunghezza parametri sbagliata
-        const byte REPLY_CMD_NOT_EXECUTED   = 0x000C; // Comando non eseguito correttamente
+        const byte REPLY_OK = 0x0000; // Successo, comando eseguito
+        const byte REPLY_PROC_NOT_ALLOWED = 0x0001; // Procedura non consentita
+        const byte REPLY_MSGID_KO = 0x0002; // Identificativo messaggio (MsgId) non valido
+        const byte REPLY_MSGOPCODE_KO = 0x0003; // Codice operativo (MsgOpCode) non valido
+        const byte REPLY_NOBN_INPUT_BIN = 0x0004; // Banconote non presenti nella bocchetta di input
+        const byte REPLY_BN_INOUTPUT_BIN = 0x0005; // Banconote presenti nella bocchetta di output
+        const byte REPLY_BN_INREJECT_BIN = 0x0006; // Banconote presenti nella bocchetta di reject
+        const byte REPLY_INVALID_PAR = 0x0007; // Parametro del comando non valido
+        const byte REPLY_BUSY = 0x0008; // Procedura già in corso
+        const byte REPLY_CMD_NOT_ALLOWED = 0x0009; // Comando non consentito
+        const byte REPLY_SESSION_CLOSED = 0x000A; // Sessione di lavoro chiusa
+        const byte REPLY_WRONG_LEN_PAR = 0x000B; // Lunghezza parametri sbagliata
+        const byte REPLY_CMD_NOT_EXECUTED = 0x000C; // Comando non eseguito correttamente
         #endregion
 
         #region COMANDI
@@ -914,10 +918,10 @@ namespace myArcaNameSpace
             public byte bytesAnswer;
             public string cmdName;
         }
-        
+
         enum PresetArea
         {
-            AllSystem=0x00,
+            AllSystem = 0x00,
             UpperArea = 0x01
         }
 
@@ -1037,7 +1041,7 @@ namespace myArcaNameSpace
         public SCommand CheckMotorMoving = new SCommand();
         public SCommand CheckLtmCableConnection = new SCommand();
 
-        public SUICommand UiSetSolidLight = new SUICommand(); 
+        public SUICommand UiSetSolidLight = new SUICommand();
         public SUICommand UiGetStatus = new SUICommand();
         public SUICommand UiGetFwRelease = new SUICommand();
         public SUICommand UiStartLightEffect = new SUICommand();
@@ -1049,7 +1053,7 @@ namespace myArcaNameSpace
         //public SCommand  = new SCommand();
         #endregion
         public List<SCommand> UtmCommands = new List<SCommand>();
-        
+
         public UtmProtocol(ref LibUsbDotNet.UsbDevice myUsbDevice)
         {
             InitializeCommands();
@@ -1359,7 +1363,7 @@ namespace myArcaNameSpace
             AdjustBin.msgId = 0x01;
             AdjustBin.msgOpCode = new byte[] { 0x01, 0x04 };
             AdjustBin.bytesAnswer = 0x02;
-            AdjustBin.timeOut = 5000;
+            AdjustBin.timeOut = 10000;
             AdjustBin.cmdName = "Adjust Bin";
             PhotoAudit.msgId = 0x01;
             PhotoAudit.msgOpCode = new byte[] { 0x01, 0x05 };
@@ -1653,7 +1657,7 @@ namespace myArcaNameSpace
             UtmCommands.Add(StressTest);
             UtmCommands.Add(CheckStressTest);
             UtmCommands.Add(StopCashOperation);
-            
+
         }
 
         public byte[] SendCommand(byte msgId, byte[] msgOpCode, int timeout, int nBytes, params byte[] parameters)
@@ -1700,7 +1704,7 @@ namespace myArcaNameSpace
             byte EOT = 0x04;
             byte[] command = new byte[10];
             ushort crc = 0;
-            
+
             short lenght;
             lenght = (short)(3);
             if (data != null)
@@ -1737,163 +1741,168 @@ namespace myArcaNameSpace
     }
     public class CanBusNovus
     {
-        const byte CAN_MSG_EVENT            = 0x00;
-        const byte CAN_MSG_CMD              = 0x01;
-        const byte CAN_MSG_REPLY            = 0x02;
+        const byte CAN_MSG_EVENT = 0x00;
+        const byte CAN_MSG_CMD = 0x01;
+        const byte CAN_MSG_REPLY = 0x02;
+        const byte CAN_MSG_CMD_NO_REPLY = 0x03;
 
-        const byte CAN_DATA_COMPLETE        = 0x00;
-        const byte CAN_DATA_INCOMPLETE      = 0x01;
+        const byte CAN_DATA_COMPLETE = 0x00;
+        const byte CAN_DATA_INCOMPLETE = 0x01;
 
-        const byte CMD_OK                   = 0x01;
-        const byte CMD_KO                   = 0x00;
-        const byte CMD_CORRUPT_HEADER       = 0x03;
+        const byte CMD_OK = 0x01;
+        const byte CMD_KO = 0x00;
+        const byte CMD_CORRUPT_HEADER = 0x03;
 
-        const byte CMD_GET_STATUS           = 0x01; // richiesta di stato
+        const byte CMD_GET_STATUS = 0x01; // richiesta di stato
         const byte CMD_SINGLE_MODULE_PRESET = 0x02; // preset modulo singolo
-        const byte CMD_DEPOSIT              = 0x03; // deposito
-        const byte CMD_STOP                 = 0x05; // stop
-        const byte CMD_SORTER_OPEN          = 0x07; // apri sorter
-        const byte CMD_SORTER_CLOSE         = 0x08; // chiudi sorter
-        const byte CMD_SET_CASS_ID          = 0x09; // imposta identificativo cassetto
-        const byte CMD_GET_CASH_STATUS      = 0x0A; // richiesta di stato cassa
-        const byte CMD_GET_DENOMINATION     = 0x0B; // richiesta di denominazione
-        const byte CMD_SET_DENOMINATION     = 0x0C; // imposta denominazione
-        const byte CMD_GET_MODULE_SN        = 0x0D; // richiesta di numero seriale del modulo
-        const byte CMD_SET_MODULE_SN        = 0x0E; // imposta il numero seriale del modulo
-        const byte CMD_GET_BOARD_SN         = 0x0F; // richiesta di numero seriale della scheda elettronica
-        const byte CMD_SET_BOARD_SN         = 0x10; // imposta il numero seriale della scheda elettronica
-        const byte CMD_GET_FW_RELEASE       = 0x11; // richiesta del numero di release del firmware
-        const byte CMD_GET_FW_VERSION       = 0x12; // richiesta del numero di versione del firmware
-        const byte CMD_REQ_FW_UPDATE        = 0x14; // richiesta di aggiornamento firmware
-        const byte CMD_WITHDRAWALL          = 0x15; // prelievo
-        const byte CMD_BN_IN_ARRIVE         = 0x16; // banconota in arrivo
-        const byte CMD_SAFE_PRESET          = 0x17; // preset complessivo di cassaforte
-        const byte CMD_CASSETTE_MAPPING     = 0X18; // esegue la mappa della posizione fisica dei cassetti
-        const byte CMD_CASSETTE_ASSIGN      = 0x19; // assegna l'identificativo a tutti i cassetti
-        const byte CMD_GET_CASSETTE_POS     = 0x1A; // richiesta posizione fisica dei cassetti
-        const byte CMD_GET_MODULE_NAME      = 0x1D; // richiesta nome del modulo
-        const byte CMD_PHOTO_ADJ            = 0x1E; // calibrazione foto sensori
-        const byte CMD_SET_OP_CASSETTE      = 0x1F; // imposta i cassetti operativi
-        const byte CMD_CHANGESTATE_EVENT_T  = 0x20; // test evento di cambio stato
-        const byte CMD_LOG_EXPORT           = 0x21; // esporta log
-        const byte CMD_SET_POWER            = 0x22; // gestione potenza
-        const byte CMD_MOVE_VERT_MOT        = 0x23; // muovi motore traccia verticale
-        const byte CMD_ASYNC_SYMC           = 0x24; // sincronizzazione per eventi asincroni
-        const byte CMD_GET_PH_PAR           = 0x25; // leggi parametri foto sensore
-        const byte CMD_SET_PH_PAR           = 0x26; // imposta parametri foto sensore
-        const byte CMD_MOVE_PINCH           = 0x27; // alza / abbassa pinch roller
-        const byte CMD_SORTER_MOVE          = 0x28; // muovi sorter
-        const byte CMD_GET_PH_STATE         = 0x29; // leggi stato foto sensore
-        const byte CMD_GET_SW_STATE         = 0x30; // leggi stato switch
-        const byte CMD_GET_MOT_CUR          = 0x31; // leggi correnti motore
-        const byte CMD_GET_MOT_VEL          = 0x32; // leggi velocità motore
-        const byte CMD_GET_MOT_ACC          = 0x33; // leggi accelerazione motore
-        const byte CMD_GET_MOT_PAR          = 0x34; // leggi parametri motore
-        const byte CMD_SET_MOT_CUR          = 0x35; // imposta correnti motore
-        const byte CMD_SET_MOT_VEL          = 0x36; // imposta velocità motore
-        const byte CMD_SET_MOT_ACC          = 0x37; // imposta accelerazione motore
-        const byte CMD_SET_MOT_PAR          = 0x38; // imposta parametri motore
-        const byte CMD_GET_PWR_TH           = 0x39; // leggi soglia potenza
-        const byte CMD_GET_PWR_CUR_V        = 0x3A; // leggi tensione e corrente potenza
-        const byte CMD_SET_OVER_CUR         = 0x3B; // imposta soglia di controllo (over current)
-        const byte CMD_CASSETTE_UNASSIGN    = 0x3C; // disassegna identificativo a tutti i cassetti
-        const byte CMD_MOVE_TAPE            = 0x3D; // svolgi / riavvolgi bandella
-        const byte CMD_REQ_BASC_FW_UPDATE   = 0x3E; // richiesta di aggiornamento firmware del basculante
-        const byte CMD_BASC_FW_UPDATE       = 0x3F; // aggiornamento firmware basculante
-        const byte CMD_GET_BASC_MODE        = 0x40; // modalità basculante
-        const byte CMD_SET_PH_MAR           = 0x4D; // imposta percentuale marginatura per la calibrazione di tutti i foto
-        const byte CMD_BREAK_PROCEDURE      = 0x41; // interrompi procedura in corso
-        const byte CMD_PH_END_ADJ           = 0x42; // calibrazione foto bandella (foto END)
-        const byte CMD_GET_UNIQUE_ID        = 0x43; // richiesta identificativo univoco (MCU id)
-        const byte CMD_MOVE_CASS_MOT        = 0x47; // muovi motori del cassetto
-        const byte CMD_GET_DEP_COUNTER      = 0x48; // restituisci contatori di deposito
-        const byte CMD_GET_WITH_COUNTER     = 0x49; // restituisci contatori di prelievo
-        const byte CMD_CANC_BASC_FW_UPDATE  = 0x4A; // abortisci aggiornamento firmware del basculante
-        const byte CMD_SET_CASS_FLOOR_NUM   = 0x4B; // informa il cassetto su che piano di sorter è posizionato
-        const byte CMD_SET_TEST_MODE        = 0x4C; // abilita / disabilita modalità di collaudo
-        const byte CMD_SET_PHOTO_TH         = 0x4D; // imposta percentuale di marginazione per la calibrazione di tutti i foto
-        const byte CMD_GET_ELM_TIME         = 0x4E; // leggi tempi elettromagnete
-        const byte CMD_GET_ELM_CUR          = 0x4F; // leggi correnti elettromagnete
-        const byte CMD_SET_ELM_TIME         = 0x50; // imposta tempi elettromagnete
-        const byte CMD_SET_ELM_CUR          = 0x51; // imposta correnti elettromagnete
-        const byte CMD_MOVE_ELM             = 0x52; // movimentazione Elettromagnete
-        const byte CMD_GET_BASC_FW_RELEASE  = 0x53; // Richiesta del numero di release del firmware del basculante
-        const byte CMD_GET_BASC_FW_VERSION  = 0x54; // Richiesta del numero di versione del firmware del basculante
-        const byte CMD_GET_BASC_NAME        = 0x55; // Richiesta nome del modulo basculante
-        const byte CMD_WRITE_E2P            = 0x56; // Scrivi un byte sulla E2P
-        const byte CMD_READ_E2P             = 0x57; // Leggi un byte dalla E2P
-        const byte CMD_RESTORE_E2P          = 0x58; // Reimpostazione della E2P
-        const byte CMD_CASSETTE_IS_EMPTY    = 0x5A; // Verifica se il cassetto è vuoto (solo se il sorter è aperto)
+        const byte CMD_DEPOSIT = 0x03; // deposito
+        const byte CMD_STOP = 0x05; // stop
+        const byte CMD_SORTER_OPEN = 0x07; // apri sorter
+        const byte CMD_SORTER_CLOSE = 0x08; // chiudi sorter
+        const byte CMD_SET_CASS_ID = 0x09; // imposta identificativo cassetto
+        const byte CMD_GET_CASH_STATUS = 0x0A; // richiesta di stato cassa
+        const byte CMD_GET_DENOMINATION = 0x0B; // richiesta di denominazione
+        const byte CMD_SET_DENOMINATION = 0x0C; // imposta denominazione
+        const byte CMD_GET_MODULE_SN = 0x0D; // richiesta di numero seriale del modulo
+        const byte CMD_SET_MODULE_SN = 0x0E; // imposta il numero seriale del modulo
+        const byte CMD_GET_BOARD_SN = 0x0F; // richiesta di numero seriale della scheda elettronica
+        const byte CMD_SET_BOARD_SN = 0x10; // imposta il numero seriale della scheda elettronica
+        const byte CMD_GET_FW_RELEASE = 0x11; // richiesta del numero di release del firmware
+        const byte CMD_GET_FW_VERSION = 0x12; // richiesta del numero di versione del firmware
+        const byte CMD_REQ_FW_UPDATE = 0x14; // richiesta di aggiornamento firmware
+        const byte CMD_WITHDRAWALL = 0x15; // prelievo
+        const byte CMD_BN_IN_ARRIVE = 0x16; // banconota in arrivo
+        const byte CMD_SAFE_PRESET = 0x17; // preset complessivo di cassaforte
+        const byte CMD_CASSETTE_MAPPING = 0X18; // esegue la mappa della posizione fisica dei cassetti
+        const byte CMD_CASSETTE_ASSIGN = 0x19; // assegna l'identificativo a tutti i cassetti
+        const byte CMD_GET_CASSETTE_POS = 0x1A; // richiesta posizione fisica dei cassetti
+        const byte CMD_GET_MODULE_NAME = 0x1D; // richiesta nome del modulo
+        const byte CMD_PHOTO_ADJ = 0x1E; // calibrazione foto sensori
+        const byte CMD_SET_OP_CASSETTE = 0x1F; // imposta i cassetti operativi
+        const byte CMD_CHANGESTATE_EVENT_T = 0x20; // test evento di cambio stato
+        const byte CMD_LOG_EXPORT = 0x21; // esporta log
+        const byte CMD_SET_POWER = 0x22; // gestione potenza
+        const byte CMD_MOVE_VERT_MOT = 0x23; // muovi motore traccia verticale
+        const byte CMD_ASYNC_SYMC = 0x24; // sincronizzazione per eventi asincroni
+        const byte CMD_GET_PH_PAR = 0x25; // leggi parametri foto sensore
+        const byte CMD_SET_PH_PAR = 0x26; // imposta parametri foto sensore
+        const byte CMD_MOVE_PINCH = 0x27; // alza / abbassa pinch roller
+        const byte CMD_SORTER_MOVE = 0x28; // muovi sorter
+        const byte CMD_GET_PH_STATE = 0x29; // leggi stato foto sensore
+        const byte CMD_GET_SW_STATE = 0x30; // leggi stato switch
+        const byte CMD_GET_MOT_CUR = 0x31; // leggi correnti motore
+        const byte CMD_GET_MOT_VEL = 0x32; // leggi velocità motore
+        const byte CMD_GET_MOT_ACC = 0x33; // leggi accelerazione motore
+        const byte CMD_GET_MOT_PAR = 0x34; // leggi parametri motore
+        const byte CMD_SET_MOT_CUR = 0x35; // imposta correnti motore
+        const byte CMD_SET_MOT_VEL = 0x36; // imposta velocità motore
+        const byte CMD_SET_MOT_ACC = 0x37; // imposta accelerazione motore
+        const byte CMD_SET_MOT_PAR = 0x38; // imposta parametri motore
+        const byte CMD_GET_PWR_TH = 0x39; // leggi soglia potenza
+        const byte CMD_GET_PWR_CUR_V = 0x3A; // leggi tensione e corrente potenza
+        const byte CMD_SET_OVER_CUR = 0x3B; // imposta soglia di controllo (over current)
+        const byte CMD_CASSETTE_UNASSIGN = 0x3C; // disassegna identificativo a tutti i cassetti
+        const byte CMD_MOVE_TAPE = 0x3D; // svolgi / riavvolgi bandella
+        const byte CMD_REQ_BASC_FW_UPDATE = 0x3E; // richiesta di aggiornamento firmware del basculante
+        const byte CMD_BASC_FW_UPDATE = 0x3F; // aggiornamento firmware basculante
+        const byte CMD_GET_BASC_MODE = 0x40; // modalità basculante
+        const byte CMD_SET_PH_MAR = 0x4D; // imposta percentuale marginatura per la calibrazione di tutti i foto
+        const byte CMD_BREAK_PROCEDURE = 0x41; // interrompi procedura in corso
+        const byte CMD_PH_END_ADJ = 0x42; // calibrazione foto bandella (foto END)
+        const byte CMD_GET_UNIQUE_ID = 0x43; // richiesta identificativo univoco (MCU id)
+        const byte CMD_MOVE_CASS_MOT = 0x47; // muovi motori del cassetto
+        const byte CMD_GET_DEP_COUNTER = 0x48; // restituisci contatori di deposito
+        const byte CMD_GET_WITH_COUNTER = 0x49; // restituisci contatori di prelievo
+        const byte CMD_CANC_BASC_FW_UPDATE = 0x4A; // abortisci aggiornamento firmware del basculante
+        const byte CMD_SET_CASS_FLOOR_NUM = 0x4B; // informa il cassetto su che piano di sorter è posizionato
+        const byte CMD_SET_TEST_MODE = 0x4C; // abilita / disabilita modalità di collaudo
+        const byte CMD_SET_PHOTO_TH = 0x4D; // imposta percentuale di marginazione per la calibrazione di tutti i foto
+        const byte CMD_GET_ELM_TIME = 0x4E; // leggi tempi elettromagnete
+        const byte CMD_GET_ELM_CUR = 0x4F; // leggi correnti elettromagnete
+        const byte CMD_SET_ELM_TIME = 0x50; // imposta tempi elettromagnete
+        const byte CMD_SET_ELM_CUR = 0x51; // imposta correnti elettromagnete
+        const byte CMD_MOVE_ELM = 0x52; // movimentazione Elettromagnete
+        const byte CMD_GET_BASC_FW_RELEASE = 0x53; // Richiesta del numero di release del firmware del basculante
+        const byte CMD_GET_BASC_FW_VERSION = 0x54; // Richiesta del numero di versione del firmware del basculante
+        const byte CMD_GET_BASC_NAME = 0x55; // Richiesta nome del modulo basculante
+        const byte CMD_WRITE_E2P = 0x56; // Scrivi un byte sulla E2P
+        const byte CMD_READ_E2P = 0x57; // Leggi un byte dalla E2P
+        const byte CMD_RESTORE_E2P = 0x58; // Reimpostazione della E2P
+        const byte CMD_CASSETTE_IS_EMPTY = 0x5A; // Verifica se il cassetto è vuoto (solo se il sorter è aperto)
         const byte CMD_GET_TRACKPHOTO_COUNT = 0x5B; // Legge i contatori di banconote dei foto di traccia
-        const byte CMD_POSS_CASS_SQ         = 0x5C; // Restituisce l’informazione di possibile squadro del cassetto
-        const byte CMD_GET_UNIQUE_CASS_ID   = 0x5D; // Restituisce identificativo univoco del cassetto (MCU)
-        const byte CMD_GET_MCU_ID           = 0x5E; // Restituisce identificativo univoco del cassetto che si trova nella posizione specifica
-        const byte CMD_CHK_VERT_TRACK       = 0x5F; // Disabilita/Abilita controlli sulla traccia verticale
-        const byte CMD_ADD_BN_WITHDR        = 0x60; //Aggiungi numero di banconote al totale da prelevare (solo con procedura in corso)
-        const byte CMD_RESET_CASS_SQ        = 0x61; //Azzera la condizione di possibile squadro (solo se il cassetto è vuoto fisicamente)
-        const byte CMD_RAW_PH_ADJUST        = 0x62; //Calibrazione grezza dei foto sensori
-        const byte CMD_PHOTO_AUDIT          = 0x63; // Esegue audit del foto sensore
-        const byte CMD_GET_CASS_WORK        = 0x64; //Legge alcune informazioni di lavoro del cassetto
-        const byte CMD_FACTORY_PH_ADJUST    = 0x65; //Calibrazione factory del foto sensore
-        const byte CMD_GET_PH_V_ROM         = 0x66; //Lettura parametri del foto sensore da memoria non volatile
-        const byte CMD_SET_PH_V_ROM         = 0x67; //Scrittura parametri del foto sensore in memoria non volatile
-        const byte CMD_RESTORE_PH_VALUE     = 0x68; //Rispristina parametri del foto sensore
-        const byte CMD_PH_AUDIT             = 0x69; // Esegue audit del foto sensore
-        const byte CMD_ADC_READ             = 0x6B; // Leggi dati da ADC
-        const byte CMD_SET_TEST_VALIDATION  = 0x6C; // Valida collaudo nodulo
-        const byte CMD_GET_TEST_VALIDATION  = 0x6E; // Verifica validazione collaudo modulo
-        const byte CMD_RESTORE_SAFE_E2P     = 0x6F; // Reimpostazione della E2P SAFE
-        const byte CMD_SET_BN_HEIGTH        = 0x70; // Imposta altezza di banconota
-        const byte CMD_SET_CFG_PARAM        = 0x71; // Imposta parametro di configurazione
-        const byte CMD_GET_CFG_PARAM        = 0x72; // Leggi parametro di configurazione
-        const byte CMD_DISABLE_5V           = 0x73; // Imposta disabilitazione tensione logica cassetti (5V)
-        const byte CMD_SET_ERROR_STATE      = 0x75; // Imposta stato di errore
-        const byte CMD_GET_BL_INFO          = 0x77; // Leggi informazioni del boot loader
-        const byte CMD_BL_PROGRAM           = 0x78; // Esegui la programmazione del boot loader
-        const byte CMD_SAFE_RECOVERY        = 0x7B; // Recovery di cassaforte
-        const byte CMD_FW_UPDATE            = 0x7F; // trasferimento byte del firmware
+        const byte CMD_POSS_CASS_SQ = 0x5C; // Restituisce l’informazione di possibile squadro del cassetto
+        const byte CMD_GET_UNIQUE_CASS_ID = 0x5D; // Restituisce identificativo univoco del cassetto (MCU)
+        const byte CMD_GET_MCU_ID = 0x5E; // Restituisce identificativo univoco del cassetto che si trova nella posizione specifica
+        const byte CMD_CHK_VERT_TRACK = 0x5F; // Disabilita/Abilita controlli sulla traccia verticale
+        const byte CMD_ADD_BN_WITHDR = 0x60; //Aggiungi numero di banconote al totale da prelevare (solo con procedura in corso)
+        const byte CMD_RESET_CASS_SQ = 0x61; //Azzera la condizione di possibile squadro (solo se il cassetto è vuoto fisicamente)
+        const byte CMD_RAW_PH_ADJUST = 0x62; //Calibrazione grezza dei foto sensori
+        const byte CMD_PHOTO_AUDIT = 0x63; // Esegue audit del foto sensore
+        const byte CMD_GET_CASS_WORK = 0x64; //Legge alcune informazioni di lavoro del cassetto
+        const byte CMD_FACTORY_PH_ADJUST = 0x65; //Calibrazione factory del foto sensore
+        const byte CMD_GET_PH_V_ROM = 0x66; //Lettura parametri del foto sensore da memoria non volatile
+        const byte CMD_SET_PH_V_ROM = 0x67; //Scrittura parametri del foto sensore in memoria non volatile
+        const byte CMD_RESTORE_PH_VALUE = 0x68; //Rispristina parametri del foto sensore
+        const byte CMD_PH_AUDIT = 0x69; // Esegue audit del foto sensore
+        const byte CMD_ADC_READ = 0x6B; // Leggi dati da ADC
+        const byte CMD_SET_TEST_VALIDATION = 0x6C; // Valida collaudo nodulo
+        const byte CMD_GET_TEST_VALIDATION = 0x6E; // Verifica validazione collaudo modulo
+        const byte CMD_RESTORE_SAFE_E2P = 0x6F; // Reimpostazione della E2P SAFE
+        const byte CMD_SET_BN_HEIGTH = 0x70; // Imposta altezza di banconota
+        const byte CMD_SET_CFG_PARAM = 0x71; // Imposta parametro di configurazione
+        const byte CMD_GET_CFG_PARAM = 0x72; // Leggi parametro di configurazione
+        const byte CMD_DISABLE_5V = 0x73; // Imposta disabilitazione tensione logica cassetti (5V)
+        const byte CMD_SET_ERROR_STATE = 0x75; // Imposta stato di errore
+        const byte CMD_GET_BL_INFO = 0x77; // Leggi informazioni del boot loader
+        const byte CMD_BL_PROGRAM = 0x78; // Esegui la programmazione del boot loader
+        const byte CMD_SAFE_RECOVERY = 0x7B; // Recovery di cassaforte
+        const byte CMD_FW_UPDATE = 0x7C; // trasferimento byte del firmware
+        const byte CMD_FW_UPDATE_BIN = 0x81; // trasferimento byte del firmware BIN
 
-        const byte MODULE_ID_BROADCAST      = 0x00;
-        const byte MODULE_ID_UPPER_CTRL     = 0x01;
-        const byte MODULE_ID_READER         = 0x02;
-        const byte MODULE_ID_PH_CONC1       = 0x03;
-        const byte MODULE_ID_PH_CONC2       = 0x04;
-        const byte MODULE_ID_PH_CONC3       = 0x05;
-        const byte MODULE_ID_SHUTTER        = 0x06;
-        const byte MODULE_ID_SAFE           = 0x14;
-        const byte MODULE_ID_CASS_A         = 0x15;  
-        const byte MODULE_ID_CASS_B         = 0x16;  
-        const byte MODULE_ID_CASS_C         = 0x17;  
-        const byte MODULE_ID_CASS_D         = 0x18;  
-        const byte MODULE_ID_CASS_E         = 0x19;  
-        const byte MODULE_ID_CASS_F         = 0x10;  
-        const byte MODULE_ID_CASS_G         = 0x1A;  
-        const byte MODULE_ID_CASS_H         = 0x1B;  
-        const byte MODULE_ID_CASS_I         = 0x1C;  
-        const byte MODULE_ID_CASS_J         = 0x1D;  
-        const byte MODULE_ID_CASS_K         = 0x1E;  
-        const byte MODULE_ID_CASS_L         = 0x20;
-        const byte MODULE_ID_BAG            = 0x21;
-        const byte MODULE_ID_ALARM          = 0x22;
-        const byte MODULE_ID_BASC_          = 0xE1;
-        const byte MODULE_ID_UI             = 0xE0;
+        const byte MODULE_ID_BROADCAST = 0x00;
+        const byte MODULE_ID_UPPER_CTRL = 0x01;
+        const byte MODULE_ID_READER = 0x02;
+        const byte MODULE_ID_PH_CONC1 = 0x03;
+        const byte MODULE_ID_PH_CONC2 = 0x04;
+        const byte MODULE_ID_PH_CONC3 = 0x05;
+        const byte MODULE_ID_SHUTTER = 0x06;
+        const byte MODULE_ID_SAFE = 0x14;
+        const byte MODULE_ID_CASS_A = 0x15;
+        const byte MODULE_ID_CASS_B = 0x16;
+        const byte MODULE_ID_CASS_C = 0x17;
+        const byte MODULE_ID_CASS_D = 0x18;
+        const byte MODULE_ID_CASS_E = 0x19;
+        const byte MODULE_ID_CASS_F = 0x10;
+        const byte MODULE_ID_CASS_G = 0x1A;
+        const byte MODULE_ID_CASS_H = 0x1B;
+        const byte MODULE_ID_CASS_I = 0x1C;
+        const byte MODULE_ID_CASS_J = 0x1D;
+        const byte MODULE_ID_CASS_K = 0x1E;
+        const byte MODULE_ID_CASS_L = 0x20;
+        const byte MODULE_ID_BAG = 0x21;
+        const byte MODULE_ID_ALARM = 0x22;
+        const byte MODULE_ID_BASC_ = 0xE1;
+        const byte MODULE_ID_UI = 0xE0;
 
-        const byte PHOTO_OUTL_ID            = 0x00;
-        const byte PHOTO_OUTR_ID            = 0x01;
-        const byte PHOTO_TRACK_ID           = 0x02;
-        const byte PHOTO_END_ID             = 0x03;
-        const byte PHOTO_SORTER_ID          = 0x04;
+        const byte PHOTO_OUTL_ID = 0x00;
+        const byte PHOTO_OUTR_ID = 0x01;
+        const byte PHOTO_TRACK_ID = 0x02;
+        const byte PHOTO_END_ID = 0x03;
+        const byte PHOTO_SORTER_ID = 0x04;
 
-        const byte ENABLE                   = 0x01; // abilita
-        const byte DISABLE                  = 0x00; // disabilita
-        const byte PINCH_UP                 = 0x00; // alza
-        const byte PINCH_DOWN               = 0x01; // abbassa
-        const byte TAPE_WRAP                = 0x01; // avvolgi bandella
-        const byte TAPE_UNWRAP              = 0x00; // svolgi bandella
-        const byte TAPE_STOP                = 0x02; // ferma bandella
-        const byte MOTOR_DIRECTION_INPUT    = 0x00; // Direzine movimentazione motore INPUT
-        const byte MOTOR_DIRECTION_OUTPUT   = 0x01; // Direzione movimentazione motore OUTPUT
-        const byte MOTOR_DIRECTION_STOP     = 0x02; // Arresto movimentazione motore
+        const byte ENABLE = 0x01; // abilita
+        const byte DISABLE = 0x00; // disabilita
+        const byte PINCH_UP = 0x00; // alza
+        const byte PINCH_DOWN = 0x01; // abbassa
+        const byte TAPE_WRAP = 0x01; // avvolgi bandella
+        const byte TAPE_UNWRAP = 0x00; // svolgi bandella
+        const byte TAPE_STOP = 0x02; // ferma bandella
+        const byte MOTOR_DIRECTION_INPUT = 0x00; // Direzine movimentazione motore INPUT
+        const byte MOTOR_DIRECTION_OUTPUT = 0x01; // Direzione movimentazione motore OUTPUT
+        const byte MOTOR_DIRECTION_STOP = 0x02; // Arresto movimentazione motore
+        const byte PAR_BOOT_VERSION = 0x00; // Parametro 'Versione' del comando Leggi informazioni del bootloader (0x77)
+        const byte PAR_BOOT_RELEASE = 0x01; // Parametro 'Release' del comando Leggi informazioni del bootloader (0x77)
+        const byte PAR_BOOT_FEATURE = 0x03; // Parametro 'Caratteristiche' del comando Leggi informazioni del bootloader (0x77)
 
         public static SerialPort mySerial = new SerialPort();
         public string commandAnswer = "";
@@ -1903,7 +1912,7 @@ namespace myArcaNameSpace
         public event EventHandler DataSent;
         int byteReceived = 0;
 
-       
+
 
         public struct SCanBusFrame
         {
@@ -1916,6 +1925,211 @@ namespace myArcaNameSpace
             public byte[] eventData;
         }
         public SCanBusFrame canFrame = new SCanBusFrame();
+
+        #region Comandi per adattatore CAN CANFD-2P-ISO
+
+        /* List of Supported Commands:
+         * O - Open the channel in Normal mode -----------------
+         * L - Open the channel in Listen Only mode
+         * Y - Open the channel in Loopback mode
+         * C - Close CAN Channel -------------------------------
+         * S - Set standard CAN bitrate ------------------------
+         * s - Set non-standard CAN bitrate
+         * t - Transmit a standard frame
+         * T - Transmit an extended frame
+         * r - Transmit a standard remote request frame
+         * R - Transmit an extended remote request frame
+         * Z - Set timestamp on/off ----------------------------
+         * m - Set acceptance mask -----------------------------
+         * M - Set acceptance filter ---------------------------
+         * F - Read status flag --------------------------------
+         * V - Check software version --------------------------
+         * N - Check serial number -----------------------------
+         * RST - Reset USB CAN Adapter
+        */
+
+        public bool CmdCanOpen()
+        {
+            if (!mySerial.IsOpen)
+                mySerial.Open();
+            byte[] cmd = { 0x4F, 0x0D };
+            byte[] answer = SendSerialCmd(cmd, 1500);
+            mySerial.Close();
+            if (answer[0] != 0x07 && answer[0] != 0x0D)
+                return false;
+            return true;
+        }
+
+        public bool CmdCanSetBitrate(byte bitrateId)
+        {
+            if (!mySerial.IsOpen)
+                mySerial.Open();
+            byte[] cmd = { 0x53, bitrateId, 0x0D, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00 }; //Sn[CR]000000000
+            byte[] answer = SendSerialCmd(cmd, 1500);
+            mySerial.Close();
+            if (answer[0] != 0x07 && answer[0] != 0x0D)
+                return false;
+            return true;
+        }
+        public bool CmdCanClose()
+        {
+            if (!mySerial.IsOpen)
+                mySerial.Open();
+            byte[] cmd = { 0x43, 0x0D }; //C[CR]
+            byte[] answer = SendSerialCmd(cmd, 1500);
+            mySerial.Close();
+            if (answer[0] != 0x07 && answer[0] != 0x0D)
+                return false;
+            return true;
+        }
+
+        public bool CmdCanSetTimeStamp(byte value = 0x00)
+        {
+            if (!mySerial.IsOpen)
+                mySerial.Open();
+            byte[] cmd = { 0x5A, value, 0x0D };
+            byte[] answer = SendSerialCmd(cmd, 1500);
+            mySerial.Close();
+            if (answer[0] != 0x07 && answer[0] != 0x0D)
+                return false;
+            return true;
+        }
+
+        public bool CmdCanSetMask(ulong filter)
+        {
+            if (!mySerial.IsOpen)
+                mySerial.Open();
+            byte[] filterBytes = new byte[8];
+
+            for (int i = 0; i < 8; i++)
+                filterBytes[i] = (byte)((filter >> (8 * i)) & 0xFF);
+
+            byte[] cmd = new byte[10];
+            cmd[0] = 0x6D;
+            Array.Copy(filterBytes, 0, cmd, 1, filterBytes.Length);
+            cmd[9] = 0x0D;
+            byte[] answer = SendSerialCmd(cmd, 1500);
+            mySerial.Close();
+            if (answer[0] != 0x07 && answer[0] != 0x0D)
+                return false;
+            return true;
+        }
+
+        public bool CmdCanSetFilter(ulong filter)
+        {
+            if (!mySerial.IsOpen)
+                mySerial.Open();
+            byte[] filterBytes = new byte[8];
+
+            for (int i = 0; i < 8; i++)
+                filterBytes[i] = (byte)((filter >> (8 * i)) & 0xFF);
+
+            byte[] cmd = new byte[11];
+            cmd[0] = 0x0D;
+            cmd[1] = 0x4D;
+            Array.Copy(filterBytes, 0, cmd, 2, filterBytes.Length);
+            cmd[10] = 0x0D;
+            byte[] answer = SendSerialCmd(cmd, 1500);
+            mySerial.Close();
+            if (answer[0] != 0x07 && answer[0] != 0x0D)
+                return false;
+            return true;
+        }
+
+        public string CmdCanGetCanStatus()
+        {
+            if (!mySerial.IsOpen)
+                mySerial.Open();
+            byte[] cmd = { 0x46, 0x0D };
+            byte[] answer = SendSerialCmd(cmd, 1500);
+            mySerial.Close();
+            if (answer.Length < 3)
+                return "FAIL";
+            if (answer[2] != 0x07 && answer[2] != 0x0D)
+                return "FAIL";
+            byte[] risposta = ByteArrayDivided2ByteArray(new byte[] { answer[0], answer[1] });
+            string bitMask = Arca.Byte2Bin(risposta[0]);
+            byte lec = Arca.Bin2Byte(bitMask.Substring(0, 3)); // da 0 a 7
+            byte sndMsg = Arca.Bin2Byte(bitMask.Substring(3, 1)); // 0/1
+            byte rcvMsg = Arca.Bin2Byte(bitMask.Substring(4, 1)); // 0/1
+            byte passErr = Arca.Bin2Byte(bitMask.Substring(5, 1)); // 0/1
+            byte warningStatus = Arca.Bin2Byte(bitMask.Substring(6, 1)); // 0/1
+            byte busOff = Arca.Bin2Byte(bitMask.Substring(7, 1)); // 0/1
+            return bitMask;
+        }
+
+        public string CmdCanGetCanSwVer()
+        {
+            if (!mySerial.IsOpen)
+                mySerial.Open();
+            byte[] cmd = { 0x56, 0x0D };
+            byte[] answer = SendSerialCmd(cmd, 1500);
+            mySerial.Close();
+            if (answer.Length < 6)
+                return "FAIL";
+            if (answer[5] != 0x07 && answer[5] != 0x0D)
+                return "FAIL";
+            return Arca.ByteArray2Ascii(answer, 0, 5);
+        }
+
+        public string CmdCanGetCanSN()
+        {
+            if (!mySerial.IsOpen)
+                mySerial.Open();
+            byte[] cmd = { 0x4E, 0x0D };
+            byte[] answer = SendSerialCmd(cmd, 1500);
+            mySerial.Close();
+            if (answer.Length < 16)
+                return "FAIL";
+            if (answer[15] != 0x07 && answer[15] != 0x0D)
+                return "FAIL";
+            return Arca.ByteArray2Ascii(answer, 0, 8);
+        }
+
+
+
+        public byte[] ByteArrayDivided2ByteArray(byte[] value)
+        {
+            byte[] result = new byte[value.Length / 2];
+            for (int i = 0; i < result.Length; i++)
+            {
+                string temp = value[i * 2].ToString("X2").Substring(1, 1) + value[i * 2 + 1].ToString("X2").Substring(1, 1);
+                result[i] = Convert.ToByte(temp);
+            }
+            return result;
+
+        }
+        public byte[] ByteArray2DividedByteArray(byte[] value)
+        {
+            byte[] result = new byte[value.Length * 2];
+            for (int i = 0; i < result.Length; i += 2)
+            {
+                string temp = value[i / 2].ToString("X2");
+                result[i] = Convert.ToByte(Convert.ToChar(temp.Substring(0, 1)));
+                result[i + 1] = Convert.ToByte(Convert.ToChar(temp.Substring(1, 1)));
+            }
+            return result;
+        }
+
+        public byte[] CmdSendFrame(byte[] frame)
+        {
+            byte[] result = ByteArray2DividedByteArray(frame);
+            if (!mySerial.IsOpen)
+                mySerial.Open();
+            byte[] cmd = new byte[13];
+            cmd[0] = 0x54;
+            Array.Copy(result, 0, cmd, 1, result.Length);
+            cmd[9] = 0x31;
+            byte[] dati = ByteArray2DividedByteArray(new byte[] { 0x01 });
+            Array.Copy(dati, 0, cmd, 10, dati.Length);
+            cmd[12] = 0x0D;
+            byte[] answer = SendSerialCmd(cmd, 3000);
+            mySerial.Close();
+            return answer;
+        }
+
+
+        #endregion
 
         public void OpenCom()
         {
@@ -1955,19 +2169,33 @@ namespace myArcaNameSpace
         static byte[] MakeFrameID(int DestinationID, int SourceID, int messageType, int dataComplete, int functionID, params byte[] data) // Command
         {
             byte[] result;
-            byte[] prefix = { 0xAA, 0xE0 };
-            prefix[1] += (byte)data.Length;
-            byte[] suffix = { 0x55 };
 
+            // dimensione dati da inviare
+            string dlcDecimalString = string.Concat(data.Select(a => a.ToString("X2")));
+            byte[] dlcAsciiByte = new byte[dlcDecimalString.Length];
+            int id = 0;
+            foreach (char dlc in dlcDecimalString)
+                dlcAsciiByte[id++] = (byte)dlc;
+
+            // composizione comando can bus
             string comando = "000000" + Arca.Dec2Bin(DestinationID, 6) + Arca.Dec2Bin(SourceID, 6) + Arca.Dec2Bin(messageType, 3) + Arca.Dec2Bin(dataComplete, 1) + Arca.Dec2Bin(functionID, 10);
-            byte[] comandoB = Arca.Bin2ByteArray(comando);
-            Array.Reverse(comandoB);
-            result = new byte[comandoB.Length + data.Length + prefix.Length + suffix.Length];
-            Array.Copy(prefix, result, prefix.Length);
-            Array.Copy(comandoB, 0, result, prefix.Length, comandoB.Length);
-            Array.Copy(data, 0, result, comandoB.Length + prefix.Length, data.Length);
-            Array.Copy(suffix, 0, result, comandoB.Length + prefix.Length + data.Length, suffix.Length);
-            return result;
+
+            // trasformazione comando in ascii hex
+            byte[] comandoByte = Arca.Bin2ByteArray(comando);
+            string comandoHexString = string.Concat(comandoByte.Select(b => b.ToString("X2")));
+            byte[] comandoAsciiByte = new byte[comandoHexString.Length];
+            id = 0;
+            foreach (char cmd in comandoHexString)
+                comandoAsciiByte[id++] = (byte)cmd;
+
+            // assemblaggio frame
+            byte[] frame = new byte[(comandoByte.Length + data.Length) * 2 + 3];
+            frame[0] = 0x54;
+            Array.Copy(comandoAsciiByte, 0, frame, 1, comandoAsciiByte.Length);
+            frame[9] = (byte)(data.Length + 0x30);
+            Array.Copy(dlcAsciiByte, 0, frame, 10, dlcAsciiByte.Length);
+            frame[frame.Length - 1] = 0x0D;
+            return frame;
         }
 
         public void SetAndStart()
@@ -1990,7 +2218,7 @@ namespace myArcaNameSpace
             mySerial.Write(dataToSend, 0, dataToSend.Length);
             Stopwatch sw = new Stopwatch();
             sw.Start();
-            aspetta:
+        aspetta:
             byte[] received = new byte[mySerial.BytesToRead];
             if (received.Length == 0 && timeout != 0)
             {
@@ -2002,7 +2230,7 @@ namespace myArcaNameSpace
                 }
                 goto aspetta;
             }
-            leggi:
+        leggi:
             received = new byte[mySerial.BytesToRead];
             Arca.WaitingTime(15);
             if (received.Length != mySerial.BytesToRead)
@@ -2013,7 +2241,7 @@ namespace myArcaNameSpace
             if (canFrame.data.Length == 0 && canFrame.eventData.Length > 0)
                 if (canFrame.eventData[1] == 0x41)
                 {
-                    attesa:
+                attesa:
                     Arca.WaitingTime(100);
                     if (mySerial.BytesToRead == 0 && sw.ElapsedMilliseconds < timeout)
                         goto attesa;
@@ -2032,6 +2260,43 @@ namespace myArcaNameSpace
             return canFrame.data;
         }
 
+        public byte[] SendSerialCmd(byte[] dataToSend, int timeout = 1000)
+        {
+            //WaitEvent();
+            List<byte[]> prova = new List<byte[]>();
+            mySerial.DiscardInBuffer();
+            commandSent = BitConverter.ToString(dataToSend);
+            DataSent(commandSent, null);
+            mySerial.Write(dataToSend, 0, dataToSend.Length);
+            Stopwatch sw = new Stopwatch();
+            sw.Start();
+        aspetta:
+            byte[] received = new byte[mySerial.BytesToRead];
+            if (received.Length == 0 && timeout != 0)
+            {
+                if (sw.ElapsedMilliseconds > timeout)
+                {
+                    DataReceived("NO ANSWER", null);
+                    goto fine;
+                }
+                goto aspetta;
+            }
+        leggi:
+            received = new byte[mySerial.BytesToRead];
+            Arca.WaitingTime(15);
+            if (received.Length != mySerial.BytesToRead)
+                goto leggi;
+            mySerial.Read(received, 0, received.Length);
+            Arca.WaitingTime(50);
+            if (received.Length > 0)
+                DataReceived(BitConverter.ToString(received), null);
+            else
+                DataReceived("NO ANSWER", null);
+            fine:
+            //TranslateFrame(received);
+            return received;
+        }
+
         public byte[] WaitEvent()
         {
             //mySerial.Open();
@@ -2043,7 +2308,7 @@ namespace myArcaNameSpace
                 TranslateFrame(received);
                 byte[] evento = new byte[canFrame.eventData.Length + 1];
                 evento[0] = Convert.ToByte(canFrame.sourceID);
-                Array.Copy(canFrame.eventData,0, evento,1, canFrame.eventData.Length);
+                Array.Copy(canFrame.eventData, 0, evento, 1, canFrame.eventData.Length);
                 DataReceived(BitConverter.ToString(evento), null);
             }
             //mySerial.Close();
@@ -2083,43 +2348,48 @@ namespace myArcaNameSpace
             string frame = "";
             canFrame = new SCanBusFrame();
             int datiLenght = 0, datiTot = 0, esitoComando = -100;
-            
-            if (received.Length > 6)
+
+            if (received.Length >= 11)
             {
                 int idFrame = 0;
-                while(idFrame < received.Length-1)
+                string hexFrame = new string(received.Select(b => (char)b).ToArray());
+                byte[] frametmp = new byte[4];
+                for (int i = 0; i < 4; i++)
                 {
-                    //if (received.Length - idFrame >= 7)
-                    {
-                        datiLenght = received[idFrame + 1] - 0xE0;
-                        datiTot += datiLenght;
-                        frame = Arca.Byte2Bin(received[idFrame + 5]) + Arca.Byte2Bin(received[idFrame + 4]) + Arca.Byte2Bin(received[idFrame + 3]) + Arca.Byte2Bin(received[idFrame + 2]);
-                        canFrame.destinationID = Arca.Bin2Hex(frame.Substring(6, 6));
-                        canFrame.sourceID = Arca.Bin2Hex(frame.Substring(12, 6));
-                        canFrame.messageType = Arca.Bin2Hex(frame.Substring(18, 3));
-                        canFrame.functionID = Arca.Bin2Hex(frame.Substring(22, 10));
-                        canFrame.dataComplete = Arca.Bin2Hex(frame.Substring(21, 1));
-                        int startCmdIndex = 0;
-                        switch (canFrame.messageType)
+                    frametmp[i] = Convert.ToByte(hexFrame.Substring(i * 2 + 1, 2), 16);
+                }
+                if (received[0] != 0x54)
+                    return null;
+                datiLenght = received[idFrame + 9] - 0X30;
+                datiTot += datiLenght;
+                frame = Arca.Byte2Bin(frametmp[0]) + Arca.Byte2Bin(frametmp[1]) + Arca.Byte2Bin(frametmp[2]) + Arca.Byte2Bin(frametmp[3]);
+                canFrame.destinationID = Arca.Bin2Hex(frame.Substring(6, 6));
+                canFrame.sourceID = Arca.Bin2Hex(frame.Substring(12, 6));
+                canFrame.messageType = Arca.Bin2Hex(frame.Substring(18, 3));
+                canFrame.functionID = Arca.Bin2Hex(frame.Substring(22, 10));
+                canFrame.dataComplete = Arca.Bin2Hex(frame.Substring(21, 1));
+                int startCmdIndex = 0;
+                switch (canFrame.messageType)
+                {
+                    case "0": // EVENT
+
+                        break;
+                    case "1": // CMD
+                    case "2": //REPLY
+                        if (esitoComando != -100)
+                            startCmdIndex = 1;
+                        else
+                            esitoComando = received[idFrame];
+                        for (int i = startCmdIndex; i < datiLenght; i++)
                         {
-                            case "0": // EVENT
-                                //for (int i = received[idFrame + 6]; i < datiLenght; i++) // modificato per intercettare gli eventi durante il collaudo dei cassetti
-                                for (int i = idFrame + 6; i < datiLenght + idFrame + 6; i++)
-                                    dataEvent.Add(received[i]);
-                                break;
-                            case "1": // CMD
-                            case "2": // REPLY
-                                if (esitoComando != -100)
-                                    startCmdIndex = 1;
-                                else
-                                    esitoComando = received[idFrame + 6];
-                                for (int i = startCmdIndex; i < datiLenght; i++)
-                                    dataCmd.Add(received[idFrame + 6 + i]);
-                                break;
+                            //10-11
+                            byte[] temp = new byte[2];
+                            Array.Copy(received, idFrame + 10, temp, 0, temp.Length);
+                            string hexTemp = new string(temp.Select(b => (char)b).ToArray());
+
+                            dataCmd.Add(Convert.ToByte(hexTemp, 16));
                         }
-                    }
-                    idFrame += 7 + datiLenght;
-                    
+                        break;
                 }
                 canFrame.data = new byte[dataCmd.Count];
                 canFrame.eventData = new byte[dataEvent.Count];
@@ -2129,102 +2399,147 @@ namespace myArcaNameSpace
                     canFrame.eventData[i] = dataEvent[i];
             }
 
-            byte[] error = new byte[1];    
+
+
+            //if (received.Length > 6)
+            //{
+            //    int idFrame = 0;
+            //    while(idFrame < received.Length-1)
+            //    {
+            //        //if (received.Length - idFrame >= 7)
+            //        {
+            //            datiLenght = received[idFrame + 1] - 0xE0;
+            //            datiTot += datiLenght;
+            //            frame = Arca.Byte2Bin(received[idFrame + 5]) + Arca.Byte2Bin(received[idFrame + 4]) + Arca.Byte2Bin(received[idFrame + 3]) + Arca.Byte2Bin(received[idFrame + 2]);
+            //            canFrame.destinationID = Arca.Bin2Hex(frame.Substring(6, 6));
+            //            canFrame.sourceID = Arca.Bin2Hex(frame.Substring(12, 6));
+            //            canFrame.messageType = Arca.Bin2Hex(frame.Substring(18, 3));
+            //            canFrame.functionID = Arca.Bin2Hex(frame.Substring(22, 10));
+            //            canFrame.dataComplete = Arca.Bin2Hex(frame.Substring(21, 1));
+            //            int startCmdIndex = 0;
+            //            switch (canFrame.messageType)
+            //            {
+            //                case "0": // EVENT
+            //                    //for (int i = received[idFrame + 6]; i < datiLenght; i++) // modificato per intercettare gli eventi durante il collaudo dei cassetti
+            //                    for (int i = idFrame + 6; i < datiLenght + idFrame + 6; i++)
+            //                        dataEvent.Add(received[i]);
+            //                    break;
+            //                case "1": // CMD
+            //                case "2": // REPLY
+            //                    if (esitoComando != -100)
+            //                        startCmdIndex = 1;
+            //                    else
+            //                        esitoComando = received[idFrame + 6];
+            //                    for (int i = startCmdIndex; i < datiLenght; i++)
+            //                        dataCmd.Add(received[idFrame + 6 + i]);
+            //                    break;
+            //            }
+            //        }
+            //        idFrame += 7 + datiLenght;
+
+            //    }
+            //    canFrame.data = new byte[dataCmd.Count];
+            //    canFrame.eventData = new byte[dataEvent.Count];
+            //    for (int i = 0; i < canFrame.data.Length; i++)
+            //        canFrame.data[i] = dataCmd[i];
+            //    for (int i = 0; i < canFrame.eventData.Length; i++)
+            //        canFrame.eventData[i] = dataEvent[i];
+            //}
+
+            byte[] error = new byte[1];
             return error;
         }
 
-        public byte[] CmdSetPower(byte destinationID, byte powerState)
+        public byte[] CmdElmDoorOpen(byte destinationID, byte action)
         {
-            // 0x22 + azione
-            // 0x00=OFF / 0x01=ON
-            if(!mySerial.IsOpen)
+            if (!mySerial.IsOpen)
                 mySerial.Open();
-            byte[] frame = MakeFrameID(destinationID, MODULE_ID_UPPER_CTRL, CAN_MSG_CMD, CAN_DATA_COMPLETE, CMD_SET_POWER, powerState);
+            byte[] frame = MakeFrameID(destinationID, MODULE_ID_UPPER_CTRL, CAN_MSG_CMD, CAN_DATA_COMPLETE, CMD_MOVE_ELM, action); // 
             byte[] result = SendCommand(frame);
             mySerial.Close();
             return result;
         }
 
-        public byte[] CmdGetPower(byte destinationID)
+        public byte[] CmdGetPhotoParameters(byte destinationID, byte photoId)
         {
             if (!mySerial.IsOpen)
                 mySerial.Open();
-            byte[] frame = MakeFrameID(destinationID, MODULE_ID_UPPER_CTRL, CAN_MSG_CMD, CAN_DATA_COMPLETE, CMD_GET_PWR_CUR_V);
-            byte[] result = SendCommand(frame);
-            mySerial.Close();
-            return result;
-        }
-        public byte[] CmdRestoreE2P(byte destinationID)
-        {
-            byte[] frame = { 0x00 };
-            if (!mySerial.IsOpen)
-                mySerial.Open();
-            switch (destinationID)
-            {
-                case MODULE_ID_BROADCAST:
-                case MODULE_ID_CASS_A:
-                case MODULE_ID_CASS_B:
-                case MODULE_ID_CASS_C:
-                case MODULE_ID_CASS_D:
-                    frame = MakeFrameID(destinationID, MODULE_ID_UPPER_CTRL, CAN_MSG_CMD, CAN_DATA_COMPLETE, CMD_RESTORE_E2P);
-                    break;
-                case MODULE_ID_SAFE:
-                    frame = MakeFrameID(destinationID, MODULE_ID_UPPER_CTRL, CAN_MSG_CMD, CAN_DATA_COMPLETE, CMD_RESTORE_SAFE_E2P);
-                    break;
-            }
+            byte[] frame = MakeFrameID(destinationID, MODULE_ID_UPPER_CTRL, CAN_MSG_CMD, CAN_DATA_COMPLETE, CMD_GET_PH_PAR, photoId); // 
             byte[] result = SendCommand(frame);
             mySerial.Close();
             return result;
         }
 
-        public byte[] CmdGetE2PByte(byte destinationID, byte address)
+        public byte[] CmdGetSafeCfg(byte destinationID, byte configurationId)
         {
-            byte[] entireAddress = new byte[4];
-            entireAddress[3] = address;
             if (!mySerial.IsOpen)
                 mySerial.Open();
-            byte[] frame = MakeFrameID(destinationID, MODULE_ID_UPPER_CTRL, CAN_MSG_CMD, CAN_DATA_COMPLETE, CMD_READ_E2P, entireAddress);
+            byte[] frame = MakeFrameID(destinationID, MODULE_ID_UPPER_CTRL, CAN_MSG_CMD, CAN_DATA_COMPLETE, CMD_GET_CFG_PARAM, configurationId); // 
             byte[] result = SendCommand(frame);
             mySerial.Close();
             return result;
         }
 
-        public byte[] CmdSetTrayNumber(int cassetteNumber = 8)
+        public byte[] CmdSetSafeCfg(byte destinationID, byte configurationId, byte configurationValue)
         {
-            byte casNum = Convert.ToByte(cassetteNumber / 2);
-            byte[] bitMask = { 0x0F, 0xFF, casNum };
             if (!mySerial.IsOpen)
                 mySerial.Open();
-            byte[] frame = MakeFrameID(MODULE_ID_SAFE, MODULE_ID_UPPER_CTRL, CAN_MSG_CMD, CAN_DATA_COMPLETE, CMD_SET_OP_CASSETTE, bitMask);
+            byte[] frame = MakeFrameID(destinationID, MODULE_ID_UPPER_CTRL, CAN_MSG_CMD, CAN_DATA_COMPLETE, CMD_SET_CFG_PARAM, configurationId, configurationValue); // 
             byte[] result = SendCommand(frame);
             mySerial.Close();
             return result;
         }
-
+        public byte[] CmdGetCassettePosition()
+        {
+            if (!mySerial.IsOpen)
+                mySerial.Open();
+            byte[] frame = MakeFrameID(MODULE_ID_SAFE, MODULE_ID_UPPER_CTRL, CAN_MSG_CMD, CAN_DATA_COMPLETE, CMD_GET_CASSETTE_POS); // 
+            byte[] result = SendCommand(frame);
+            mySerial.Close();
+            return result;
+        }
+        public byte[] CmdAssignAllCassettes(byte destinationID)
+        {
+            if (!mySerial.IsOpen)
+                mySerial.Open();
+            byte[] frame = MakeFrameID(destinationID, MODULE_ID_UPPER_CTRL, CAN_MSG_CMD, CAN_DATA_COMPLETE, CMD_CASSETTE_ASSIGN); // 
+            byte[] result = SendCommand(frame);
+            mySerial.Close();
+            return result;
+        }
+        public byte[] CmdGetSwitchStatus(byte destinationID, byte idSwitch)
+        {
+            if (!mySerial.IsOpen)
+                mySerial.Open();
+            byte[] frame = MakeFrameID(destinationID, MODULE_ID_UPPER_CTRL, CAN_MSG_CMD, CAN_DATA_COMPLETE, CMD_GET_SW_STATE, idSwitch); // 
+            byte[] result = SendCommand(frame);
+            mySerial.Close();
+            return result;
+        }
+        public byte[] CmdSetPower(byte destinationID, byte mode)
+        {
+            if (!mySerial.IsOpen)
+                mySerial.Open();
+            byte[] frame = MakeFrameID(destinationID, MODULE_ID_UPPER_CTRL, CAN_MSG_CMD, CAN_DATA_COMPLETE, CMD_SET_POWER, mode); // 
+            byte[] result = SendCommand(frame);
+            mySerial.Close();
+            return result;
+        }
         public byte[] CmdGetStatus(byte destinationID)
         {
-            if(!mySerial.IsOpen)
+            if (!mySerial.IsOpen)
                 mySerial.Open();
             byte[] frame = MakeFrameID(destinationID, MODULE_ID_UPPER_CTRL, CAN_MSG_CMD, CAN_DATA_COMPLETE, CMD_GET_STATUS); // 
             byte[] result = SendCommand(frame);
             mySerial.Close();
             return result;
         }
-        
+
         public byte[] CmdGetBascMode(byte destinationID)
         {
             if (!mySerial.IsOpen)
                 mySerial.Open();
             byte[] frame = MakeFrameID(destinationID, MODULE_ID_UPPER_CTRL, CAN_MSG_CMD, CAN_DATA_COMPLETE, CMD_GET_BASC_MODE);
-            byte[] result = SendCommand(frame);
-            mySerial.Close();
-            return result;
-        }
-        public byte[] CmdDisable5V(byte destinationID, byte state) // state=0x01 = 5V disabilitato - 0x00=5V abilitato
-        {
-            if (!mySerial.IsOpen)
-                mySerial.Open();
-            byte[] frame = MakeFrameID(destinationID, MODULE_ID_UPPER_CTRL, CAN_MSG_CMD, CAN_DATA_COMPLETE, CMD_DISABLE_5V, state);
             byte[] result = SendCommand(frame);
             mySerial.Close();
             return result;
@@ -2240,7 +2555,8 @@ namespace myArcaNameSpace
             return result;
         }
 
-        public byte[]CmdGetModuleName(byte destinationID)
+
+        public byte[] CmdGetModuleName(byte destinationID)
         {
             if (!mySerial.IsOpen)
                 mySerial.Open();
@@ -2254,15 +2570,6 @@ namespace myArcaNameSpace
             if (!mySerial.IsOpen)
                 mySerial.Open();
             byte[] frame = MakeFrameID(destinationID, MODULE_ID_UPPER_CTRL, CAN_MSG_CMD, CAN_DATA_COMPLETE, CMD_SET_TEST_VALIDATION, value);
-            byte[] result = SendCommand(frame);
-            mySerial.Close();
-            return result;
-        }
-        public byte[] CmdGetValidateTest(byte destinationID)
-        {
-            if (!mySerial.IsOpen)
-                mySerial.Open();
-            byte[] frame = MakeFrameID(destinationID, MODULE_ID_UPPER_CTRL, CAN_MSG_CMD, CAN_DATA_COMPLETE, CMD_GET_TEST_VALIDATION);
             byte[] result = SendCommand(frame);
             mySerial.Close();
             return result;
@@ -2295,7 +2602,7 @@ namespace myArcaNameSpace
             return result;
         }
 
-        public byte[]CmdGetFwRelease(byte destinationID)
+        public byte[] CmdGetFwRelease(byte destinationID)
         {
             if (!mySerial.IsOpen)
                 mySerial.Open();
@@ -2304,7 +2611,7 @@ namespace myArcaNameSpace
             mySerial.Close();
             return result;
         }
-        public byte[]CmdGetFwVersion(byte destinationID)
+        public byte[] CmdGetFwVersion(byte destinationID)
         {
             if (!mySerial.IsOpen)
                 mySerial.Open();
@@ -2313,7 +2620,7 @@ namespace myArcaNameSpace
             mySerial.Close();
             return result;
         }
-        public byte[]CmdFwUpdateRequest(byte destinationID)
+        public byte[] CmdFwUpdateRequest(byte destinationID)
         {
             if (!mySerial.IsOpen)
                 mySerial.Open();
@@ -2331,42 +2638,10 @@ namespace myArcaNameSpace
             mySerial.Close();
             return result;
         }
-        public byte[] CmdElmOpen(byte destinationID, byte state, byte idElm = 0x00)
-        {
-            if (!mySerial.IsOpen)
-                mySerial.Open();
-            byte[] frame = MakeFrameID(destinationID, MODULE_ID_UPPER_CTRL, CAN_MSG_CMD, CAN_DATA_COMPLETE, CMD_MOVE_ELM, idElm, state);
-            byte[] result = SendCommand(frame);
-            mySerial.Close();
-            return result;
-        }
 
-        public byte[] CmdFwUpload(byte destinationID, byte[] fwData, byte dataComplete = CAN_DATA_INCOMPLETE)
-        {
-            //if(!mySerial.IsOpen)
-            //    mySerial.Open();
-            byte[] result = { 0x00 };
-            byte[] data = new byte[8];
-            byte[] frame;
 
-            for (int i = 0; i < fwData.Length; i += 8)
-            {
-                //result = new byte[1];
-                if (fwData.Length - i < 8)
-                {
-                    data = new byte[fwData.Length - i];
-                    frame = MakeFrameID(destinationID, MODULE_ID_UPPER_CTRL, CAN_MSG_CMD, CAN_DATA_COMPLETE, CMD_FW_UPDATE, data);
-                }
-                else
-                    frame = MakeFrameID(destinationID, MODULE_ID_UPPER_CTRL, CAN_MSG_CMD, CAN_DATA_INCOMPLETE, CMD_FW_UPDATE, data);
 
-                Array.Copy(fwData, i, frame, 6, data.Length);
-                SendFirmware(frame);
-            }
-            return result;
-        }
-
-        public byte[] UpdateFwCassette(byte destinationID, byte[] fwData)
+        public byte[] UpdateFwHexCassette(byte destinationID, byte[] fwData)
         {
             byte[] result = { 0x00 };
             int dim = 8;
@@ -2386,7 +2661,7 @@ namespace myArcaNameSpace
             frame = MakeFrameID(destinationID, MODULE_ID_UPPER_CTRL, CAN_MSG_CMD, CAN_DATA_INCOMPLETE, CMD_FW_UPDATE, data);
             return result;
         }
-        public byte[] UpdateFwBasc(byte destinationID, byte[] fwData)
+        public byte[] UpdateFwHexBasc(byte destinationID, byte[] fwData)
         {
             byte[] result = { 0x00 };
             int dim = 8;
@@ -2407,34 +2682,8 @@ namespace myArcaNameSpace
             return result;
         }
 
-        public byte[] CmdFwUpdateAbort(byte destinationID)
-        {
-            if (!mySerial.IsOpen)
-                mySerial.Open();
-            byte[] frame = MakeFrameID(destinationID, MODULE_ID_UPPER_CTRL, CAN_MSG_CMD, CAN_DATA_COMPLETE, CMD_CANC_BASC_FW_UPDATE);
-            byte[] result = SendCommand(frame);
-            mySerial.Close();
-            return result;
-        }
-        public byte[]CmdSorterOpen(byte destinationID, byte sorterPosition)
-        {
-            if (!mySerial.IsOpen)
-                mySerial.Open();
-            byte[] frame = MakeFrameID(destinationID, MODULE_ID_UPPER_CTRL, CAN_MSG_CMD, CAN_DATA_COMPLETE, CMD_SORTER_OPEN);
-            byte[] result = SendCommand(frame);
-            mySerial.Close();
-            return result;
-        }
-        public byte[]CmdSorterClose(byte destinationID, byte sorterPosition)
-        {
-            if (!mySerial.IsOpen)
-                mySerial.Open();
-            byte[] frame = MakeFrameID(destinationID, MODULE_ID_UPPER_CTRL, CAN_MSG_CMD, CAN_DATA_COMPLETE, CMD_SORTER_CLOSE);
-            byte[] result = SendCommand(frame);
-            mySerial.Close();
-            return result;
-        }
-        public byte[]CmdSetCassetteID(byte cassetteID)
+
+        public byte[] CmdSetCassetteID(byte cassetteID)
         {
             if (!mySerial.IsOpen)
                 mySerial.Open();
@@ -2444,27 +2693,9 @@ namespace myArcaNameSpace
             return result;
         }
 
-        public byte[] CmdAssignAllCassettes(byte cassetteID)
-        {
-            if (!mySerial.IsOpen)
-                mySerial.Open();
-            byte[] frame = MakeFrameID(cassetteID, MODULE_ID_UPPER_CTRL, CAN_MSG_CMD, CAN_DATA_COMPLETE, CMD_CASSETTE_ASSIGN);
-            byte[] result = SendCommand(frame);
-            mySerial.Close();
-            return result;
-        }
 
-        public byte[] CmdGetCassettePosition()
-        {
-            if (!mySerial.IsOpen)
-                mySerial.Open();
-            byte[] frame = MakeFrameID(MODULE_ID_SAFE, MODULE_ID_UPPER_CTRL, CAN_MSG_CMD, CAN_DATA_COMPLETE, CMD_GET_CASSETTE_POS);
-            byte[] result = SendCommand(frame);
-            mySerial.Close();
-            return result;
-        }
 
-        public byte[]CmdSetTestMode (byte destinationID, byte testMode)
+        public byte[] CmdSetTestMode(byte destinationID, byte testMode)
         {
             if (!mySerial.IsOpen)
                 mySerial.Open();
@@ -2484,7 +2715,7 @@ namespace myArcaNameSpace
             byte[] temp = SendCommand(frame);
             for (int i = 0; i < canFrame.data.Length; i++)
                 myList.Add(canFrame.data[i]);
-        incompleto:
+            incompleto:
             if (canFrame.dataComplete == "1")
             {
                 temp = SendCommand(frame);
@@ -2497,7 +2728,7 @@ namespace myArcaNameSpace
             return result;
         }
 
-        public byte[]CmdSetModuleSN(byte destinationID, string serialNumber)
+        public byte[] CmdSetModuleSN(byte destinationID, string serialNumber)
         {
             serialNumber = serialNumber.PadRight(16, '0');
             byte[] serial1 = Arca.Ascii2ByteArray(serialNumber.Substring(0, 8));
@@ -2511,85 +2742,8 @@ namespace myArcaNameSpace
             mySerial.Close();
             return result;
         }
-        public byte[] CmdTestValidation(byte destinationID)
-        {
-            if (!mySerial.IsOpen)
-                mySerial.Open();
-            byte[] frame = MakeFrameID(destinationID, MODULE_ID_UPPER_CTRL, CAN_MSG_CMD, CAN_DATA_COMPLETE, CMD_GET_TEST_VALIDATION, 0x01);
-            byte[] result = SendCommand(frame);
-            mySerial.Close();
-            return result;
-        }
 
-        public byte[] CmdSetSafeCfg(byte destinationID, byte parameter, byte value)
-        {
-            if (!mySerial.IsOpen)
-                mySerial.Open();
-            byte[] param = { parameter, value };
-            byte[] frame = MakeFrameID(destinationID, MODULE_ID_UPPER_CTRL, CAN_MSG_CMD, CAN_DATA_COMPLETE, CMD_SET_CFG_PARAM, parameter, value); 
-            byte[] result = SendCommand(frame);
-            mySerial.Close();
-            return result;
-        }
 
-        public byte[] CmdGetSafeCfg(byte destinationID, byte parameter)
-        {
-            if (!mySerial.IsOpen)
-                mySerial.Open();
-            byte[] frame = MakeFrameID(destinationID, MODULE_ID_UPPER_CTRL, CAN_MSG_CMD, CAN_DATA_COMPLETE, CMD_GET_CFG_PARAM, parameter);
-            byte[] result = SendCommand(frame);
-            mySerial.Close();
-            return result;
-        }
-
-        public byte[]CmdPhotoAdjust(byte destinationID, byte photoID)
-        {
-            if (!mySerial.IsOpen)
-                mySerial.Open();
-            byte[] frame = MakeFrameID(destinationID, MODULE_ID_UPPER_CTRL, CAN_MSG_CMD, CAN_DATA_COMPLETE, CMD_PHOTO_ADJ, photoID);
-            byte[] result = SendCommand(frame);
-            mySerial.Close();
-            return result;
-        }
-
-        public byte[] CmdEventDisabling(byte destinationID, byte disable)
-        {
-            if (!mySerial.IsOpen)
-                mySerial.Open();
-            byte[] frame = MakeFrameID(destinationID, MODULE_ID_UPPER_CTRL, CAN_MSG_CMD, CAN_DATA_COMPLETE, 268, disable);
-            byte[] result = SendCommand(frame);
-            mySerial.Close();
-            return result;
-        }
-
-        public byte[] CmdGetPhotoParameters(byte destinationID, byte photoID)
-        {
-            if (!mySerial.IsOpen)
-                mySerial.Open();
-            byte[] frame = MakeFrameID(destinationID, MODULE_ID_UPPER_CTRL, CAN_MSG_CMD, CAN_DATA_COMPLETE, CMD_GET_PH_PAR, photoID);
-            byte[] result = SendCommand(frame);
-            mySerial.Close();
-            return canFrame.data;
-            
-        }
-
-        public byte[] CmdSetPhotoParameters(byte destinationID, byte photoID, byte soglia, byte agc, short corrente, byte polarità)
-        {
-            byte[] parameters = new byte[6];
-            parameters[0] = photoID; // direzione
-            parameters[1] = soglia;
-            parameters[2] = agc;
-            byte[] curr = Arca.Short2ByteArray(corrente);
-            Array.Copy(curr, 0, parameters, 3, 2);
-            parameters[5] = polarità;
-            if (!mySerial.IsOpen)
-                mySerial.Open();
-            byte[] frame = MakeFrameID(destinationID, MODULE_ID_UPPER_CTRL, CAN_MSG_CMD, CAN_DATA_COMPLETE, CMD_SET_PH_PAR, parameters);
-            byte[] result = SendCommand(frame);
-            mySerial.Close();
-            return canFrame.data;
-
-        }
 
         public byte[] CmdPhotoFactoryAdjust(byte destinationID, byte photoID, byte parameter)
         {
@@ -2601,7 +2755,7 @@ namespace myArcaNameSpace
             return canFrame.data;
         }
 
-        public byte[]CmdPhotoEndAdjust(byte destinationID)
+        public byte[] CmdPhotoEndAdjust(byte destinationID)
         {
             if (!mySerial.IsOpen)
                 mySerial.Open();
@@ -2611,7 +2765,7 @@ namespace myArcaNameSpace
             {
                 Stopwatch sw = new Stopwatch();
                 sw.Start();
-                while (sw.ElapsedMilliseconds < 20000 && result.Length == 1 )
+                while (sw.ElapsedMilliseconds < 20000 && result.Length == 1)
                 {
                     Arca.WaitingTime(100);
                     if (mySerial.BytesToRead > 0)
@@ -2623,7 +2777,7 @@ namespace myArcaNameSpace
                     }
                 }
             }
-            
+
             mySerial.Close();
             return canFrame.data;
         }
@@ -2637,9 +2791,9 @@ namespace myArcaNameSpace
             mySerial.Close();
             return result;
         }
-        
 
-        public byte[]CmdGetPhotoStatus(byte destinationID, byte photoID)
+
+        public byte[] CmdGetPhotoStatus(byte destinationID, byte photoID)
         {
             if (!mySerial.IsOpen)
                 mySerial.Open();
@@ -2649,17 +2803,8 @@ namespace myArcaNameSpace
             return result;
         }
 
-        public byte[] CmdGetSwitchStatus(byte destinationID, byte switchID)
-        {
-            if (!mySerial.IsOpen)
-                mySerial.Open();
-            byte[] frame = MakeFrameID(destinationID, MODULE_ID_UPPER_CTRL, CAN_MSG_CMD, CAN_DATA_COMPLETE, CMD_GET_SW_STATE, switchID);
-            byte[] result = SendCommand(frame);
-            mySerial.Close();
-            return result;
-        }
 
-        public byte[]CmdSorterOpen(byte destinationID)
+        public byte[] CmdSorterOpen(byte destinationID)
         {
             if (!mySerial.IsOpen)
                 mySerial.Open();
@@ -2686,8 +2831,8 @@ namespace myArcaNameSpace
             mySerial.Close();
             return result;
         }
-        
-        public byte[]CmdSorterClose(byte destinationID)
+
+        public byte[] CmdSorterClose(byte destinationID)
         {
             if (!mySerial.IsOpen)
                 mySerial.Open();
@@ -2696,7 +2841,7 @@ namespace myArcaNameSpace
             mySerial.Close();
             return result;
         }
-        public byte[]CmdMovePinchRoller(byte destinationID, byte pinchPosition)
+        public byte[] CmdMovePinchRoller(byte destinationID, byte pinchPosition)
         {
             if (!mySerial.IsOpen)
                 mySerial.Open();
@@ -2706,73 +2851,9 @@ namespace myArcaNameSpace
             return result;
         }
 
-        public byte[] CmdGetADCValues(byte destinationID)
-        {
-            byte[] result = { 0x00 };
-            List<byte> myList = new List<byte>();
-            if (!mySerial.IsOpen)
-                mySerial.Open();
-            byte[] frame = MakeFrameID(destinationID, MODULE_ID_UPPER_CTRL, CAN_MSG_CMD, CAN_DATA_COMPLETE, CMD_ADC_READ);
-            invioComando:
-            byte[] temp = SendCommand(frame);
-            for (int i = 1; i < canFrame.data.Length; i++)
-            {
-                myList.Add(canFrame.data[i]);
-            }
-            if (canFrame.dataComplete == "1")
-                goto invioComando;
-            mySerial.Close();
-            result = myList.ToArray();
-            return result;
-        }
 
-        public byte[] CmdGetCurrMotor(byte motorID)
-        {
-            if (!mySerial.IsOpen)
-                mySerial.Open();
-            byte[] frame = MakeFrameID(MODULE_ID_SAFE, MODULE_ID_UPPER_CTRL, CAN_MSG_CMD, CAN_DATA_COMPLETE, CMD_GET_MOT_CUR, motorID);
-            byte[] result = SendCommand(frame);
-            mySerial.Close();
-            return result;
-        }
 
-        public byte[] CmdMoveMivMotor(byte direction)
-        {
-            byte[] parameters = new byte[7];
-            parameters[0] = direction; // direzione
-            parameters[1] = 0x01;
-            parameters[2] = 0x22;
-            parameters[3] = 0xFF;
-            parameters[4] = 0xFF;
-            parameters[5] = 0xFF;
-            parameters[6] = 0xFF;
-            if (!mySerial.IsOpen)
-                mySerial.Open();
-            byte[] frame = MakeFrameID(MODULE_ID_SAFE, MODULE_ID_UPPER_CTRL, CAN_MSG_CMD, CAN_DATA_COMPLETE, CMD_MOVE_VERT_MOT, parameters);
-            byte[] result = SendCommand(frame, 5000);
-            mySerial.Close();
-            return result;
-        }
-
-        public byte[] CmdStopMivMotor()
-        {
-            byte[] parameters = new byte[7];
-            parameters[0] = 0x02;
-            parameters[1] = 0xFF;
-            parameters[2] = 0xFF;
-            parameters[3] = 0xFF;
-            parameters[4] = 0xFF;
-            parameters[5] = 0xFF;
-            parameters[6] = 0xFF;
-            if (!mySerial.IsOpen)
-                mySerial.Open();
-            byte[] frame = MakeFrameID(MODULE_ID_SAFE, MODULE_ID_UPPER_CTRL, CAN_MSG_CMD, CAN_DATA_COMPLETE, CMD_MOVE_VERT_MOT, parameters);
-            byte[] result = SendCommand(frame, 5000);
-            mySerial.Close();
-            return result;
-        }
-
-        public byte[]CmdTapeMove(byte destinationID, byte action)
+        public byte[] CmdTapeMove(byte destinationID, byte action)
         {
             //0x00 Svolgi
             //0x01 Avvolgi
@@ -2784,108 +2865,13 @@ namespace myArcaNameSpace
             mySerial.Close();
             return result;
         }
-        public byte[]CmdCassetteMotorMove(byte destinationID, byte direction, int velocità, int nPassi)
-        {
-            byte[] parameters = new byte[7];
-            parameters[0] = direction;
-            byte[] vel = Arca.Short2ByteArray((short)velocità, 2);
-            parameters[1] = vel[0];
-            parameters[2] = vel[1];
-            byte[] passi = Arca.Int2ByteArray(nPassi, 4);
-            parameters[3] = passi[0];
-            parameters[4] = passi[1];
-            parameters[5] = passi[2];
-            parameters[6] = passi[3];
-            if (!mySerial.IsOpen)
-                mySerial.Open();
-            byte[] frame = MakeFrameID(destinationID, MODULE_ID_UPPER_CTRL, CAN_MSG_CMD, CAN_DATA_COMPLETE, CMD_MOVE_CASS_MOT, parameters);
-            byte[] result = SendCommand(frame, 4000 + nPassi * 3);
-            mySerial.Close();
-            return result;
-        }
 
-        public byte[] CmdGetElmCurrent(byte destinationID)
-        {
-            if (!mySerial.IsOpen)
-                mySerial.Open();
-            byte[] frame = MakeFrameID(destinationID, MODULE_ID_UPPER_CTRL, CAN_MSG_CMD, CAN_DATA_COMPLETE, CMD_GET_ELM_CUR);
-            byte[] result = SendCommand(frame);
-            mySerial.Close();
-            return result;
-        }
-        public byte[] CmdSetElmCurrent(byte destinationID, byte elmID, short massima, short impulso, short mantenimento)
-        {
-            // pre/mant/post -> mA
-            // 0x7FFF = default
-            byte[] dati = new byte[7];
-            dati[0] = elmID;
-            byte[] numero = Arca.Short2ByteArray(massima);
-            dati[1] = numero[0];
-            dati[2] = numero[1];
-            numero = Arca.Short2ByteArray(impulso);
-            dati[3] = numero[0];
-            dati[4] = numero[1];
-            numero = Arca.Short2ByteArray(mantenimento);
-            dati[5] = numero[0];
-            dati[6] = numero[1];
-            if (!mySerial.IsOpen)
-                mySerial.Open();
-            byte[] frame = MakeFrameID(destinationID, MODULE_ID_UPPER_CTRL, CAN_MSG_CMD, CAN_DATA_COMPLETE, CMD_SET_ELM_CUR, dati);
-            byte[] result = SendCommand(frame);
-            mySerial.Close();
-            return result;
-        }
-
-
-        public byte[]CmdGetMotorCurrent(byte destinationID, byte motorID)
-        {
-            // 0x00 Motore trasporto verticale
-            // 0x01 Motore left cassetto
-            // 0x02 Motore right cassetto
-            if (!mySerial.IsOpen)
-                mySerial.Open();
-            byte[] frame = MakeFrameID(destinationID, MODULE_ID_UPPER_CTRL, CAN_MSG_CMD, CAN_DATA_COMPLETE, CMD_GET_MOT_CUR);
-            byte[] result = SendCommand(frame);
-            mySerial.Close();
-            return result;
-        }
-        public byte[]CmdSetMotorCurrent(byte destinationID, byte motorID, short preEccitazione, short mantenimento, short postEccitazione)
-        {
-            // pre/mant/post -> mA
-            // 0x7FFF = default
-            byte[] dati = new byte[7];
-            dati[0] = motorID;
-            byte[] numero = Arca.Short2ByteArray(preEccitazione);
-            dati[1] = numero[0];
-            dati[2] = numero[1];
-            numero = Arca.Short2ByteArray(mantenimento);
-            dati[3] = numero[0];
-            dati[4] = numero[1];
-            numero = Arca.Short2ByteArray(postEccitazione);
-            dati[5] = numero[0];
-            dati[6] = numero[1];
-            if (!mySerial.IsOpen)
-                mySerial.Open();
-            byte[] frame = MakeFrameID(destinationID, MODULE_ID_UPPER_CTRL, CAN_MSG_CMD, CAN_DATA_COMPLETE, CMD_SET_MOT_CUR,dati);
-            byte[] result = SendCommand(frame,2000);
-            mySerial.Close();
-            return result;
-        }
-        //public byte[]Cmd(byte destinationID)
-        //{
-        //    mySerial.Open();
-        //    byte[] frame = MakeFrameID(destinationID, MODULE_ID_UPPER_CTRL, CAN_MSG_CMD, CAN_DATA_COMPLETE, CMD_);
-        //    byte[] result = SendCommand(frame);
-        //    mySerial.Close();
-        //    return result;
-        //}
-        
     }
 
     public class RS232Novus
 
     {
-        
+
 
 
         public static SerialPort mySerial = new SerialPort();
@@ -2898,7 +2884,7 @@ namespace myArcaNameSpace
         public event EventHandler DataReceived;
         public event EventHandler DataSent;
         int byteReceived = 0;
-        
+
 
         public RS232Novus(string comPort = "COM1", int baudRate = 9600, Parity parity = Parity.None, int dataBits = 8, StopBits stopBits = StopBits.One)
         {
@@ -2983,7 +2969,7 @@ namespace myArcaNameSpace
             }
             commandAnswer = Arca.Hex2Ascii(commandAnswer);
 
-            endCommand:
+        endCommand:
             DataReceived(commandAnswer, null);
             return commandAnswer;
 
@@ -3027,7 +3013,7 @@ namespace myArcaNameSpace
                 Arca.WaitingTime(timeout);
             }
 
-            endCommand:
+        endCommand:
             myTimer.Reset();
             DataReceived(commandAnswer, null);
             return dataReceived;
@@ -3069,7 +3055,7 @@ namespace myArcaNameSpace
                 Arca.WaitingTime(timeout);
             }
 
-            endCommand:
+        endCommand:
             myTimer.Reset();
             DataReceived(commandAnswer, null);
             return commandAnswer;
@@ -3117,20 +3103,20 @@ namespace myArcaNameSpace
                 Arca.WaitingTime(timeOut);
             }
 
-            endCommand:
+        endCommand:
             myTimer.Reset();
             DataReceived(commandAnswer, null);
             mySerial.Close();
             return commandAnswer;
         }
 
-        
+
 
         public byte[] GetImageBytes(byte[] command, int nByteAnswer = 1, int timeout = 5000)
         {
-            
 
-            inizio:
+
+        inizio:
             answerByte = new byte[nByteAnswer];
             mySerial.ReadTimeout = timeout;
             byteReceived = 0;
@@ -3168,7 +3154,7 @@ namespace myArcaNameSpace
         {
             mySerial.Write(command, 0, command.Count());
         }
-        public byte[] SendCommandByte (byte[] command, int nByteAnswer = 1, int timeout = 5000)
+        public byte[] SendCommandByte(byte[] command, int nByteAnswer = 1, int timeout = 5000)
         {
             answerByte = new byte[nByteAnswer];
             mySerial.ReadTimeout = timeout;
@@ -3225,7 +3211,7 @@ namespace myArcaNameSpace
                 commandToSend[index] = Convert.ToByte(command.Substring(i - 1, 2), 16);
                 index += 1;
             }
-            
+
             dataReceived = SendCommandByte(commandToSend, nByteAnswer, timeOut);
 
             //for (int i = 0; i < dataReceived.Length; i++)
@@ -3269,7 +3255,7 @@ namespace myArcaNameSpace
             for (int i = 0; i < command.Count(); i++)
                 commandSent += command[i].ToString("X2");
             if (mySerial.IsOpen == false) { mySerial.Open(); }
-            inizio:
+        inizio:
             byteReceived = 0;
             while (mySerial.BytesToRead != 0)
                 mySerial.ReadExisting();
@@ -3298,7 +3284,7 @@ namespace myArcaNameSpace
                 DataReceived("incomplete", null);
                 goto inizio;
             }
-            
+
             DataReceived(result.Length + " bytes", null);
 
             return result;
@@ -3313,7 +3299,7 @@ namespace myArcaNameSpace
             for (int i = 0; i < command.Count(); i++)
                 commandSent += command[i].ToString("X2");
             if (mySerial.IsOpen == false) { mySerial.Open(); }
-            inizio:
+        inizio:
             byteReceived = 0;
             while (mySerial.BytesToRead != 0)
                 mySerial.ReadExisting();
@@ -3356,7 +3342,7 @@ namespace myArcaNameSpace
             for (int i = 0; i < command.Count(); i++)
                 commandSent += command[i].ToString("X2");
             if (mySerial.IsOpen == false) { mySerial.Open(); }
-            inizio:
+        inizio:
             byteReceived = 0;
             while (mySerial.BytesToRead != 0)
                 mySerial.ReadExisting();
@@ -3399,7 +3385,7 @@ namespace myArcaNameSpace
             for (int i = 0; i < command.Count(); i++)
                 commandSent += command[i].ToString("X2");
             if (mySerial.IsOpen == false) { mySerial.Open(); }
-            inizio:
+        inizio:
             byteReceived = 0;
             while (mySerial.BytesToRead != 0)
                 mySerial.ReadExisting();
@@ -3447,7 +3433,7 @@ namespace myArcaNameSpace
                 iOffset += iNumeroRx;
             }
             return true;
-            
+
 
 
         }
@@ -3460,13 +3446,13 @@ namespace myArcaNameSpace
             byte[] bufferDimension = new byte[4];
             mySerial.ReadTimeout = timeout;
 
-            
+
             //mySerial.ReadBufferSize = 64000;
             commandSent = "";
             for (int i = 0; i < command.Count(); i++)
                 commandSent += command[i].ToString("X2");
             if (mySerial.IsOpen == false) { mySerial.Open(); }
-            inizio:
+        inizio:
             byteReceived = 0;
             while (mySerial.BytesToRead != 0)
             {
@@ -3474,11 +3460,11 @@ namespace myArcaNameSpace
                 Arca.WaitingTime(100);
             }
             DataSent(commandSent, null);
-            
+
             mySerial.Write(command, 0, command.Length);
-            
+
             Arca.WaitingTime(50);
-            
+
             numeroRX = mySerial.Read(bufferDimension, 0, 4);
             dimensioneFile = ((int)bufferDimension[3] << 24) + ((int)bufferDimension[2] << 16) + ((int)bufferDimension[1] << 8) + (bufferDimension[0]);
             byte[] jsonBytes = new byte[dimensioneFile];
@@ -3508,7 +3494,7 @@ namespace myArcaNameSpace
             return result;
         }
 
-        
+
     }
     public class RL40
     {
@@ -3615,7 +3601,7 @@ namespace myArcaNameSpace
             public int end;
             public int value;
         }
-        
+
 
         public struct SDoc2IniVariables
         {
@@ -3659,12 +3645,12 @@ namespace myArcaNameSpace
         {
             public float width;
             public float height;
-            public float rect1_rd; 
-            public float rect1_gr; 
-            public float rect1_bl; 
-            public float rect1_ir; 
-            public float rect1_it; 
-            public float rect1_i3; 
+            public float rect1_rd;
+            public float rect1_gr;
+            public float rect1_bl;
+            public float rect1_ir;
+            public float rect1_it;
+            public float rect1_i3;
             public float rect1_uv;
             public float rect1_wh;
             public int start;
@@ -4159,7 +4145,7 @@ namespace myArcaNameSpace
 
         }
         public SReader rl40 = new SReader();
-        
+
         public struct SRilettura
         {
             public string type;
@@ -4191,7 +4177,7 @@ namespace myArcaNameSpace
                 byte[] command = { 0xD3, 0X81 };
                 comPort.OpenCom();
                 comPort.SendCommandByte(command, 5, 200);
-                answer =  Arca.Hex2Ascii(comPort.commandAnswer);
+                answer = Arca.Hex2Ascii(comPort.commandAnswer);
                 if (answer == "COM--")
                     rl40.serialPort = comPort.serialPortName;
                 if (answer == "USB--")
@@ -4204,7 +4190,7 @@ namespace myArcaNameSpace
 
         public string CmdCurrentMaxPwmMaxSet(int Cis = 0)
         {
-            byte[] command = {0xD3, 0x33, Convert.ToByte(Cis) };
+            byte[] command = { 0xD3, 0x33, Convert.ToByte(Cis) };
             comPort.OpenCom();
             comPort.SendCommandByte(command, 1, 200);
             comPort.CloseCom();
@@ -4371,7 +4357,7 @@ namespace myArcaNameSpace
             if (cis == 1)
                 comando[2] = 0x16;
             int timeOut = 3000;
-            
+
             if (fileCfx == null) // coefficienti standard 10 04 01 00
             {
                 fileCfx = new byte[65536];
@@ -4391,7 +4377,7 @@ namespace myArcaNameSpace
             comPort.WriteSerial(fileCfx);
             comPort.CloseCom();
             Arca.WaitingTime(timeOut);
-            
+
         }
 
         public void CmdDownloadCoefCompCisRil(int cis, byte[] fileCfx = null)
@@ -4461,7 +4447,7 @@ namespace myArcaNameSpace
             return comPort.commandAnswer;
         }
 
-        
+
         public RL40.STableParamSamplingConfig CmdGetTableParamSamplingConfig()
         {
             byte[] answer;
@@ -4470,9 +4456,9 @@ namespace myArcaNameSpace
             comPort.OpenCom();
             answer = comPort.SendCommandByte(command, 16);
             comPort.CloseCom();
-            if (answer[0]== 1)
+            if (answer[0] == 1)
                 myTable.ScanMode = 1;
-            if (answer[1]== 1)
+            if (answer[1] == 1)
                 myTable.LedOn = 1;
             if (answer[2] == 1)
                 myTable.DarkComp = 1;
@@ -4501,7 +4487,7 @@ namespace myArcaNameSpace
             return myTable;
         }
 
-        public string CmdSetTableParamSamplingConfig( RL40.STableParamSamplingConfig actualConfig, RL40.STableParamSamplingConfig newConfig)
+        public string CmdSetTableParamSamplingConfig(RL40.STableParamSamplingConfig actualConfig, RL40.STableParamSamplingConfig newConfig)
         {
             byte[] command = { 0xD3, 0x32, 0x01 };
             comPort.OpenCom();
@@ -4520,7 +4506,7 @@ namespace myArcaNameSpace
             tableParam += tableConfig.CompCis.ToString("00");
             tableParam += tableConfig.StrobeExt.ToString("00");
             tableParam += tableConfig.CompCoeffK.ToString("00");
-            string bitMask = Arca.Bin2Hex("0000" + tableConfig.SensorEnablePresetMask.CisF.ToString() + tableConfig.SensorEnablePresetMask.CisR.ToString() + tableConfig.SensorEnablePresetMask.Tape.ToString() + tableConfig.SensorEnablePresetMask.Mag.ToString(),2);
+            string bitMask = Arca.Bin2Hex("0000" + tableConfig.SensorEnablePresetMask.CisF.ToString() + tableConfig.SensorEnablePresetMask.CisR.ToString() + tableConfig.SensorEnablePresetMask.Tape.ToString() + tableConfig.SensorEnablePresetMask.Mag.ToString(), 2);
             tableParam += bitMask;
 
             tableParam += tableConfig.EncExt.ToString("00");
@@ -4528,7 +4514,7 @@ namespace myArcaNameSpace
             tableParam += "00000000000000";
 
             comPort.OpenCom();
-            answer = comPort.SendCommand("D33201"+tableParam, 1, 2000);
+            answer = comPort.SendCommand("D33201" + tableParam, 1, 2000);
             comPort.CloseCom();
             return answer;
         }
@@ -4627,7 +4613,7 @@ namespace myArcaNameSpace
 
         public string CmdUploadDimBn(byte bnIndex = 0x00)
         {
-            byte[] command = { 0xD3, 0x06, 0x06, Convert.ToByte(bnIndex)};
+            byte[] command = { 0xD3, 0x06, 0x06, Convert.ToByte(bnIndex) };
             comPort.OpenCom();
             comPort.SendCommandByte(command, 5, 15000); //timeout=100 modificato 06.09.23
             comPort.CloseCom();
@@ -4636,21 +4622,21 @@ namespace myArcaNameSpace
 
         public string CmdUploadShortStatistic()
         {
-            byte[] command = { 0xD3, 0x06, 0x0A};
+            byte[] command = { 0xD3, 0x06, 0x0A };
             comPort.OpenCom();
             comPort.SendCommandByte(command, 80, 100);
             comPort.CloseCom();
             return comPort.commandAnswer;
         }
 
-        public string CmdUploadCompCis(int cis, byte[] CfxArray )
+        public string CmdUploadCompCis(int cis, byte[] CfxArray)
         {
             string answer = "";
             byte[] command = new byte[65542];
             command[0] = 0xD3;
             command[1] = 0x07;
             command[2] = 0x15; // front
-            if (cis == 1) 
+            if (cis == 1)
                 command[2] = 0x16;// rear
             command[3] = 0x00;
             command[4] = 0x00;
@@ -4691,14 +4677,14 @@ namespace myArcaNameSpace
             return comPort.commandAnswer;
         }
 
-        
+
         public string CmdBoardId()
         {
             byte[] command = { 0xE3, 0x0A };
             comPort.OpenCom();
             comPort.SendCommandByte(command, 32, 100);
             comPort.CloseCom();
-            return Arca.Hex2Ascii(comPort.commandAnswer.Substring(0,32));
+            return Arca.Hex2Ascii(comPort.commandAnswer.Substring(0, 32));
         }
 
         public string CmdVersionLinux()
@@ -4710,7 +4696,7 @@ namespace myArcaNameSpace
             return Arca.Hex2Ascii(comPort.commandAnswer.Substring(0, 50).Trim((char)0x00));
         }
 
-        public byte[]CmdScanlinePresetUpload(int cis, int src)
+        public byte[] CmdScanlinePresetUpload(int cis, int src)
         {
             return comPort.GetScanlinePreset(cis, src);
         }
@@ -4746,7 +4732,7 @@ namespace myArcaNameSpace
         {
             byte[] command = { 0xE3, 0x0B };
             comPort.OpenCom();
-            comPort.SendCommandByte(command,16,100);
+            comPort.SendCommandByte(command, 16, 100);
             comPort.CloseCom();
             return Arca.ByteArray2Ascii(comPort.answerByte);
         }
@@ -4820,7 +4806,7 @@ namespace myArcaNameSpace
 
         public void CmdSptBaseReaderDwl(string filename)
         {
-            
+
             byte[] command = { 0xD3, 0x07, 0x02 };
             byte[] length = new byte[4];
             byte[] fileBytes = File.ReadAllBytes(filename);
@@ -4846,7 +4832,7 @@ namespace myArcaNameSpace
                 command[2] = 0x04;
 
             byte[] length = new byte[4];
-            string myJson = JsonConvert.SerializeObject(jSpt,Newtonsoft.Json.Formatting.Indented );
+            string myJson = JsonConvert.SerializeObject(jSpt, Newtonsoft.Json.Formatting.Indented);
             byte[] fileBytes = Encoding.ASCII.GetBytes(myJson);
             int lenFile = fileBytes.Length;
             length[0] = (byte)(lenFile & 0xFF);
@@ -5000,7 +4986,7 @@ namespace myArcaNameSpace
             command[2] = Convert.ToByte(parameter);
             for (int i = 3; i < value.Length + 3; i++)
                 command[i] = values[i - 3];
-            
+
             comPort.OpenCom();
             byte[] results = comPort.SendCommandByte(command, 1, 2000);
             comPort.CloseCom();
@@ -5229,7 +5215,7 @@ namespace myArcaNameSpace
                     break;
             }
             temp.currBank = Arca.Bin2Dec(giudizio.Substring(3, 3));
-            
+
             return temp;
         }
 
@@ -5237,9 +5223,9 @@ namespace myArcaNameSpace
         {
             // ATTENZIONE - RISPOSTA DA COMPLETARE
             string result;
-            byte[] comando = { 0xD3, 0x0F};
+            byte[] comando = { 0xD3, 0x0F };
             comPort.OpenCom();
-            
+
             result = comPort.SendByteArray(comando, 0, 500); // 2000 - modificato time out
             comando = new byte[1];
             comando[0] = 0xA3;
@@ -5277,16 +5263,16 @@ namespace myArcaNameSpace
             return temp;
         }
 
-        public string ModeTransparentModule(int IDSensor, int nByteAnswer,  string hexCmd)
+        public string ModeTransparentModule(int IDSensor, int nByteAnswer, string hexCmd)
         {
             //hexCmd = hexCmd.PadRight(4, '0');
-            string command = "D322" + IDSensor.ToString("00") + Arca.Dec2Hex(hexCmd.Length/2,2) + Arca.Dec2Hex(nByteAnswer,2) + hexCmd;
+            string command = "D322" + IDSensor.ToString("00") + Arca.Dec2Hex(hexCmd.Length / 2, 2) + Arca.Dec2Hex(nByteAnswer, 2) + hexCmd;
             return command;
         }
 
-        
 
-        public byte[] CmdStreamImageUpload (int imageW, int imageH, int idStream, int idBn = 255)
+
+        public byte[] CmdStreamImageUpload(int imageW, int imageH, int idStream, int idBn = 255)
         {
             //Arca.WaitingTime(200);
             byte[] answer;
@@ -5364,7 +5350,7 @@ namespace myArcaNameSpace
                 case 0x12: //PWM CIS FRONT - RILETTURA
                 case 0x13: //PWM CIS REAR - RILETTURA
                     byteAns = 32;
-                    break;                                        
+                    break;
                 case 0x06: //OFFSET CIS FRONT
                 case 0x07: //OFFSET CIS REAR
                 case 0x16: //OFFSET CIS FRONT - RILETTURA
@@ -5377,7 +5363,7 @@ namespace myArcaNameSpace
             return comPort.answerByte;
         }
 
-        public string CmdSptCisDownload( RL40.JsonSptCisRoot jSpt, string side = "FRONT")
+        public string CmdSptCisDownload(RL40.JsonSptCisRoot jSpt, string side = "FRONT")
         {
             byte[] command = { 0xD3, 0x07, 0x03 };
             if (side.ToUpper() != "FRONT")
@@ -5396,16 +5382,16 @@ namespace myArcaNameSpace
             comPort.CloseCom();
             return comPort.commandAnswer;
         }
-        
+
         public string CmdSptCisUpload(int side)
         {
             byte[] command = { 0xD3, 0x06, 0x08 };
             string result = "";
             if (side != 0)
                 command[2] = 0x09;
-            
+
             comPort.OpenCom();
-            result = comPort.GetJsonFile(command,500);
+            result = comPort.GetJsonFile(command, 500);
             comPort.CloseCom();
             return result;
         }
@@ -5443,11 +5429,11 @@ namespace myArcaNameSpace
             comPort.CloseCom();
         }
 
-        public string  SingleCommand(string command, int nByteAnswer = 1, int timeout = 500)
+        public string SingleCommand(string command, int nByteAnswer = 1, int timeout = 500)
         {
             string result;
             comPort.OpenCom();
-            result=comPort.SendCommand(command, nByteAnswer, timeout);
+            result = comPort.SendCommand(command, nByteAnswer, timeout);
             comPort.CloseCom();
             return result;
         }
@@ -5458,7 +5444,7 @@ namespace myArcaNameSpace
         public void SPTSet(string page, string address, string value)
         {
             comPort.OpenCom();
-            comPort.SendCommand(ModeTransparentModule(TRANSP_TAPE_ID, 0, "53" + page + address + value),0,200);
+            comPort.SendCommand(ModeTransparentModule(TRANSP_TAPE_ID, 0, "53" + page + address + value), 0, 200);
             comPort.CloseCom();
         }
         public void SetTapeHwLevel(int hwlevel)
@@ -5467,7 +5453,7 @@ namespace myArcaNameSpace
             comPort.OpenCom();
             for (int i = 0; i < 3; i++)
             {
-                comPort.SendCommand(ModeTransparentModule(TRANSP_TAPE_ID, 0, "5300" + Arca.Dec2Hex(0x78 + i,2) + "3" + hwl.PadLeft(3,'0').Substring(i, 1)), 0, 100);
+                comPort.SendCommand(ModeTransparentModule(TRANSP_TAPE_ID, 0, "5300" + Arca.Dec2Hex(0x78 + i, 2) + "3" + hwl.PadLeft(3, '0').Substring(i, 1)), 0, 100);
             }
             comPort.CloseCom();
         }
@@ -5476,7 +5462,7 @@ namespace myArcaNameSpace
         {
             string result;
             byte nByteAnswer = 0;
-            string command = "55" ;
+            string command = "55";
             comPort.OpenCom();
             switch (stream_id)
             {
@@ -5490,7 +5476,7 @@ namespace myArcaNameSpace
                     break;
             }
 
-            result = comPort.SendCommand(ModeTransparentModule(TRANSP_TAPE_ID, nByteAnswer,command + Arca.Dec2Hex(channel,2)),nByteAnswer,100);
+            result = comPort.SendCommand(ModeTransparentModule(TRANSP_TAPE_ID, nByteAnswer, command + Arca.Dec2Hex(channel, 2)), nByteAnswer, 100);
             comPort.CloseCom();
             return result;
         }
@@ -5499,7 +5485,7 @@ namespace myArcaNameSpace
         {
             string result;
             comPort.OpenCom();
-            result = comPort.SendCommand(ModeTransparentModule(TRANSP_TAPE_ID, 1, "46"),1,30000);
+            result = comPort.SendCommand(ModeTransparentModule(TRANSP_TAPE_ID, 1, "46"), 1, 30000);
             comPort.CloseCom();
             return result;
         }
@@ -5515,7 +5501,7 @@ namespace myArcaNameSpace
 
         public string WaitForData(int nByteAnswer, int timeout)
         {
-            string result = comPort.WaitingData(nByteAnswer,timeout);
+            string result = comPort.WaitingData(nByteAnswer, timeout);
             return result;
         }
 
@@ -5530,16 +5516,16 @@ namespace myArcaNameSpace
             string hexValue = Arca.Dec2Hex(value, 4);
             comPort.OpenCom();
             comPort.SendCommand(ModeTransparentModule(TRANSP_TAPE_ID, 0, "5300" + address + hexValue.Substring(0, 2)), 0, 100);
-            comPort.SendCommand(ModeTransparentModule(TRANSP_TAPE_ID, 0, "5300" + (Arca.Hex2Dec(address)+1).ToString("X2") + hexValue.Substring(2, 2)), 0, 100);
+            comPort.SendCommand(ModeTransparentModule(TRANSP_TAPE_ID, 0, "5300" + (Arca.Hex2Dec(address) + 1).ToString("X2") + hexValue.Substring(2, 2)), 0, 100);
             comPort.CloseCom();
             return result;
         }
-        public string SetTapeSptCompActive(int value )
+        public string SetTapeSptCompActive(int value)
         {
-            string result="";
+            string result = "";
             int address = 19;
             comPort.OpenCom();
-            comPort.SendCommand(ModeTransparentModule(TRANSP_TAPE_ID, 0, "5300" + (address).ToString("00") + value.ToString("00")),0, 200);
+            comPort.SendCommand(ModeTransparentModule(TRANSP_TAPE_ID, 0, "5300" + (address).ToString("00") + value.ToString("00")), 0, 200);
             comPort.CloseCom();
             return result;
         }
@@ -5578,7 +5564,7 @@ namespace myArcaNameSpace
         {
             string result;
             comPort.OpenCom();
-            result = comPort.SendCommand(ModeTransparentModule(2, lenght, "55" + ID),lenght);
+            result = comPort.SendCommand(ModeTransparentModule(2, lenght, "55" + ID), lenght);
             comPort.CloseCom();
             return result;
         }
@@ -5588,7 +5574,7 @@ namespace myArcaNameSpace
         {
             string result;
             string type = Arca.Dec2Hex(testType, 2);
-            int byteAnswer=0;
+            int byteAnswer = 0;
             int timeout = 1000;
             switch (testType)
             {
@@ -5784,8 +5770,8 @@ namespace myArcaNameSpace
             xFile.WriteAttributeString("operator", user);
             xFile.WriteAttributeString("series", serial.Substring(0, 1));
             xFile.WriteAttributeString("serial", serial);
-            xFile.WriteAttributeString("sw_version", "0.0"); 
-            
+            xFile.WriteAttributeString("sw_version", "0.0");
+
             xFile.WriteStartElement("Modules");
             xFile.WriteFullEndElement();
             xFile.WriteEndElement();
@@ -5841,12 +5827,12 @@ namespace myArcaNameSpace
             XmlEditRootAttribute("time_end", DateTime.Now.ToShortTimeString().ToString());
         }
 
-        
+
 
         public void XmlAddElement(string elementName, params string[] additionalAttributes)
         {
 
-            string[] stdAttributes = { "result", "false", "date", DateTime.Now.ToString("yyyy-MM-dd"), "time_start", DateTime.Now.ToLongTimeString(), "time_end", DateTime.Now.ToLongTimeString()};
+            string[] stdAttributes = { "result", "false", "date", DateTime.Now.ToString("yyyy-MM-dd"), "time_start", DateTime.Now.ToLongTimeString(), "time_end", DateTime.Now.ToLongTimeString() };
             XmlDocument xDocument = new XmlDocument();
             xDocument.Load(xmlFilename);
             XmlNode root1 = xDocument.DocumentElement;
@@ -5901,7 +5887,7 @@ namespace myArcaNameSpace
                     {
                         if (root1.ChildNodes[i].ChildNodes[z].Name == photo)
                         {
-                            XmlNode sogliaDoc = xDocument.CreateNode(XmlNodeType.Element, "sogliaDoc","");
+                            XmlNode sogliaDoc = xDocument.CreateNode(XmlNodeType.Element, "sogliaDoc", "");
                             root1.ChildNodes[i].ChildNodes[z].AppendChild(sogliaDoc);
                             XmlNode agcDoc = xDocument.CreateNode(XmlNodeType.Element, "agcDoc", "");
                             root1.ChildNodes[i].ChildNodes[z].AppendChild(agcDoc);
@@ -5921,7 +5907,7 @@ namespace myArcaNameSpace
                             root1.ChildNodes[i].ChildNodes[z].AppendChild(correnteWork);
                         }
                     }
-                    
+
                     xDocument.Save(xmlFilename);
                     break;
                 }
@@ -6001,7 +5987,7 @@ namespace myArcaNameSpace
                             break;
                         }
                     }
-                    
+
                 }
             }
             XmlEditRootAttribute("time_end", DateTime.Now.ToShortTimeString().ToString());
@@ -6060,7 +6046,7 @@ namespace myArcaNameSpace
              * com_status
              * val_status
              * */
-            string[] stdAttributes = { "result", "false", "date", DateTime.Now.ToString("yyyy-MM-dd"), "time_start", DateTime.Now.ToLongTimeString(), "time_end", DateTime.Now.ToLongTimeString(), "hw_level", "0", "com_status", "00", "val_status", "00"};
+            string[] stdAttributes = { "result", "false", "date", DateTime.Now.ToString("yyyy-MM-dd"), "time_start", DateTime.Now.ToLongTimeString(), "time_end", DateTime.Now.ToLongTimeString(), "hw_level", "0", "com_status", "00", "val_status", "00" };
             XmlDocument xDocument = new XmlDocument();
             xDocument.Load(readerXmlFilename);
             XmlNode root1 = xDocument.DocumentElement;
@@ -6080,13 +6066,13 @@ namespace myArcaNameSpace
                 attrib.Value = additionalAttributes[x + 1];
                 child.Attributes.Append(attrib);
             }
-            for (int i = 0; i < root1.ChildNodes.Count;i++)
+            for (int i = 0; i < root1.ChildNodes.Count; i++)
             {
                 if (root1.ChildNodes[i].Name == "Modules")
                 {
                     if (elementName == "Mag")
                     {
-                        for (int moduleID = root1.ChildNodes[i].ChildNodes.Count - 1 ; moduleID >= 0; moduleID--)
+                        for (int moduleID = root1.ChildNodes[i].ChildNodes.Count - 1; moduleID >= 0; moduleID--)
                         {
                             if (root1.ChildNodes[i].ChildNodes[moduleID].Name == elementName)
                             {
@@ -6100,7 +6086,7 @@ namespace myArcaNameSpace
                     xDocument.Save(readerXmlFilename);
                 }
             }
-            fine:
+        fine:
             ReaderXmlEditRootAttribute("time_end", DateTime.Now.ToShortTimeString().ToString());
         }
 
@@ -6134,7 +6120,7 @@ namespace myArcaNameSpace
 
         public void ReaderXmlEditCisElement(int pos, string elementName, string newValue)
         {
-            if (readerType == TYPE_REMOTE && pos != 1 || readerType==TYPE_READER)
+            if (readerType == TYPE_REMOTE && pos != 1 || readerType == TYPE_READER)
             {
                 bool trovato = false;
                 XmlDocument xDocument = new XmlDocument();
@@ -6176,14 +6162,14 @@ namespace myArcaNameSpace
                         }
                     }
                 }
-                salva:
+            salva:
                 if (trovato == false)
                 {
                     ReaderXmlAddCisElement(pos, elementName, newValue);
                 }
             }
-            end:;
-            
+        end:;
+
         }
 
         public void ReaderXmlEditCisAttribute(int pos, string attributeName, string newAttributeValue, bool AddIfNotExist = true)
@@ -6284,7 +6270,7 @@ namespace myArcaNameSpace
                 if (root1.ChildNodes[gf].Name == granFatherElement)
                     for (int f = 0; f < root1.ChildNodes[gf].ChildNodes.Count; f++)
                         if (root1.ChildNodes[gf].ChildNodes[f].Name == fatherElement)
-                            for (int e=0; e < root1.ChildNodes[gf].ChildNodes[f].ChildNodes.Count;e++)
+                            for (int e = 0; e < root1.ChildNodes[gf].ChildNodes[f].ChildNodes.Count; e++)
                                 if (root1.ChildNodes[gf].ChildNodes[f].ChildNodes[e].Name == elementName)
                                     for (int a = 0; a < root1.ChildNodes[gf].ChildNodes[f].ChildNodes[e].Attributes.Count; a++)
                                     {
@@ -6375,7 +6361,7 @@ namespace myArcaNameSpace
                                     break;
                                 }
                             }
-                            
+
                         }
                 }
             xDocument.Save(xmlFilename);
@@ -6436,7 +6422,7 @@ namespace myArcaNameSpace
                         if (moduleNodes[i].Name == photoName)
                             for (int x = 0; x < moduleNodes[i].ChildNodes.Count; x++)
                             {
-                                switch(moduleNodes[i].ChildNodes[x].Name)
+                                switch (moduleNodes[i].ChildNodes[x].Name)
                                 {
                                     case "sogliaDoc":
                                         moduleNodes[i].ChildNodes[x].InnerText = myPhoto.sogliaDoc.ToString();
@@ -6506,7 +6492,7 @@ namespace myArcaNameSpace
             xDocument.Save(xmlFilename);
         }
 
-        
+
         public void XmlAddTestElement(string testName, string elementName, string value, params string[] attributes)
         {
             XmlDocument xDocument = new XmlDocument();
@@ -6572,7 +6558,7 @@ namespace myArcaNameSpace
                         }
                 }
             XmlAddElement(elementName, newValue);
-            end:;
+        end:;
         }
 
         public void ReaderXmlEditReaderElement(string elementName, string newValue)
@@ -6600,7 +6586,7 @@ namespace myArcaNameSpace
                 }
             }
             ReaderXmlAddReaderElement(elementName, newValue);
-            end:;
+        end:;
 
         }
 
@@ -6646,11 +6632,11 @@ namespace myArcaNameSpace
             }
             XmlAddTestElement(testName, elementName, newValue);
 
-            end:;
+        end:;
 
         }
 
-        public void ReaderXmlEditModuleElement (string moduleName, string elementName,string newValue)
+        public void ReaderXmlEditModuleElement(string moduleName, string elementName, string newValue)
         {
             XmlDocument xDocument = new XmlDocument();
             xDocument.Load(readerXmlFilename);
@@ -6665,14 +6651,14 @@ namespace myArcaNameSpace
                         if (xDocument.ChildNodes[idreader].ChildNodes[x].Name == "Modules")
                         {
                             idmodules = x;
-                            for (int y = (xDocument.ChildNodes[idreader].ChildNodes[idmodules].ChildNodes.Count-1); y >= 0 ; y--)
+                            for (int y = (xDocument.ChildNodes[idreader].ChildNodes[idmodules].ChildNodes.Count - 1); y >= 0; y--)
                             {
                                 if (xDocument.ChildNodes[idreader].ChildNodes[idmodules].ChildNodes[y].Name == moduleName)
                                 {
                                     idmodule = y;
                                     if (xDocument.ChildNodes[idreader].ChildNodes[idmodules].ChildNodes[idmodule].ChildNodes.Count == 0)
                                         goto aggiungi;
-                                    for (int z = (xDocument.ChildNodes[idreader].ChildNodes[idmodules].ChildNodes[idmodule].ChildNodes.Count - 1); z >=0 ; z--)
+                                    for (int z = (xDocument.ChildNodes[idreader].ChildNodes[idmodules].ChildNodes[idmodule].ChildNodes.Count - 1); z >= 0; z--)
                                     {
                                         if (xDocument.ChildNodes[idreader].ChildNodes[idmodules].ChildNodes[idmodule].ChildNodes[z].Name == elementName)
                                         {
@@ -6693,10 +6679,10 @@ namespace myArcaNameSpace
                     }
                 }
             }
-            aggiungi:
+        aggiungi:
             ReaderXmlAddModuleElement(moduleName, elementName, newValue);
-            
-            end:;
+
+        end:;
 
         }
 
@@ -6737,7 +6723,7 @@ namespace myArcaNameSpace
         /// <param name="moduleName"></param>
         /// <param name="attributeName"></param>
         /// <param name="newAttributeValue"></param>
-        public void ReaderXmlEditModuleAttribute(string moduleName, string attributeName, string newAttributeValue,  bool AddIfNotExist = true)
+        public void ReaderXmlEditModuleAttribute(string moduleName, string attributeName, string newAttributeValue, bool AddIfNotExist = true)
         {
             bool trovato = false;
             XmlDocument xDocument = new XmlDocument();
@@ -6748,8 +6734,8 @@ namespace myArcaNameSpace
             {
                 if (root1.ChildNodes[0].ChildNodes[i].Name == moduleName)
                 {
-                    ciclo:
-                    for (int x = root1.ChildNodes[0].ChildNodes[i].Attributes.Count - 1; x >= 0 ;x--)
+                ciclo:
+                    for (int x = root1.ChildNodes[0].ChildNodes[i].Attributes.Count - 1; x >= 0; x--)
                     {
                         if (trovato == true)
                         {
@@ -6771,14 +6757,14 @@ namespace myArcaNameSpace
                     }
                 }
             }
-            salva:
+        salva:
             xDocument.Save(readerXmlFilename);
             //ReaderXmlEditRootAttribute("time_end", DateTime.Now.ToShortTimeString().ToString());
             if (trovato == false && AddIfNotExist == true)
                 ReaderXmlAddModuleAttribute(moduleName, attributeName, newAttributeValue);
 
         }
-        
+
         public void XmlAddTestAttribute(string testName, string attributeName, string newAttributeValue)
         {
             XmlDocument xDocument = new XmlDocument();
@@ -6885,18 +6871,18 @@ namespace myArcaNameSpace
     {
         public const string LCSET = "#";
         const string LCGET = "$";
-        
+
 
         public CC3R()
         {
-            
+
         }
 
         public struct SPrinterCmd
         {
-            
+
         }
-        
+
 
         public struct SCC3R
         {
@@ -6913,7 +6899,7 @@ namespace myArcaNameSpace
             public string firwmare;
         }
 
-        
+
 
 
         public string DconCommand(string cmd)
@@ -6931,28 +6917,28 @@ namespace myArcaNameSpace
                 temp += Convert.ToInt16(CM18tool.Arca.Hex2Dec(command.Substring(i, 2)));
             }
             chk = CM18tool.Arca.Dec2Hex(temp);
-            chk = CM18tool.Arca.Ascii2Hex(chk.Substring(chk.Length-2, 1)) + CM18tool.Arca.Ascii2Hex(chk.Substring(chk.Length - 1, 1));
+            chk = CM18tool.Arca.Ascii2Hex(chk.Substring(chk.Length - 2, 1)) + CM18tool.Arca.Ascii2Hex(chk.Substring(chk.Length - 1, 1));
             command += chk.Substring(chk.Length - 4, 4);
             command += "0D";
             return command;
         }
-        public string DconCommand(string leadChr,int moduleAddress, string cmd)
+        public string DconCommand(string leadChr, int moduleAddress, string cmd)
         {
             cmd = leadChr + CM18tool.Arca.Dec2Hex(moduleAddress, 2) + cmd;
             string command = "";
             string chk = "";
             int temp = 0;
-            for (int i = 0; i<cmd.Length;i++)
+            for (int i = 0; i < cmd.Length; i++)
             {
                 command += CM18tool.Arca.Ascii2Hex(cmd.Substring(i, 1)).ToUpper();
 
             }
-            for (int i = 0; i<command.Length;i=i+2)
+            for (int i = 0; i < command.Length; i = i + 2)
             {
                 temp += Convert.ToInt16(CM18tool.Arca.Hex2Dec(command.Substring(i, 2)));
             }
             chk += CM18tool.Arca.Ascii2Hex(CM18tool.Arca.Dec2Hex(temp, 2).Substring(0, 1)) + CM18tool.Arca.Ascii2Hex(CM18tool.Arca.Dec2Hex(temp, 2).Substring(1, 1));
-            command += chk.Substring(chk.Length-4,4);
+            command += chk.Substring(chk.Length - 4, 4);
             command += "0D";
             return command;
         }
@@ -7030,7 +7016,7 @@ namespace myArcaNameSpace
             public byte endCommand;
         }
 
-        public enum LeadingCharacter : int { cc,ssw}
+        public enum LeadingCharacter : int { cc, ssw }
 
         public struct ModuleAddress
         {
@@ -7084,7 +7070,7 @@ namespace myArcaNameSpace
             }
             return commandAnswer;
         }
-        public string CcTalkCommand(int destination, int bytes, int source, string cmd, string parameter="")
+        public string CcTalkCommand(int destination, int bytes, int source, string cmd, string parameter = "")
         {
             string[] command = new string[4];
             string chk = "";
@@ -7098,7 +7084,7 @@ namespace myArcaNameSpace
                 temp += Convert.ToInt16(CM18tool.Arca.Hex2Dec(command[i]));
             }
             temp = 256 - temp;
-            chk=CM18tool.Arca.Dec2Hex(temp, 2);
+            chk = CM18tool.Arca.Dec2Hex(temp, 2);
             cmd = command[0] + command[1] + command[2] + command[3] + chk;
             return cmd;
         }
@@ -7106,13 +7092,13 @@ namespace myArcaNameSpace
     }
 
     #region Eccezioni 
-    public class CMConnectionTypeException: Exception
+    public class CMConnectionTypeException : Exception
     {
         public CMConnectionTypeException()
         { }
 
         public CMConnectionTypeException(string message)
-            :base (message)
+            : base(message)
         { }
     }
     #endregion
@@ -7131,7 +7117,7 @@ namespace SesamiFramework
         public Color Grey1 = Color.FromArgb(255, 25, 25, 31); // 0x19191F
         public Color Grey2 = Color.FromArgb(255, 37, 37, 45); // 0x25252D
         public Color Grey3 = Color.FromArgb(255, 54, 54, 62); // 0x36363E
-        public Color Grey4 = Color.FromArgb(255, 63, 63,70 ); // 0x3F3F46
+        public Color Grey4 = Color.FromArgb(255, 63, 63, 70); // 0x3F3F46
         public Color Grey5 = Color.FromArgb(255, 102, 102, 108); // 0x66666C
         public Color Grey6 = Color.FromArgb(255, 124, 124, 129); // 0x7C7C81
         public Color Grey7 = Color.FromArgb(255, 146, 146, 150); // 0x929296
@@ -7176,7 +7162,7 @@ namespace CM18tool
         {
             //public static STower myTower = new STower();
         }
-        
+
 
         public static System.Drawing.Color ArcaColors(uint argbValue)
         {
@@ -7239,7 +7225,7 @@ namespace CM18tool
             public int cd80Num;
             public SCd80Status cd80Status;
             public SCassette[] cassettes;
-        } 
+        }
 
         public struct SCd80
         {
@@ -7307,7 +7293,7 @@ namespace CM18tool
             public SErrorLog[] errorLog;
         }
         public SSystem mySystem;
-            
+
         public struct SJamErrorLog
         {
             public List<SJamDetail> jamDetail;
@@ -7633,7 +7619,7 @@ namespace CM18tool
             return result;
         }
 
-        
+
         public static string ToBase64String(byte[] value, bool reverseArray, Base64FormattingOptions lineBreaks = Base64FormattingOptions.InsertLineBreaks)
         {
             string result = "";
@@ -7643,11 +7629,11 @@ namespace CM18tool
             return result;
         }
 
-        public static string Hex2Base64Binary (string value)
+        public static string Hex2Base64Binary(string value)
         {
             string result = "";
             byte[] valueBytes = Hex2ByteArray(value);
-            result = Convert.ToBase64String(valueBytes,Base64FormattingOptions.InsertLineBreaks);
+            result = Convert.ToBase64String(valueBytes, Base64FormattingOptions.InsertLineBreaks);
 
             return result;
         }
@@ -7712,7 +7698,7 @@ namespace CM18tool
         /// <param name="value">HEX value</param>
         /// <param name="bit">Number of bit (considered only if highter of number of bit calculated)</param>
         /// <returns></returns>
-        public static string Hex2Bin(string value,int bit=0)
+        public static string Hex2Bin(string value, int bit = 0)
         {
             value = value.ToUpper();
             string result = "";
@@ -7788,7 +7774,7 @@ namespace CM18tool
         }
 
 
-        public static int CalcOutlierPos (byte[] array)
+        public static int CalcOutlierPos(byte[] array)
         {
             int result = 0;
             double mean = CalcMean(array);
@@ -7852,7 +7838,7 @@ namespace CM18tool
             return skewness;
         }
 
-        public static double CalcAsimmetry (byte[] array)
+        public static double CalcAsimmetry(byte[] array)
         {
             int n = array.Length;
             if (n < 3)
@@ -7868,7 +7854,7 @@ namespace CM18tool
 
             double result = 0;
             for (int i = 0; i < n; i++)
-                result += Math.Pow((array[i] - mean) / stdDev,3);
+                result += Math.Pow((array[i] - mean) / stdDev, 3);
             result *= n / ((n - 1) * (n - 2));
 
             return result;
@@ -7884,7 +7870,7 @@ namespace CM18tool
             sum = 0;
             for (int i = 0; i < array.Length; i++)
             {
-                 sum += Math.Pow((array[i] - mean), 2) / values;
+                sum += Math.Pow((array[i] - mean), 2) / values;
             }
             result = Math.Sqrt(sum);
             return result;
@@ -7899,11 +7885,11 @@ namespace CM18tool
             sum = 0;
             for (int i = 0; i < array.Length; i++)
                 sum += Math.Pow((array[i] - mean), 2);
-            result = Math.Sqrt(sum/values);
+            result = Math.Sqrt(sum / values);
             return result;
         }
 
-        public static double CalcMean(byte[] array,  byte absValues = 0)
+        public static double CalcMean(byte[] array, byte absValues = 0)
         {
             double result = 0;
             if (absValues != 0)
@@ -7970,12 +7956,12 @@ namespace CM18tool
         /// <param name="value">DEC 8int) number</param>
         /// <param name="bit">Number of bit (considered only if highter of number of bit calculated)</param>
         /// <returns></returns>
-        public static string Dec2Bin (int value, int bit = 0)
+        public static string Dec2Bin(int value, int bit = 0)
         {
-            string result = Convert.ToString(value,2) ;
+            string result = Convert.ToString(value, 2);
             if (bit > result.Length)
             {
-                for (int i = result.Length;i<bit;i++)
+                for (int i = result.Length; i < bit; i++)
                 {
                     result = "0" + result;
                 }
@@ -7992,16 +7978,16 @@ namespace CM18tool
 
 
 
-        public static string ResulRc (string rc)
+        public static string ResulRc(string rc)
         {
-            if (rc == "101" || rc =="1")
+            if (rc == "101" || rc == "1")
             {
                 return "PASS";
             }
             return rc;
         }
 
-        public static bool AsciiDec2Bool (string value)
+        public static bool AsciiDec2Bool(string value)
         {
             if (value == "1")
                 return true;
@@ -8013,21 +7999,21 @@ namespace CM18tool
         /// </summary>
         /// <param name="value">BIN value</param>
         /// <returns></returns>
-        public static int Bin2Dec (string value)
+        public static int Bin2Dec(string value)
         {
             int result = 0;
             int temp = 0;
 
             for (int i = 0; i < value.Length; i++)
             {
-                temp = Convert.ToInt16(value.Substring(value.Length - (i+1), 1));
+                temp = Convert.ToInt16(value.Substring(value.Length - (i + 1), 1));
                 if (temp == 1)
                 {
                     temp = Convert.ToInt16(Math.Pow(2, i));
                 }
                 result += temp;
             }
-            
+
             return result;
         }
 
@@ -8049,9 +8035,9 @@ namespace CM18tool
             return (short)result;
         }
 
-        public static byte[] Bin2ByteArray (string value)
+        public static byte[] Bin2ByteArray(string value)
         {
-            inizio:
+        inizio:
             int resto = value.Length % 4;
             if (resto != 0)
             {
@@ -8068,7 +8054,7 @@ namespace CM18tool
 
         public static byte Bin2Byte(string value)
         {
-            inizio:
+        inizio:
             int resto = value.Length % 4;
             if (resto != 0)
             {
@@ -8083,13 +8069,13 @@ namespace CM18tool
             return answer;
         }
 
-        public static string Bin2Hex (string value, int bit = 0)
+        public static string Bin2Hex(string value, int bit = 0)
         {
             int temp = Bin2Dec(value);
             string result = Dec2Hex(temp, bit);
             return result;
         }
-        
+
         public static int Hex2AsciiDec(string value)
         {
             int result = 0;
@@ -8120,10 +8106,10 @@ namespace CM18tool
 
         public static byte[] Hex2ByteArray(string value)
         {
-            byte[] result = new byte[value.Length/2];
+            byte[] result = new byte[value.Length / 2];
 
             for (int i = 0; i < value.Length; i += 2)
-                result[i/2]=Convert.ToByte(Arca.Hex2Dec(value.Substring(i, 2)));
+                result[i / 2] = Convert.ToByte(Arca.Hex2Dec(value.Substring(i, 2)));
             return result;
         }
 
@@ -8150,7 +8136,7 @@ namespace CM18tool
         /// <param name="source"></param>
         /// <param name="byteOrder">0=little-endian / 1=big-endian</param>
         /// <returns></returns>
-        public static double ByteArray2Double (byte[] source, int byteOrder = 0)
+        public static double ByteArray2Double(byte[] source, int byteOrder = 0)
         {
             double answer = 0;
 
@@ -8171,15 +8157,15 @@ namespace CM18tool
             }
         }
 
-        public static string Float2Binary (float value) //, int nBit = 10
+        public static string Float2Binary(float value) //, int nBit = 10
         {
             //float test = value * 256;
             string result = Arca.Dec2Bin((int)value, 10);
-            
+
             return result;
         }
 
-        public static byte[] Float2ByteArray (float value)
+        public static byte[] Float2ByteArray(float value)
         {
             return BitConverter.GetBytes(value);
         }
@@ -8251,7 +8237,7 @@ namespace CM18tool
             return answer;
         }
 
-        public static byte[] FloatArray2ByteArray ( float[] value)
+        public static byte[] FloatArray2ByteArray(float[] value)
         {
             byte[] singleFloatInByte;
             byte[] answer = new byte[value.Length * 4];
@@ -8279,7 +8265,7 @@ namespace CM18tool
                 indice += value[i].Length;
             }
 
-            return answer; 
+            return answer;
         }
 
         public static string ByteArray2Ascii(byte[] source, int offset = 0, int length = 0)
@@ -8289,7 +8275,7 @@ namespace CM18tool
                 length = source.Length - offset;
             for (int i = offset; i < length + offset; i++)
                 //if (source[i] >= 32)
-                    answer += Arca.Hex2Ascii(Arca.Dec2Hex(source[i],2));
+                answer += Arca.Hex2Ascii(Arca.Dec2Hex(source[i], 2));
 
             return answer;
         }
@@ -8314,9 +8300,9 @@ namespace CM18tool
                 result = Convert.ToString(source[i], 2).PadLeft(8, '0');
             return result;
         }
-        public static string Byte2Bin (byte source)
+        public static string Byte2Bin(byte source)
         {
-            return Convert.ToString(source,2).PadLeft(8, '0');
+            return Convert.ToString(source, 2).PadLeft(8, '0');
         }
 
         public static int ByteArray2Int(byte[] source, int offset, int length, int byteOrder = 0)
@@ -8327,7 +8313,7 @@ namespace CM18tool
             {
                 case 0://little endian
                     for (int i = offset; i < offset + length; i++)
-                        answer += source[i] * (int)Math.Pow(256, i-offset);
+                        answer += source[i] * (int)Math.Pow(256, i - offset);
                     return answer;
                 case 1: // big endian
                     for (int i = offset; i < offset + length; i++)
@@ -8361,12 +8347,12 @@ namespace CM18tool
 
             answer = BitConverter.ToInt16(value, 0);
             return answer;
-            
+
         }
 
         public static short[] ByteArray2ShortArray(byte[] source, int byteOrder = 0)
         {
-            short[] answer = new short[source.Length/2];
+            short[] answer = new short[source.Length / 2];
             //Array.Reverse(source);
             //Buffer.BlockCopy(source, 0, answer, 0, source.Length);
             short tmpAnswer = 0;
@@ -8375,7 +8361,7 @@ namespace CM18tool
                 case 0://little endian
                     for (int i = 0; i < source.Length; i += 2)
                     {
-                        tmpAnswer =  (short)(source[i] * 256  + source[i + 1]);
+                        tmpAnswer = (short)(source[i] * 256 + source[i + 1]);
                         answer[i / 2] = tmpAnswer;
                     }
                     return answer;
@@ -8419,7 +8405,7 @@ namespace CM18tool
             return result;
         }
 
-        
+
 
         public static string HexArray2Ascii(byte[] value)
         {
@@ -8447,14 +8433,14 @@ namespace CM18tool
             }
             return result;
         }
-        
-        public static string Ascii2Hex (string value)
+
+        public static string Ascii2Hex(string value)
         {
             StringBuilder sb = new StringBuilder();
             byte[] inputBytes = Encoding.UTF8.GetBytes(value);
-            foreach(byte b in inputBytes)
+            foreach (byte b in inputBytes)
             {
-                sb.Append(string.Format("{0:X2}",b));
+                sb.Append(string.Format("{0:X2}", b));
             }
             return sb.ToString();
         }
@@ -8581,7 +8567,7 @@ namespace CM18tool
 
         #endregion
 
-        
+
         public static byte[] ReverseFloatToByteArray(float value)
         {
             byte[] temp = Float2ByteArray(value);
@@ -8754,8 +8740,8 @@ namespace CM18tool
                     specificValue = 27;
                     break;
                 default:
-                    if (specificKey.Length>0)
-                    specificValue = Convert.ToChar(specificKey);
+                    if (specificKey.Length > 0)
+                        specificValue = Convert.ToChar(specificKey);
                     break;
             }
             do
@@ -8792,10 +8778,10 @@ namespace CM18tool
             return key;
         }
 
-        public static void WriteMessage(System.Windows.Forms.Label label,string message, Color Colors = default(Color))
+        public static void WriteMessage(System.Windows.Forms.Label label, string message, Color Colors = default(Color))
         {
             label.Text = message;
-            if (Colors == default(Color)) { Colors=Color.White; }
+            if (Colors == default(Color)) { Colors = Color.White; }
             label.ForeColor = Colors;
             label.Refresh();
         }
@@ -8810,12 +8796,12 @@ namespace CM18tool
 
         public static void WriteMessage(System.Windows.Forms.Label label, int messageID, Color Colors = default(Color), params object[] param)
         {
-            label.Text = string.Format(iniMessage.GetValue("messages", "msg" + messageID),param);
+            label.Text = string.Format(iniMessage.GetValue("messages", "msg" + messageID), param);
             //if (Colors == default(Color)) { Colors = Color.Green; }
             label.ForeColor = Colors;
             label.Refresh();
         }
-        
+
 
         public static void WaitingTime(int mSec = 1000)
         {
@@ -8826,7 +8812,7 @@ namespace CM18tool
         public static void LogWrite(string fileName, string logBlock, bool endLog = false)
         {
             StreamWriter logFile = File.AppendText(fileName);
-            if (endLog==true)
+            if (endLog == true)
             {
                 logFile.WriteLine(logBlock);
             }

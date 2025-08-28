@@ -8,8 +8,7 @@ using System.Data;
 using MySqlConnector;
 using System.Data.SqlClient;
 using System.Text.RegularExpressions;
-using System.Net.Configuration;
-using Newtonsoft.Json.Linq;
+//using System.Net.Configuration;
 
 namespace MySQLUtils
 {
@@ -111,10 +110,6 @@ namespace MySQLUtils
                 SetDBCommand(mySqlString);
                 result = myDBCommand.ExecuteNonQuery();
             }
-            catch (SqlException ex)
-            {
-                MessageBox.Show(ex.Message);
-            }
             catch (MySqlException ex)
             {
                 MessageBox.Show(ex.Message);
@@ -132,7 +127,7 @@ namespace MySQLUtils
                 foreach (var item in fieldValues)
                 {
                     Type type = item.GetType();
-                    if (item is string)
+                    if (item is string || item is DateTime)
                         values += "'" + item + "', ";
                     else
                         values += item + ", ";
@@ -142,10 +137,6 @@ namespace MySQLUtils
                 mySqlString = "INSERT INTO " + tableName + " (" + fieldNames + ") VALUES (" + values + ")";
                 SetDBCommand(mySqlString);
                 result = myDBCommand.ExecuteNonQuery();
-            }
-            catch (SqlException ex)
-            {
-                MessageBox.Show(ex.Message);
             }
             catch (MySqlException ex)
             {
@@ -172,6 +163,39 @@ namespace MySQLUtils
                     if (i < fields.Length - 2)
                         mySqlString += ", "; 
                 }
+                mySqlString += " WHERE " + whereClause;
+                SetDBCommand(mySqlString);
+                result = myDBCommand.ExecuteNonQuery();
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.Message);
+                throw;
+            }
+            return result;
+        }
+
+        public int UpdateTable(string tableName, string whereClause, bool saveTimeEnd, params object[] fields)
+        {
+            int result = -1;
+            if (fields.Length % 2 != 0)
+                return result;
+            try
+            {
+                Open();
+                mySqlString = "UPDATE " + tableName + " SET ";
+                for (int i = 0; i < fields.Length; i += 2)
+                {
+                    if (fields[i + 1] is string)
+                        mySqlString += fields[i] + " = '" + fields[i + 1] + "'";
+                    else
+                        mySqlString += fields[i] + " = " + fields[i + 1];
+
+                    if (i < fields.Length - 2)
+                        mySqlString += ", ";
+                }
+                if (saveTimeEnd == true)
+                    mySqlString += " , timeEnd = '" + DateTime.Now.ToString("HH:mm:ss") + "'";
                 mySqlString += " WHERE " + whereClause;
                 SetDBCommand(mySqlString);
                 result = myDBCommand.ExecuteNonQuery();

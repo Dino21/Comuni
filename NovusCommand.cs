@@ -6,6 +6,10 @@ using System.Threading.Tasks;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using System.Runtime.InteropServices;
+// aggiungere al progetto i file: novuscommand.cs, Novus_Json.cs, novConst.cs
+// aggiungere al progetto il pacchetto Newtonsoft.Json da nuget manager
+// aggiungere al progetto il file ArcaLibLog.dll, ArcaDevInt.dll, ARCAdevsvc.dll
+// creare una callback nel form principale per ricevere gli eventi ( public static EventCallback cbEvent = new EventCallback(EventReceived))
 
 namespace Novus
 {
@@ -408,7 +412,7 @@ namespace Novus
         /// Connectio to NOVUS
         /// </summary>
         /// <returns></returns>
-        public int ConnectEvent(Novus_Json.CinDataConnect inDataConnect)
+        public int ConnectEvent(Novus_Json.CinDataConnect inDataConnect, ref EventCallback callback)
         {
             int reply = 0;
 
@@ -417,7 +421,7 @@ namespace Novus
             StringBuilder inData = new StringBuilder(JsonConvert.SerializeObject(inDataConnect));
             StringBuilder outData = new StringBuilder(STRDIM_LITTLE);
 
-            reply = ARCAConnect(inData, NovusFactoryTool.Form1.cbEvent, ref hCon, STRDIM_LITTLE, outData);
+            reply = ARCAConnect(inData, callback, ref hCon, STRDIM_LITTLE, outData);
             JObject jConnect = JObject.Parse(outData.ToString());
             var obj = (JObject)jConnect;
             var userObj = JObject.Parse(outData.ToString());

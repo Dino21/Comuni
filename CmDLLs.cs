@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 using System.Runtime.InteropServices;
 
 
-namespace  CM18tool
+namespace CM18tool
 {
     public class RSDLL
     {
@@ -22,7 +22,7 @@ namespace  CM18tool
         [DllImport("OEMR_USB.dll", CallingConvention = CallingConvention.Winapi, CharSet = CharSet.Ansi, SetLastError = true, ExactSpelling = true, EntryPoint = "OEMR_ReadUsbDataStream")]
         public static extern bool OEMR_ReadUsbDataStream(byte endpoint, byte[] ricezione, int nByte, int timeout);
 
-        public bool Connect (int lpOUIO = 0)
+        public bool Connect(int lpOUIO = 0)
         {
             return OEMR_OpenUsbConnection(lpOUIO);
         }
@@ -35,184 +35,184 @@ namespace  CM18tool
         public bool Command(string command, int nByte, int timeout = 6000) //string command, int nByte, int timeout=1000
         {
             bool reply = false;
-            byte[] cmd = new byte[command.Length/2];
+            byte[] cmd = new byte[command.Length / 2];
             byte[] ricezione = new byte[nByte];
-            for (int i = 0; i < command.Length/2; i++)
+            for (int i = 0; i < command.Length / 2; i++)
                 cmd[i] = byte.Parse(command.Substring(i * 2, 2), System.Globalization.NumberStyles.HexNumber);
-            
+
             reply = OEMR_SendUsbCommand(cmd, cmd.Length, timeout);
             reply = OEMR_ReadUsbDataStream(0, ricezione, 1, 2000);
             return reply;
         }
 
     }
-    public class CmDLLs 
+    public class CmDLLs
     {
 
         public event EventHandler CommandSent;
         public event EventHandler CommandReceived;
-        
+
         #region CONSTANTS
         //CONSTANTS
-        public const int COMM_TIMER_SECOND5 =                   5000;
-        public const int QUIT_THREAD =                          2;
-        public const int THREAD_MESSAGES =                      3;
-        public const int OPEN_POPUP_MENU =                      4;
-        public const int PROT_TRANSPARENT_OFF =                 0;
-        public const int PROT_TRANSPARENT_ON =                  1;
-        public const int PROTO_JOB_STATUS_READY =               2;
-        public const int PROTO_JOB_STATUS_SEND =                4;
-        public const int PROTO_JOB_STATUS_RECEIVE =             6;
-        public const int PROTO_JOB_STATUS_RECEIVE_DONE =        7;
-        public const int PROTO_JOB_STATUS_TRANSPARENT =         8;
-        public const int PROTO_JOB_STATUS_RECEIVE_STX =         10;
-        public const int PROTO_JOB_STATUS_RECEIVE_ETB_OR_ETX =  11;
-        public const int PROTO_JOB_STATUS_RECEIVE_DLE =         12;
-        public const int PROTO_JOB_STATUS_RECEIVE_EOT =         13;
-        public const int PROTO_JOB_STATUS_RECEIVE_BCC =         14;
-        public const int PROTO_JOB_STATUS_RECEIVE_0_OR_1 =      15;
-        public const int PROTO_JOB_STATUS_END =                 19;
+        public const int COMM_TIMER_SECOND5 = 5000;
+        public const int QUIT_THREAD = 2;
+        public const int THREAD_MESSAGES = 3;
+        public const int OPEN_POPUP_MENU = 4;
+        public const int PROT_TRANSPARENT_OFF = 0;
+        public const int PROT_TRANSPARENT_ON = 1;
+        public const int PROTO_JOB_STATUS_READY = 2;
+        public const int PROTO_JOB_STATUS_SEND = 4;
+        public const int PROTO_JOB_STATUS_RECEIVE = 6;
+        public const int PROTO_JOB_STATUS_RECEIVE_DONE = 7;
+        public const int PROTO_JOB_STATUS_TRANSPARENT = 8;
+        public const int PROTO_JOB_STATUS_RECEIVE_STX = 10;
+        public const int PROTO_JOB_STATUS_RECEIVE_ETB_OR_ETX = 11;
+        public const int PROTO_JOB_STATUS_RECEIVE_DLE = 12;
+        public const int PROTO_JOB_STATUS_RECEIVE_EOT = 13;
+        public const int PROTO_JOB_STATUS_RECEIVE_BCC = 14;
+        public const int PROTO_JOB_STATUS_RECEIVE_0_OR_1 = 15;
+        public const int PROTO_JOB_STATUS_END = 19;
         public const int PROTO_JOB_STATUS_RECEIVE_TRANSPARENT = 20;
-        public const int PROTO_JOB_STATUS_RECEIVE_ENQ =         21;
-        public const int PROTO_JOB_STATUS_BLOCK =               22;
-        public const int PROTO_JOB_STATUS_WAIT_TRANSPARENT =    23;
-        public const int PROTO_JOB_STATUS_FILETRN =             24;
+        public const int PROTO_JOB_STATUS_RECEIVE_ENQ = 21;
+        public const int PROTO_JOB_STATUS_BLOCK = 22;
+        public const int PROTO_JOB_STATUS_WAIT_TRANSPARENT = 23;
+        public const int PROTO_JOB_STATUS_FILETRN = 24;
 
-        public const int PROTO_TEXT_MAX_LEN =                   80;
+        public const int PROTO_TEXT_MAX_LEN = 80;
 
-        public const int PROTO_CHAR_OP_SEPARATOR =              0x2C;
+        public const int PROTO_CHAR_OP_SEPARATOR = 0x2C;
 
-        public const int PROTO_CONTROL_CHAR_STX =               0x02;
-        public const int PROTO_CONTROL_CHAR_ETX =               0x03;
-        public const int PROTO_CONTROL_CHAR_EOT =               0x04;
-        public const int PROTO_CONTROL_CHAR_ENQ =               0x05;
-        public const int PROTO_CONTROL_CHAR_ACK =               0x06;
-        public const int PROTO_CONTROL_CHAR_DLE =               0x10;
-        public const int PROTO_CONTROL_CHAR_0 =                 0x30;
-        public const int PROTO_CONTROL_CHAR_1 =                 0x31;
-        public const int PROTO_CONTROL_CHAR_NAK =               0x15;
-        public const int PROTO_CONTROL_CHAR_ETB =               0x17;
+        public const int PROTO_CONTROL_CHAR_STX = 0x02;
+        public const int PROTO_CONTROL_CHAR_ETX = 0x03;
+        public const int PROTO_CONTROL_CHAR_EOT = 0x04;
+        public const int PROTO_CONTROL_CHAR_ENQ = 0x05;
+        public const int PROTO_CONTROL_CHAR_ACK = 0x06;
+        public const int PROTO_CONTROL_CHAR_DLE = 0x10;
+        public const int PROTO_CONTROL_CHAR_0 = 0x30;
+        public const int PROTO_CONTROL_CHAR_1 = 0x31;
+        public const int PROTO_CONTROL_CHAR_NAK = 0x15;
+        public const int PROTO_CONTROL_CHAR_ETB = 0x17;
 
-        public const string PROTO_CONTROL_STRING_DLE0 =         "\x10\x30";
-        public const string PROTO_CONTROL_STRING_DLE1 =         "\x10\x31";
-        public const int PROTO_CONTROL_STRING_DLE0_LEN =        2;
-        public const int PROTO_CONTROL_STRING_DLE1_LEN =        2;
+        public const string PROTO_CONTROL_STRING_DLE0 = "\x10\x30";
+        public const string PROTO_CONTROL_STRING_DLE1 = "\x10\x31";
+        public const int PROTO_CONTROL_STRING_DLE0_LEN = 2;
+        public const int PROTO_CONTROL_STRING_DLE1_LEN = 2;
 
-        public const int LINK_RECONNECTED =                     69;
+        public const int LINK_RECONNECTED = 69;
 
-        public const byte DLINK_MODE_SERIAL =                   83;	    // connection using RS232 port
-        public const byte DLINK_MODE_SERIAL_EASY =              115;    // connection using RS232 port with LAN protocol
-        public const byte DLINK_MODE_TCPIP =                    76;     // connection using TCP/IP port
-        public const byte DLINK_MODE_SSL =                      108;    // connection secure SSL
-        public const byte DLINK_MODE_TLS =                      116;    // connection secure TLS
-        public const byte DLINK_MODE_USB =                      85;     // connection using USB port
-        public const byte DLINK_MODE_EMULATION =                69;     // connection in Emulation Moode
-        public const byte DLINK_MODE_USB_EASY =                 117;    // connection using USB port with USB protocol
-        public const byte DLINK_MODE_BLOCKTRANSFERT =           70;     // connection for UpLoad file tranfert
-        public const byte DLINK_MODE_SERVER_LAN =               101;	// connection server for emulator in lan
+        public const byte DLINK_MODE_SERIAL = 83;	    // connection using RS232 port
+        public const byte DLINK_MODE_SERIAL_EASY = 115;    // connection using RS232 port with LAN protocol
+        public const byte DLINK_MODE_TCPIP = 76;     // connection using TCP/IP port
+        public const byte DLINK_MODE_SSL = 108;    // connection secure SSL
+        public const byte DLINK_MODE_TLS = 116;    // connection secure TLS
+        public const byte DLINK_MODE_USB = 85;     // connection using USB port
+        public const byte DLINK_MODE_EMULATION = 69;     // connection in Emulation Moode
+        public const byte DLINK_MODE_USB_EASY = 117;    // connection using USB port with USB protocol
+        public const byte DLINK_MODE_BLOCKTRANSFERT = 70;     // connection for UpLoad file tranfert
+        public const byte DLINK_MODE_SERVER_LAN = 101;  // connection server for emulator in lan
 
 
-//#define WM_EXECUTE_COMPLETE									WM_USER+601     // Notification message to end of the sending operation
+        //#define WM_EXECUTE_COMPLETE									WM_USER+601     // Notification message to end of the sending operation
 
         //----------API Return code-----------------------------------------------------
         public const int CM_OK = 0;// Command correctly executed
-//#define CM_ERROR                        0xFFFF // Generic Error
+                                   //#define CM_ERROR                        0xFFFF // Generic Error
 
-        public const int CM_LINK_SYSTEM_ERR =                   1050;   //"CMLINK layer -Function communication device error"
-        public const int CM_LINK_CONNECTION_ERR =               1051;   //"CMLINK layer -Invalid handle"
-        public const int CM_LINK_ALREADY_CONNECTED_ERR =        1052;   //"CMLINK layer -Connection already connected"
-        public const int CM_LINK_CONNECT_PARAMETERS_ERR =       1053;   //"CMLINK layer -Syntax error on connect operation"
-        public const int CM_LINK_WRITE_ERR =                    1054;   //"CMLINK layer -WriteFile Function on device has failed"
-        public const int CM_LINK_READ_ERR =                     1055;   //"CMLINK layer -ReadFile Function on device has failed"
-        public const int CM_LINK_LAN_OPEN_ERR =                 1056;   //"CMLINK layer -Error on TCP/IP socket connection routines"
-        public const int CM_LINK_LAN_WRITE_ERR =                1057;   //"CMLINK layer -Write on LAN has failed"
-        public const int CM_LINK_LAN_READ_ERR =                 1058;   //"CMLINK layer -Read on LAN has failed"
-        public const int CM_LINK_TIMEOUT_ERR =                  1059;   //"CMLINK layer -Time command has expired"
-        public const int CM_LINK_OVERFLOW_ERR =                 1060;   //"CMLINK layer -Buffer of reply command has been exeed"
-        public const int CM_LINK_BCC_ERR =                      1061;   //"CMLINK layer -Trasmission error, wrong BCC/char"
-        public const int CM_LINK_PROTOCOL_ERR =                 1062;   //"CMLINK layer -Trasmission error, wrong protocol "
-        public const int CM_LINK_CDM_IN_PROGRESS =              1063;   //"CMLINK layer -Command in progress"
-        public const int CM_LINK_TERMINATE_EMULATOR =           1064;   //"CMLINK layer -Command in progress"
-        public const int CM_LINK_SEQUENCE_ERR =                 1065;   //"CMLINK layer -Command in progress"
-        public const int CM_LINK_LAN_CONNECTION_REFUSED =       1066;   //"CMLINK layer -LAN Connection refused 10061"
-        public const int CM_LINK_SYNTAX_ERR =                   1067;   //"CMLINK Syntax Error"
-        public const int CM_LINK_LAN_CONNECTION_RESET =         1068;   //"CMLINK layer -LAN 10054 - Connection reset by peer"
-        public const int CM_LINK_LANSERVER_CLIENT_CLOSE =       1069;   //"CMLINK layer Close session by client in LanServer"
+        public const int CM_LINK_SYSTEM_ERR = 1050;   //"CMLINK layer -Function communication device error"
+        public const int CM_LINK_CONNECTION_ERR = 1051;   //"CMLINK layer -Invalid handle"
+        public const int CM_LINK_ALREADY_CONNECTED_ERR = 1052;   //"CMLINK layer -Connection already connected"
+        public const int CM_LINK_CONNECT_PARAMETERS_ERR = 1053;   //"CMLINK layer -Syntax error on connect operation"
+        public const int CM_LINK_WRITE_ERR = 1054;   //"CMLINK layer -WriteFile Function on device has failed"
+        public const int CM_LINK_READ_ERR = 1055;   //"CMLINK layer -ReadFile Function on device has failed"
+        public const int CM_LINK_LAN_OPEN_ERR = 1056;   //"CMLINK layer -Error on TCP/IP socket connection routines"
+        public const int CM_LINK_LAN_WRITE_ERR = 1057;   //"CMLINK layer -Write on LAN has failed"
+        public const int CM_LINK_LAN_READ_ERR = 1058;   //"CMLINK layer -Read on LAN has failed"
+        public const int CM_LINK_TIMEOUT_ERR = 1059;   //"CMLINK layer -Time command has expired"
+        public const int CM_LINK_OVERFLOW_ERR = 1060;   //"CMLINK layer -Buffer of reply command has been exeed"
+        public const int CM_LINK_BCC_ERR = 1061;   //"CMLINK layer -Trasmission error, wrong BCC/char"
+        public const int CM_LINK_PROTOCOL_ERR = 1062;   //"CMLINK layer -Trasmission error, wrong protocol "
+        public const int CM_LINK_CDM_IN_PROGRESS = 1063;   //"CMLINK layer -Command in progress"
+        public const int CM_LINK_TERMINATE_EMULATOR = 1064;   //"CMLINK layer -Command in progress"
+        public const int CM_LINK_SEQUENCE_ERR = 1065;   //"CMLINK layer -Command in progress"
+        public const int CM_LINK_LAN_CONNECTION_REFUSED = 1066;   //"CMLINK layer -LAN Connection refused 10061"
+        public const int CM_LINK_SYNTAX_ERR = 1067;   //"CMLINK Syntax Error"
+        public const int CM_LINK_LAN_CONNECTION_RESET = 1068;   //"CMLINK layer -LAN 10054 - Connection reset by peer"
+        public const int CM_LINK_LANSERVER_CLIENT_CLOSE = 1069;   //"CMLINK layer Close session by client in LanServer"
 
-        public const int CM_COMMAND_SYNTAXERROR =               2000;   // "CM_COMMAND layer -Error in input parameter"
-        public const int CM_COMMAND_INVALID_REPLY_PARAMETER =   2001;   // "CM_COMMAND layer -Output parameter cannot be NULL"
-        public const int CM_COMMAND_UNEXPECTEDREPLY =           2002;   // "CM_COMMAND layer -Error in input parameter"
-        public const int CM_COMMAND_REFUSED =                   2003;   // "CM_COMMAND layer -"
-        public const int CM_COMMAND_INVALID_CONNECT_HANDLE =    2004;	//"CM_COMMAND layer -System Error"
+        public const int CM_COMMAND_SYNTAXERROR = 2000;   // "CM_COMMAND layer -Error in input parameter"
+        public const int CM_COMMAND_INVALID_REPLY_PARAMETER = 2001;   // "CM_COMMAND layer -Output parameter cannot be NULL"
+        public const int CM_COMMAND_UNEXPECTEDREPLY = 2002;   // "CM_COMMAND layer -Error in input parameter"
+        public const int CM_COMMAND_REFUSED = 2003;   // "CM_COMMAND layer -"
+        public const int CM_COMMAND_INVALID_CONNECT_HANDLE = 2004;	//"CM_COMMAND layer -System Error"
 
-        public const byte TRANSPARENT =             35;     //#
-        public const byte EMUL_RECEIVE =            64;     //@
-        public const int CONNECTION =               -1;     //&HFFFF
-        public const byte TWS_CTS =                 123;    //{
-        public const byte EMUL_SEND =               93;     //]
+        public const byte TRANSPARENT = 35;     //#
+        public const byte EMUL_RECEIVE = 64;     //@
+        public const int CONNECTION = -1;     //&HFFFF
+        public const byte TWS_CTS = 123;    //{
+        public const byte EMUL_SEND = 93;     //]
 
-        public const double CM_DEF_TIMEOUT =        0xFFFFFFFF;
-        public const double CM_DEF_TIMEOUTx2 =      0xFFFFFFFE;
-        public const double CM_DEF_TIMEOUTx3 =      0xFFFFFFFD;
-        public const double CM_DEF_TIMEOUTx4 =      0xFFFFFFFC;
+        public const double CM_DEF_TIMEOUT = 0xFFFFFFFF;
+        public const double CM_DEF_TIMEOUTx2 = 0xFFFFFFFE;
+        public const double CM_DEF_TIMEOUTx3 = 0xFFFFFFFD;
+        public const double CM_DEF_TIMEOUTx4 = 0xFFFFFFFC;
 
-        public const short MAX_PATH =               260;
-        public const byte LEN_PASSWORD	=	        6;
-        public const byte MAX_SLOT_ACTIVE =         4;
-        public const byte MAX_FLASH_REF =           16;
-        public const byte MAX_CASSETTES =           24;
-        public const byte MAX_DELAYCLASS =          10;
-        public const byte MAX_USERID =              10;
-        public const byte MAX_MODULE =              30;
-        public const byte MAX_CHARDENOM =           4;
-        public const byte MAX_CHANNEL =             32;
-        public const byte MAX_DEPOSIT =             200;
-        public const byte MAX_DENOMINATION =        32;
-        public const byte MAX_BOOKING =             29;
-        public const byte SERIALNUMBER =            12;
-        public const double MAX_LOG =               8192;
-        public const byte MAX_HOOPER_COIN =         8;
-        public const byte NUM_PROTO_DM =            6;
-        
-        public const byte AUTOASSIGNCASSETTES =     65;	    //'A'
-        public const byte BELL =                    66;     //'B'
-        public const byte CLOSE =                   67;     //'C'
-        public const byte DEPOSIT_CASH =            68;     //'D'
-        public const byte EXTENDED_STATUS =         69;     //'E'
-        public const byte FILL =                    70;     //'F'
-        public const byte GET_CASH_DATA =           71;     //'G'
-        public const byte ERROR_LOG =               72;     //'H'
-        public const byte INIT =                    73;     //'I'
-        public const byte JOURNAL =                 74;     //'J'
-        public const byte KEYCHANGE =               75;     //'K'
-        public const byte DOWNLOAD =                76;     //'L'
-        public const byte OPEN =                    79;     //'O'
-        public const byte SINGLECMD =               91;     //'['
-        public const byte FILETRANSF =              94;     //'^'
-        public const byte WITHDRAWAL =              87;     //'W'
-        public const byte SETSEVLEVEL =             80;     //'P'
-        public const byte SETOIDPAR =               78;     //'N'
-        public const byte GETSEVLEVEL =             81;     //'Q'
-        public const byte GET_CONFIG =              82;     //'R'
-        public const byte SETCONFIG =               83;     //'S'
-        public const byte TEST =                    84;     //'T'
-        public const byte UNDO =                    85;     //'U'
-        public const byte VERSION =                 86;     //'V'
-        public const byte TRASPARENT_START =        88;     //'X'
-        public const byte TRASPARENT_END =          89;     //'Y'
-        public const byte MOD_FILL =                90;     //'Z'
-        public const byte CTS_TWS =                 121;    //'y'
+        public const short MAX_PATH = 260;
+        public const byte LEN_PASSWORD = 6;
+        public const byte MAX_SLOT_ACTIVE = 4;
+        public const byte MAX_FLASH_REF = 16;
+        public const byte MAX_CASSETTES = 24;
+        public const byte MAX_DELAYCLASS = 10;
+        public const byte MAX_USERID = 10;
+        public const byte MAX_MODULE = 30;
+        public const byte MAX_CHARDENOM = 4;
+        public const byte MAX_CHANNEL = 32;
+        public const byte MAX_DEPOSIT = 200;
+        public const byte MAX_DENOMINATION = 32;
+        public const byte MAX_BOOKING = 29;
+        public const byte SERIALNUMBER = 12;
+        public const double MAX_LOG = 8192;
+        public const byte MAX_HOOPER_COIN = 8;
+        public const byte NUM_PROTO_DM = 6;
 
-        public const byte NewAssign =               97;     //'a'
-        public const byte GET_CASH_MONSTER =        103;    //'g'
-        public const byte EXT_STATUS_MONSTER =      101;    //'e'
-        public const byte MOVENOTES =               119;    //'w'
-        public const byte GET_CNF_MONSTER =         114;    //'r'
-        public const byte SWAPNOTES =               115;    //'s'
-        public const byte COIN_DSP =                100;    //'d'
-        public const byte UTILITY =                 117;    //'u'
-        public const byte ROBBERY =                 98;     //'b'
-        public const byte MOD_DEP =                 77;     //'M'
+        public const byte AUTOASSIGNCASSETTES = 65;	    //'A'
+        public const byte BELL = 66;     //'B'
+        public const byte CLOSE = 67;     //'C'
+        public const byte DEPOSIT_CASH = 68;     //'D'
+        public const byte EXTENDED_STATUS = 69;     //'E'
+        public const byte FILL = 70;     //'F'
+        public const byte GET_CASH_DATA = 71;     //'G'
+        public const byte ERROR_LOG = 72;     //'H'
+        public const byte INIT = 73;     //'I'
+        public const byte JOURNAL = 74;     //'J'
+        public const byte KEYCHANGE = 75;     //'K'
+        public const byte DOWNLOAD = 76;     //'L'
+        public const byte OPEN = 79;     //'O'
+        public const byte SINGLECMD = 91;     //'['
+        public const byte FILETRANSF = 94;     //'^'
+        public const byte WITHDRAWAL = 87;     //'W'
+        public const byte SETSEVLEVEL = 80;     //'P'
+        public const byte SETOIDPAR = 78;     //'N'
+        public const byte GETSEVLEVEL = 81;     //'Q'
+        public const byte GET_CONFIG = 82;     //'R'
+        public const byte SETCONFIG = 83;     //'S'
+        public const byte TEST = 84;     //'T'
+        public const byte UNDO = 85;     //'U'
+        public const byte VERSION = 86;     //'V'
+        public const byte TRASPARENT_START = 88;     //'X'
+        public const byte TRASPARENT_END = 89;     //'Y'
+        public const byte MOD_FILL = 90;     //'Z'
+        public const byte CTS_TWS = 121;    //'y'
+
+        public const byte NewAssign = 97;     //'a'
+        public const byte GET_CASH_MONSTER = 103;    //'g'
+        public const byte EXT_STATUS_MONSTER = 101;    //'e'
+        public const byte MOVENOTES = 119;    //'w'
+        public const byte GET_CNF_MONSTER = 114;    //'r'
+        public const byte SWAPNOTES = 115;    //'s'
+        public const byte COIN_DSP = 100;    //'d'
+        public const byte UTILITY = 117;    //'u'
+        public const byte ROBBERY = 98;     //'b'
+        public const byte MOD_DEP = 77;     //'M'
 
         #endregion
 
@@ -225,7 +225,7 @@ namespace  CM18tool
         public static string commandSent;
         public string commandAns;
         public string[] commandSingleAns;
-        public int n=1;
+        public int n = 1;
         #endregion
 
         #region STRUCTURES
@@ -493,7 +493,7 @@ namespace  CM18tool
         [DllImport("CMTrace.dll", CallingConvention = CallingConvention.Winapi, CharSet = CharSet.Ansi, SetLastError = true, ExactSpelling = true, EntryPoint = "CMTrace_SetTraceDirectiveExt")]
         public static extern short SetTraceDirective(STraceDirective traceDirective, ref int lastError);
 
-        
+
 
         #endregion
 
@@ -541,7 +541,7 @@ namespace  CM18tool
 
         public int CMDisconnect()
         {
-            for (short i = 0; i<=hCon;i++)
+            for (short i = 0; i <= hCon; i++)
                 CMDisconnect(i);
             return 0;
         }
@@ -553,7 +553,7 @@ namespace  CM18tool
         //CMCommand_Execute -  = ''
         [DllImport("CMCommand.dll", CallingConvention = CallingConvention.Winapi, CharSet = CharSet.Ansi, SetLastError = true, ExactSpelling = true, EntryPoint = "CMCommand_Execute")]
         public static extern short CMSingleCommand(int hCon, byte idCommand, ref ISingle lpCmd, ref OSingle lpReply, int timeOut);
-        
+
 
         public static ISingle InputSingle = new ISingle();
         public static OSingle OutputSingle = new OSingle();
@@ -569,12 +569,13 @@ namespace  CM18tool
             public string answer;
             public int size;
         }
-        
 
-        public string CMSingleCommand(string command, int posReply = 3, int timeOut=5000)
+
+
+        public string CMSingleCommand(string command, int posReply = 3, int timeOut = 5000)
         {
             n++;
-            if (n==10)
+            if (n == 10)
             {
                 n = 1;
             }
@@ -582,7 +583,7 @@ namespace  CM18tool
             string reply;
             InputSingle.command = command;
             InputSingle.size = InputSingle.command.Length;
-            OutputSingle.answer  = new string (' ', 1700) ;
+            OutputSingle.answer = new string(' ', 1700);
             OutputSingle.size = OutputSingle.answer.Length;
             commandSent = command;
 
@@ -591,6 +592,8 @@ namespace  CM18tool
             commandAns = OutputSingle.answer;
             CommandReceived(commandAns, null);
             commandSingleAns = commandAns.Split(',');
+            if (commandSingleAns.Length == 1)
+                return result.ToString();
             try
             {
                 reply = commandSingleAns[posReply];
@@ -600,7 +603,7 @@ namespace  CM18tool
             {
                 return result.ToString();
             }
-                
+
         }
         #endregion
 
@@ -609,7 +612,7 @@ namespace  CM18tool
         //public static extern short cmdOpen(int hCon, byte idCommand, ref IOpen lpCmd, ref OOpen lpReply, int timeOut);
         //public static IOpen inputOpen = new IOpen();
         //public static OOpen OutputOpen = new OOpen();
-        
+
         //public short cmdOpen()
         //{
         //    inputOpen.side = DOWNLOAD;
@@ -625,7 +628,7 @@ namespace  CM18tool
         /// <param name="side">Operator side (L/R)</param>
         /// <param name="code">Password relative to the operator selected</param>
         /// <returns></returns>
-        public string CMOpen(string side = "L",string code = "123456")
+        public string CMOpen(string side = "L", string code = "123456")
         {
             string rc = CMSingleCommand("O," + n + "," + side + "," + code, 3, 5000);
             replyOpen = new SReplyOpen();
@@ -636,7 +639,7 @@ namespace  CM18tool
             }
             return rc;
 
-            
+
         }
 
         /// <summary>
@@ -644,22 +647,22 @@ namespace  CM18tool
         /// </summary>
         /// <param name="side">Operator side (L/R)</param>
         /// <returns></returns>
-        public string CMGetCashData (string side = "L")
+        public string CMGetCashData(string side = "L")
         {
-            string rc=CMSingleCommand("G," + n + "," + side , 3, 5000);
+            string rc = CMSingleCommand("G," + n + "," + side, 3, 5000);
 
-            int dim =((commandSingleAns.Length )-4)/5;
+            int dim = ((commandSingleAns.Length) - 4) / 5;
             replyGetCashData = new SGetCashData();
             SCassetteInfo[] cassetteInfo = new SCassetteInfo[dim];
             replyGetCashData.side = commandSingleAns[2];
             replyGetCashData.rc = commandSingleAns[3];
-            for (int i = 0 ; i < dim; i++)
+            for (int i = 0; i < dim; i++)
             {
-                cassetteInfo[i].noteId = commandSingleAns[i*5 + 4];
-                cassetteInfo[i].bnNumber = commandSingleAns[i*5 + 5];
-                cassetteInfo[i].bnFreeCap = commandSingleAns[i*5 + 6];
-                cassetteInfo[i].name = commandSingleAns[i*5 + 7];
-                cassetteInfo[i].enabled = commandSingleAns[i*5 + 8];
+                cassetteInfo[i].noteId = commandSingleAns[i * 5 + 4];
+                cassetteInfo[i].bnNumber = commandSingleAns[i * 5 + 5];
+                cassetteInfo[i].bnFreeCap = commandSingleAns[i * 5 + 6];
+                cassetteInfo[i].name = commandSingleAns[i * 5 + 7];
+                cassetteInfo[i].enabled = commandSingleAns[i * 5 + 8];
             }
             replyGetCashData.CassetteInfo = cassetteInfo;
             replyGetCashData.numCasProt = dim.ToString();
@@ -671,15 +674,15 @@ namespace  CM18tool
         /// </summary>
         /// <param name="side">Operator side (L/R)</param>
         /// <returns></returns>
-        public string CMDeposit (string side ="L")
+        public string CMDeposit(string side = "L")
         {
-            string rc = CMSingleCommand("D," + n + "," + side + ",0,0000",3 ,60000);
-            int dim = ((commandSingleAns.Length)-7)/2;
+            string rc = CMSingleCommand("D," + n + "," + side + ",0,0000", 3, 60000);
+            int dim = ((commandSingleAns.Length) - 7) / 2;
             replyDeposit = new SDeposit();
             SNotesInfo[] notesInfo = new SNotesInfo[dim];
             replyDeposit.side = commandSingleAns[2];
             replyDeposit.rc = commandSingleAns[3];
-            replyDeposit.bnTotal = Convert.ToInt16( commandSingleAns[4]);
+            replyDeposit.bnTotal = Convert.ToInt16(commandSingleAns[4]);
             replyDeposit.bnOutput = Convert.ToInt16(commandSingleAns[5]);
             replyDeposit.bnRej = Convert.ToInt16(commandSingleAns[6]);
             for (int i = 0; i < dim; i++)
@@ -723,7 +726,7 @@ namespace  CM18tool
         /// </summary>
         /// <param name="side">Operator side (L/R)</param>
         /// <returns></returns>
-        public string CMFitCounting (string side = "L")
+        public string CMFitCounting(string side = "L")
         {
             string rc = CMSingleCommand("D," + n + "," + side + ",10,0000", 3, 60000);
             int dim = ((commandSingleAns.Length) - 7) / 2;
@@ -750,9 +753,9 @@ namespace  CM18tool
         /// <param name="side">Operator side</param>
         /// <param name="mode">0:UNDO DEPOSIT, 1:ACCEPT DEPOSIT, 2:VIEW LIST DEPOSIT</param>
         /// <returns></returns>
-        public string CMUndo (string side = "L", string mode = "0")
+        public string CMUndo(string side = "L", string mode = "0")
         {
-            string rc = CMSingleCommand("U," + n + "," + side + "," + mode, 3, 112000) ;
+            string rc = CMSingleCommand("U," + n + "," + side + "," + mode, 3, 112000);
             int dim = ((commandSingleAns.Length) - 4) / 2;
             replyUndo = new SUndo();
             SNotesInfo[] notesInfo = new SNotesInfo[dim];
@@ -773,14 +776,14 @@ namespace  CM18tool
         /// <param name="noteInfo">stuct(SNotesInfo) of requested notes for each specific denomination</param>
         /// <param name="side">Operator side</param>
         /// <returns></returns>
-        public string CMWithdrawal (SNotesInfo[] noteInfo = null, string side = "L")
+        public string CMWithdrawal(SNotesInfo[] noteInfo = null, string side = "L")
         {
-            string request="";
-            for (int i = 0; i< noteInfo.Length; i++)
+            string request = "";
+            for (int i = 0; i < noteInfo.Length; i++)
             {
                 request += "," + noteInfo[i].denomination + "," + noteInfo[i].bnNum;
             }
-            string rc=CMSingleCommand("W," + n + "," + side + request, 3, 112000);
+            string rc = CMSingleCommand("W," + n + "," + side + request, 3, 112000);
             int dim = ((commandSingleAns.Length) - 4) / 2;
             replyWithdrawal = new SWithdrawal();
             SNotesInfo[] notesInfo = new SNotesInfo[dim];
@@ -819,8 +822,8 @@ namespace  CM18tool
             for (int i = 0; i < dim; i++)
             {
                 transferInfo[i].noteId = commandSingleAns[i * 3 + 4];
-                transferInfo[i].bnNum=Convert.ToInt16(commandSingleAns[i * 3 + 5]);
-                transferInfo[i].bnDep=Convert.ToInt16(commandSingleAns[i * 3 + 6]);
+                transferInfo[i].bnNum = Convert.ToInt16(commandSingleAns[i * 3 + 5]);
+                transferInfo[i].bnDep = Convert.ToInt16(commandSingleAns[i * 3 + 6]);
             }
             return rc;
         }
@@ -835,12 +838,12 @@ namespace  CM18tool
             return CMSingleCommand("C," + n + "," + side, 3, 5000);
         }
 
-        public string CMCassetteNumber (int cass_num = 0)
+        public string CMCassetteNumber(int cass_num = 0)
         {
             return CMSingleCommand("F,1,11," + cass_num.ToString());
         }
 
-        public string CMCD80Number (int num_cd80 = 0)
+        public string CMCD80Number(int num_cd80 = 0)
         {
             return CMSingleCommand("F,1,30," + num_cd80);
         }
@@ -920,7 +923,7 @@ namespace  CM18tool
         /// </summary>
         /// <param name="module">Module address or name</param>
         /// <returns></returns>
-        public string CMVersion (string module)
+        public string CMVersion(string module)
         {
             string rc;
             if (module.Length > 1)
@@ -933,10 +936,13 @@ namespace  CM18tool
                     case "FEEDER":
                         module = "1";
                         break;
-                    case "RTC": case "REAL TIME": case "REAL TIME CONTROLLER":
+                    case "RTC":
+                    case "REAL TIME":
+                    case "REAL TIME CONTROLLER":
                         module = "2";
                         break;
-                    case "READER": case "IDENTIFIER":
+                    case "READER":
+                    case "IDENTIFIER":
                         module = "3";
                         break;
                     case "SAFE":
@@ -1087,14 +1093,14 @@ namespace  CM18tool
             }
             return rc;
         }
-        
+
         /// <summary>
         /// This command initializes the cassette logical address according to the physical position
         /// </summary>
         /// <returns></returns>
         public string CMAssignCassette()
         {
-            string rc =CMSingleCommand("A," + n,2,5000);
+            string rc = CMSingleCommand("A," + n, 2, 5000);
             replyAssign = new SAssign();
             replyAssign.rc = commandSingleAns[2];
             replyAssign.message = commandSingleAns[3];
@@ -1138,13 +1144,13 @@ namespace  CM18tool
             {
                 rc = "WRONG DATE";
             }
-            
+
             if (hh < 1 | hh > 24 | hh < 0 | hh > 59)
             {
                 rc += " WRONG TIME";
             }
 
-            if (rc=="")
+            if (rc == "")
             {
                 rc = CMSingleCommand("F," + n + ",0," + mm + "," + dd + "," + hh + "," + pp, 3, 5000);
             }
@@ -1174,7 +1180,7 @@ namespace  CM18tool
         /// <param name="x4000">reserved</param>
         /// <param name="x8000">0/1 - Enable Journal Log</param>
         /// <returns></returns>
-        public string CMFillConfig (string config = "", int x0001 = 0,int x0002 = 0, int x0004 = 0, int x0008 = 0, int x0010 = 0, int x0020 = 0, int x0040 = 0, int x0080 = 0, int x0100 = 0, int x0200 = 0, int x0400 = 0, int x0800 = 0, int x1000 = 0, int x2000 = 0, int x4000 = 0, int x8000 = 0)
+        public string CMFillConfig(string config = "", int x0001 = 0, int x0002 = 0, int x0004 = 0, int x0008 = 0, int x0010 = 0, int x0020 = 0, int x0040 = 0, int x0080 = 0, int x0100 = 0, int x0200 = 0, int x0400 = 0, int x0800 = 0, int x1000 = 0, int x2000 = 0, int x4000 = 0, int x8000 = 0)
         {
 
             if (config == "")
@@ -1276,8 +1282,8 @@ namespace  CM18tool
         /// <param name="x4000">Enable booking open by external button</param>
         /// <param name="x8000">reserved</param>
         /// <returns></returns>
-        public string CMFillOptionOneConfig(string config = "", int x0001 = 0, int x0002 = 0, int x0004 = 0, 
-            int x0008 = 0, int x0010 = 0, int x0020 = 0, int x0040 = 0, int x0080 = 0, int x0100 = 0, int x0200 = 0, 
+        public string CMFillOptionOneConfig(string config = "", int x0001 = 0, int x0002 = 0, int x0004 = 0,
+            int x0008 = 0, int x0010 = 0, int x0020 = 0, int x0040 = 0, int x0080 = 0, int x0100 = 0, int x0200 = 0,
             int x0400 = 0, int x0800 = 0, int x1000 = 0, int x2000 = 0, int x4000 = 0, int x8000 = 0)
         {
 
@@ -1300,7 +1306,7 @@ namespace  CM18tool
                 x4000 = x4000 == 1 ? 0x4000 : 0;
                 x8000 = x8000 == 1 ? 0x8000 : 0;
 
-                config = (x0001 + x0002 + x0004 + x0008 + x0010 + x0020 + x0040 + x0080 + x0100 + x0200 + x0400 + x0800 + 
+                config = (x0001 + x0002 + x0004 + x0008 + x0010 + x0020 + x0040 + x0080 + x0100 + x0200 + x0400 + x0800 +
                     x1000 + x2000 + x4000 + x8000).ToString("X4");
             }
 
@@ -1331,9 +1337,9 @@ namespace  CM18tool
         /// <param name="x00008000">Disable message on display</param>
         /// <param name="x00010000">Alarm2 output handling</param>
         /// <returns></returns>
-        public string CMFillOptionTwoConfig(string config = "", int x00000001 = 0, int x00000002 = 0, int x00000004 = 0, 
-            int x00000008 = 0, int x00000010 = 0, int x00000020 = 0, int x00000040 = 0, int x00000080 = 0, int x00000100 = 0, 
-            int x00000200 = 0, int x00000400 = 0, int x00000800 = 0, int x00001000 = 0, int x00002000 = 0, int x00004000 = 0, 
+        public string CMFillOptionTwoConfig(string config = "", int x00000001 = 0, int x00000002 = 0, int x00000004 = 0,
+            int x00000008 = 0, int x00000010 = 0, int x00000020 = 0, int x00000040 = 0, int x00000080 = 0, int x00000100 = 0,
+            int x00000200 = 0, int x00000400 = 0, int x00000800 = 0, int x00001000 = 0, int x00002000 = 0, int x00004000 = 0,
             int x00008000 = 0, int x00010000 = 0)
         {
 
@@ -1449,12 +1455,12 @@ namespace  CM18tool
             replyUnitCoverTest = new SUnitCoverTest();
             replyUnitCoverTest.rc = CMSingleCommand("T," + n + ",0,0", 4, 5000);
             replyUnitCoverTest.safeDoor = commandSingleAns[5];
-            replyUnitCoverTest.cover= commandSingleAns[7];
-            replyUnitCoverTest.feeder= commandSingleAns[8];
-            replyUnitCoverTest.inputSlot= commandSingleAns[9];
-            replyUnitCoverTest.rejectSlot= commandSingleAns[10];
-            replyUnitCoverTest.leftSlot= commandSingleAns[11];
-            replyUnitCoverTest.rightSlot= commandSingleAns[12];
+            replyUnitCoverTest.cover = commandSingleAns[7];
+            replyUnitCoverTest.feeder = commandSingleAns[8];
+            replyUnitCoverTest.inputSlot = commandSingleAns[9];
+            replyUnitCoverTest.rejectSlot = commandSingleAns[10];
+            replyUnitCoverTest.leftSlot = commandSingleAns[11];
+            replyUnitCoverTest.rightSlot = commandSingleAns[12];
 
             return replyUnitCoverTest.rc;
         }
@@ -1497,9 +1503,9 @@ namespace  CM18tool
         /// <returns></returns>
         public string CMTransparentCommand(string command, int timeOut = 1000)
         {
-            
+
             replyTransparentCommand = new STransparentCommand();
-            
+
             if (replyTransparentState.state != "ON")
             {
                 return "TRASP OFF";
@@ -1507,7 +1513,7 @@ namespace  CM18tool
             int result;
             InputSingle.command = command;
             InputSingle.size = InputSingle.command.Length;
-            OutputSingle.answer =  new string(' ', 1700);
+            OutputSingle.answer = new string(' ', 1700);
             OutputSingle.size = OutputSingle.answer.Length;
             commandSent = command;
             CommandSent(commandSent, null);
@@ -1520,7 +1526,7 @@ namespace  CM18tool
             commandSingleAns = commandAns.Split(',');
             try
             {
-                
+
                 return replyTransparentCommand.answer;
             }
             catch (System.IndexOutOfRangeException)
@@ -1528,7 +1534,7 @@ namespace  CM18tool
                 return result.ToString();
             }
 
-            
+
         }
     }
 }
