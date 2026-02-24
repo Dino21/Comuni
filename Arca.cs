@@ -1926,6 +1926,150 @@ namespace myArcaNameSpace
         }
         public SCanBusFrame canFrame = new SCanBusFrame();
 
+        #region Comandi Vecchio CANBUS
+        public byte[] CmdElmOpen(byte destinationID, byte state, byte idElm = 0x00)
+        {
+            if (!mySerial.IsOpen)
+                mySerial.Open();
+            byte[] frame = MakeFrameID(destinationID, MODULE_ID_UPPER_CTRL, CAN_MSG_CMD, CAN_DATA_COMPLETE, CMD_MOVE_ELM, idElm, state);
+            byte[] result = SendCommand(frame);
+            mySerial.Close();
+            return result;
+        }
+        public byte[] CmdSetPhotoParameters(byte destinationID, byte photoID, byte soglia, byte agc, short corrente, byte polarità)
+        {
+            byte[] parameters = new byte[6];
+            parameters[0] = photoID; // direzione
+            parameters[1] = soglia;
+            parameters[2] = agc;
+            byte[] curr = Arca.Short2ByteArray(corrente);
+            Array.Copy(curr, 0, parameters, 3, 2);
+            parameters[5] = polarità;
+            if (!mySerial.IsOpen)
+                mySerial.Open();
+            byte[] frame = MakeFrameID(destinationID, MODULE_ID_UPPER_CTRL, CAN_MSG_CMD, CAN_DATA_COMPLETE, CMD_SET_PH_PAR, parameters);
+            byte[] result = SendCommand(frame);
+            mySerial.Close();
+            return canFrame.data;
+
+        }
+        public byte[] CmdFwUpload(byte destinationID, byte[] fwData, byte dataComplete = CAN_DATA_INCOMPLETE)
+        {
+            //if(!mySerial.IsOpen)
+            //    mySerial.Open();
+            byte[] result = { 0x00 };
+            byte[] data = new byte[8];
+            byte[] frame;
+
+            for (int i = 0; i < fwData.Length; i += 8)
+            {
+                //result = new byte[1];
+                if (fwData.Length - i < 8)
+                {
+                    data = new byte[fwData.Length - i];
+                    frame = MakeFrameID(destinationID, MODULE_ID_UPPER_CTRL, CAN_MSG_CMD, CAN_DATA_COMPLETE, CMD_FW_UPDATE, data);
+                }
+                else
+                    frame = MakeFrameID(destinationID, MODULE_ID_UPPER_CTRL, CAN_MSG_CMD, CAN_DATA_INCOMPLETE, CMD_FW_UPDATE, data);
+
+                Array.Copy(fwData, i, frame, 6, data.Length);
+                SendFirmware(frame);
+            }
+            return result;
+        }
+        public byte[] CmdSetTrayNumber(int cassetteNumber = 8)
+        {
+            byte casNum = Convert.ToByte(cassetteNumber / 2);
+            byte[] bitMask = { 0x0F, 0xFF, casNum };
+            if (!mySerial.IsOpen)
+                mySerial.Open();
+            byte[] frame = MakeFrameID(MODULE_ID_SAFE, MODULE_ID_UPPER_CTRL, CAN_MSG_CMD, CAN_DATA_COMPLETE, CMD_SET_OP_CASSETTE, bitMask);
+            byte[] result = SendCommand(frame);
+            mySerial.Close();
+            return result;
+        }
+        public byte[] CmdRestoreE2P(byte destinationID)
+        {
+            byte[] frame = { 0x00 };
+            if (!mySerial.IsOpen)
+                mySerial.Open();
+            switch (destinationID)
+            {
+                case MODULE_ID_BROADCAST:
+                    frame = MakeFrameID(destinationID, MODULE_ID_UPPER_CTRL, CAN_MSG_CMD, CAN_DATA_COMPLETE, CMD_RESTORE_E2P);
+                    break;
+                case MODULE_ID_SAFE:
+                    frame = MakeFrameID(destinationID, MODULE_ID_UPPER_CTRL, CAN_MSG_CMD, CAN_DATA_COMPLETE, CMD_RESTORE_SAFE_E2P);
+                    break;
+            }
+            byte[] result = SendCommand(frame);
+            mySerial.Close();
+            return result;
+        }
+        public byte[] CmdGetValidateTest(byte destinationID)
+        {
+            if (!mySerial.IsOpen)
+                mySerial.Open();
+            byte[] frame = MakeFrameID(destinationID, MODULE_ID_UPPER_CTRL, CAN_MSG_CMD, CAN_DATA_COMPLETE, CMD_GET_TEST_VALIDATION);
+            byte[] result = SendCommand(frame);
+            mySerial.Close();
+            return result;
+        }
+        public byte[] CmdMoveMivMotor(byte direction)
+        {
+            byte[] parameters = new byte[7];
+            parameters[0] = direction; // direzione
+            parameters[1] = 0x01;
+            parameters[2] = 0x22;
+            parameters[3] = 0xFF;
+            parameters[4] = 0xFF;
+            parameters[5] = 0xFF;
+            parameters[6] = 0xFF;
+            if (!mySerial.IsOpen)
+                mySerial.Open();
+            byte[] frame = MakeFrameID(MODULE_ID_SAFE, MODULE_ID_UPPER_CTRL, CAN_MSG_CMD, CAN_DATA_COMPLETE, CMD_MOVE_VERT_MOT, parameters);
+            byte[] result = SendCommand(frame, 5000);
+            mySerial.Close();
+            return result;
+        }
+        public byte[] CmdStopMivMotor()
+        {
+            byte[] parameters = new byte[7];
+            parameters[0] = 0x02;
+            parameters[1] = 0xFF;
+            parameters[2] = 0xFF;
+            parameters[3] = 0xFF;
+            parameters[4] = 0xFF;
+            parameters[5] = 0xFF;
+            parameters[6] = 0xFF;
+            if (!mySerial.IsOpen)
+                mySerial.Open();
+            byte[] frame = MakeFrameID(MODULE_ID_SAFE, MODULE_ID_UPPER_CTRL, CAN_MSG_CMD, CAN_DATA_COMPLETE, CMD_MOVE_VERT_MOT, parameters);
+            byte[] result = SendCommand(frame, 5000);
+            mySerial.Close();
+            return result;
+        }
+        public byte[] CmdGetCurrMotor(byte motorID)
+        {
+            if (!mySerial.IsOpen)
+                mySerial.Open();
+            byte[] frame = MakeFrameID(MODULE_ID_SAFE, MODULE_ID_UPPER_CTRL, CAN_MSG_CMD, CAN_DATA_COMPLETE, CMD_GET_MOT_CUR, motorID);
+            byte[] result = SendCommand(frame);
+            mySerial.Close();
+            return result;
+        }
+        public byte[] CmdFwUpdateAbort(byte destinationID)
+        {
+            if (!mySerial.IsOpen)
+                mySerial.Open();
+            byte[] frame = MakeFrameID(destinationID, MODULE_ID_UPPER_CTRL, CAN_MSG_CMD, CAN_DATA_COMPLETE, CMD_CANC_BASC_FW_UPDATE);
+            byte[] result = SendCommand(frame);
+            mySerial.Close();
+            return result;
+        }
+
+        #endregion
+
         #region Comandi per adattatore CAN CANFD-2P-ISO
 
         /* List of Supported Commands:
@@ -5580,11 +5724,11 @@ namespace myArcaNameSpace
             {
                 case 1:
                     byteAnswer = 4;
-                    timeout = 2000;
+                    timeout = 6000; // valore passato da 2000 a 6000 su richiesta di Nervo 24/02/26
                     break;
                 case 2:
                     byteAnswer = 16;
-                    timeout = 4000;
+                    timeout = 10000; // valore passato da 4000 a 10000 su richiesta di Nervo 24/02/26
                     break;
                 case 3:
                     byteAnswer = 8192;
@@ -6156,7 +6300,9 @@ namespace myArcaNameSpace
                                                 goto end;
                                             }
                                         }
+                                        goto salva;
                                     }
+
                                 }
                             }
                         }
@@ -6180,7 +6326,7 @@ namespace myArcaNameSpace
                 XmlDocument xDocument = new XmlDocument();
                 xDocument.Load(readerXmlFilename);
                 XmlNode root1 = xDocument.DocumentElement;
-                for (int i = 0; i < root1.ChildNodes[0].ChildNodes.Count; i++)
+                for (int i = root1.ChildNodes[0].ChildNodes.Count - 1 ; i >= 0; i--)
                 {
                     if (root1.ChildNodes[0].ChildNodes[i].Name == "CIS" && root1.ChildNodes[0].ChildNodes[i].Attributes["pos"].Value == pos.ToString())
                     {
@@ -6194,16 +6340,19 @@ namespace myArcaNameSpace
                             {
                                 trovato = true;
                                 root1.ChildNodes[0].ChildNodes[i].Attributes[x].Value = newAttributeValue;
+
                             }
 
                         }
                     }
+                    if (trovato == true) goto salva;
                 }
                 if (trovato == false)
                 {
                     //Aggiungere l'attributo??
 
                 }
+            salva:
                 xDocument.Save(readerXmlFilename);
             }
         }
@@ -7149,7 +7298,7 @@ namespace CM18tool
         public static Color messageColor = Color.FromArgb(255, 255, 255, 255); //0x00000000
         public static Color errorColor = Color.FromArgb(255, 255, 0, 0); //0x00FF0000
         public static Color warningColor = Color.FromArgb(255, 255, 184, 0);//0x00FFB800
-        public static Color actionColor = Color.FromArgb(255, 0, 0, 255);//0x000000FF
+        public static Color actionColor = Color.FromArgb(255, 50, 50, 255);//0x000000FF
         public static Color correctColor = Color.FromArgb(255, 154, 205, 50);//0x009ACD32
         public static Color waitingColor = Color.FromArgb(255, 154, 205, 50);//0x009ACD32
         public static Color arcaBlackColor = Color.FromArgb(255, 88, 89, 91);

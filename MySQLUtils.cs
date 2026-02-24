@@ -8,10 +8,13 @@ using System.Data;
 using MySqlConnector;
 using System.Data.SqlClient;
 using System.Text.RegularExpressions;
+using System.IO;
+//using DatabaseProvider;
 //using System.Net.Configuration;
 
 namespace MySQLUtils
 {
+    
     public class SQLUtils
     {
         // aggiungere al progetto il pacchetto nuget 'MySqlConnector' 2.4.0 o superiore
@@ -84,13 +87,16 @@ namespace MySQLUtils
             return result.ToArray();
         }
 
-        public int GetLastID(string tableName, string idFieldName)
+        public int GetLastID(string tableName, string idFieldName, string whereClausole = "")
         {
             int result = -1;
             try
             {
                 Open();
-                result = Convert.ToInt16(GetStringValue("SELECT* FROM " + tableName + " ORDER BY " + idFieldName +" DESC LIMIT 1", idFieldName));
+                if (whereClausole != "")
+                    result = Convert.ToInt16(GetStringValue("SELECT * FROM " + tableName + " WHERE " + whereClausole + " ORDER BY " + idFieldName + " DESC LIMIT 1", idFieldName));
+                else
+                    result = Convert.ToInt16(GetStringValue("SELECT * FROM " + tableName + " ORDER BY " + idFieldName + " DESC LIMIT 1", idFieldName));
                 
             }
             catch (Exception)
@@ -165,6 +171,10 @@ namespace MySQLUtils
                 }
                 mySqlString += " WHERE " + whereClause;
                 SetDBCommand(mySqlString);
+                //using (StreamWriter logsql = new StreamWriter(Application.StartupPath + "//log.txt", append:true))
+                //{
+                //    logsql.WriteLine(mySqlString);
+                //}
                 result = myDBCommand.ExecuteNonQuery();
             }
             catch (Exception ex)
@@ -217,7 +227,10 @@ namespace MySQLUtils
                 SetDBCommand(sqlString);
                 result = myDBCommand.ExecuteNonQuery();
             }
-            catch { }
+            catch (Exception ex)
+            {
+                MessageBox.Show("Errore nell'esecuzione del comando SQL: " + sqlString + Environment.NewLine + Environment.NewLine + ex.Message,"ERRORE",MessageBoxButtons.OK,MessageBoxIcon.Stop);
+            }
             return result;
         }
 
@@ -276,6 +289,16 @@ namespace MySQLUtils
             return value;
         }
 
+        //public int GetLastId(string tableName, string idFieldName, string fieldName)
+        //{
+        //    int result = -1;
+        //    if (Open() != true)
+        //        return result;
+        //    string sqlStringCommand = $"SELECT {fieldName} FROM {tableName} ORDER BY {idFieldName} DESC LIMIT 1";
+        //    SetDBCommand(sqlStringCommand);
+        //    result = Convert.ToInt16(GetStringValue(sqlStringCommand, fieldName));
+        //    return result;
+        //}
         public int GetIntValue(string sqlStringCommand, string fieldName)
         {
             int value = -1;
