@@ -4,6 +4,8 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Runtime.InteropServices;
+using System.Resources;
+using System.Windows.Forms.VisualStyles;
 
 
 namespace CM18tool
@@ -107,7 +109,7 @@ namespace CM18tool
         public const byte DLINK_MODE_TLS = 116;    // connection secure TLS
         public const byte DLINK_MODE_USB = 85;     // connection using USB port
         public const byte DLINK_MODE_EMULATION = 69;     // connection in Emulation Moode
-        public const byte DLINK_MODE_USB_EASY = 117;    // connection using USB port with USB protocol
+        public const byte DLINK_MODE_USB_EASY = 117;    // connection using USB port with SIMPLIFIED protocol
         public const byte DLINK_MODE_BLOCKTRANSFERT = 70;     // connection for UpLoad file tranfert
         public const byte DLINK_MODE_SERVER_LAN = 101;  // connection server for emulator in lan
 
@@ -116,7 +118,7 @@ namespace CM18tool
 
         //----------API Return code-----------------------------------------------------
         public const int CM_OK = 0;// Command correctly executed
-                                   //#define CM_ERROR                        0xFFFF // Generic Error
+        //#define CM_ERROR                        0xFFFF // Generic Error
 
         public const int CM_LINK_SYSTEM_ERR = 1050;   //"CMLINK layer -Function communication device error"
         public const int CM_LINK_CONNECTION_ERR = 1051;   //"CMLINK layer -Invalid handle"
@@ -269,6 +271,100 @@ namespace CM18tool
             public string enabled;
         }
         public static SCassetteInfo CassetteInfo;
+
+        public struct SGetModuleInformation
+        {
+            public string rc;
+            public string name;
+            public string ver;
+            public string rel;
+            public string serialNumber;
+        }
+        public static SGetModuleInformation replyGetModuleInformation;
+
+        public struct SLANSettings
+        {
+            public string rc;
+            public string dhcpEnabled;
+            public string ipAddress;
+            public string subnetMask;
+            public string gateway;
+            public string deviceName;
+            public string deviceDescription;
+            public string primaryDNS;
+            public string secondaryDNS;
+            public string useNetBiosName;
+        }
+        public SLANSettings replyLanSettings;
+
+        public struct SReaderConfiguration
+        {
+            public string rc;
+            public SCDF cdf;
+            public int activeBanks;
+            public string currency;
+            public string bankConfig;
+            public string[] refBank;
+            public int[] fitnessBank;
+            public static SReaderConfiguration Create()
+            {
+                return new SReaderConfiguration
+                {
+                    rc = "",
+                    cdf = SCDF.Create(),
+                    activeBanks = 0,
+                    currency = "",
+                    bankConfig = "",
+                    refBank = new string[4] {"","","",""},
+                    fitnessBank = new int[4]
+                };
+            }
+
+        }
+        public SReaderConfiguration replyReaderConfiguration;
+
+        public struct SCDF
+        {
+            public string code;
+            public string internalName;
+            public string[] currCode;
+            public static SCDF Create()
+            {
+                var cdf = new SCDF
+                {
+                    code = "",
+                    internalName = "",
+                    currCode = new string[16]
+                };
+                for (int i = 0; i < cdf.currCode.Length; i++)
+                    cdf.currCode[i] = "";
+                return cdf;
+            }
+        }
+        
+        public struct SReferences
+        {
+            public string name;
+            public string ver;
+            public int bankId;
+        }
+        public struct SBanks
+        {
+            public string bankName;
+            public int numBank;
+            public string ver;
+        }
+        public struct SUnitConfig
+        {
+            public string rc;
+            public string[] allCfg;
+            public string cfg;
+            public string optCfg;
+            public string optOneCfg;
+            public string optTwoCfg;
+            public string optThreeCfg;
+        }
+        public SUnitConfig replyUnitConfig;
 
         public struct SGetCashData
         {
@@ -576,9 +672,7 @@ namespace CM18tool
         {
             n++;
             if (n == 10)
-            {
                 n = 1;
-            }
             int result;
             string reply;
             InputSingle.command = command;
@@ -641,6 +735,209 @@ namespace CM18tool
 
 
         }
+
+        public SUnitConfig CMGetUnitConfig()
+        {
+            SUnitConfig temp = new SUnitConfig();
+
+            temp.rc = CMSingleCommand($"T,{n},0,15", 4);
+            if (temp.rc != "101")
+                goto fine;
+            temp.cfg = commandSingleAns[5];
+            temp.rc = CMSingleCommand($"T,{n},0,28", 4);
+            if (temp.rc != "101")
+                goto fine;
+            temp.optCfg = commandSingleAns[5];
+            temp.rc = CMSingleCommand($"T,{n},0,32", 4);
+            if (temp.rc != "101")
+                goto fine;
+            temp.optOneCfg = commandSingleAns[5]; 
+            temp.rc = CMSingleCommand($"T,{n},0,49", 4);
+            if (temp.rc != "101")
+                goto fine;
+            temp.optTwoCfg = commandSingleAns[5]; 
+            temp.rc = CMSingleCommand($"T,{n},0,51", 4);
+            if (temp.rc != "101")
+                goto fine;
+            temp.optThreeCfg = commandSingleAns[5];
+            temp.allCfg = new string[] { temp.cfg, temp.optCfg, temp.optOneCfg, temp.optTwoCfg, temp.optThreeCfg };
+        fine:
+            return temp;
+        }
+        public int CMGetActiveBanks()
+        {
+            int result = -1;
+            string rc = CMSingleCommand($"T,{n},3,3", 4);
+            if (rc == "101")
+                int.TryParse(commandSingleAns[5], out result);
+            return result;
+        }
+        public string CMSetActiveSlots(int numActBnk)
+        {
+            string rc = CMSingleCommand($"Z,{n},3,2," + numActBnk, 4);
+            if (rc == "101")
+            { 
+            }
+            return rc;
+        }
+        public SBanks CMGetBankConfig()
+        {
+            SBanks bank = new SBanks();
+            string rc = CMSingleCommand($"T,{n},3,1", 4, 50000);
+            if (rc == "101")
+            {
+                
+            }
+            return bank;
+        }
+
+        public SReferences CMGetReaderReferences()
+        {
+            SReferences references = new SReferences();
+            string rc = CMSingleCommand($"T,{n},3,5", 4);
+            if (rc == "101")
+            {
+                references.name = commandSingleAns[5];
+                references.ver = commandSingleAns[6];
+                int.TryParse(commandSingleAns[7], out references.bankId);
+            }
+            return references;
+        }
+
+        public int CMGetFitnessConfig(int bank)
+        {
+            int result = -1;
+            string rc = CMSingleCommand($"T,{n},3,15,{bank}", 4);
+            if (rc == "101")
+                int.TryParse(commandSingleAns[5], out result);
+            return result;
+        }
+        public string CMGetInstalledCDF()
+        {
+            string rc = CMSingleCommand($"T,{n},3,21", 4);
+            return rc;
+        }
+
+        public string CMSetUnitConfig(string[] allCfg)
+        {
+            SUnitConfig temp = new SUnitConfig();
+            if (allCfg.Length != 5)
+                return temp.rc;
+            temp.rc = CMSingleCommand($"F,{n},7,{allCfg[0]}");
+            if (temp.rc != "101")
+                goto fine;
+            temp.rc = CMSingleCommand($"F,{n},8,{allCfg[1]}");
+            if (temp.rc != "101")
+                goto fine;
+            temp.rc = CMSingleCommand($"F,{n},9,{allCfg[2]}");
+            if (temp.rc != "101")
+                goto fine;
+            temp.rc = CMSingleCommand($"F,{n},23,{allCfg[3]}");
+            if (temp.rc != "101")
+                goto fine;
+            temp.rc = CMSingleCommand($"F,{n},31,{allCfg[4]}", 3, 14000);
+            if (temp.rc != "101")
+                goto fine;
+            fine:
+            return temp.rc;
+        }
+
+        public string CMSetUnitConfig(UnitConfiguration unitCfg)
+        {
+            SUnitConfig temp = new SUnitConfig();
+            temp.rc = CMSingleCommand($"F,{n},7,{unitCfg.cfg}");
+            if (temp.rc != "101")
+                goto fine;
+            temp.rc = CMSingleCommand($"F,{n},8,{unitCfg.optCfg}");
+            if (temp.rc != "101")
+                goto fine;
+            temp.rc = CMSingleCommand($"F,{n},9,{unitCfg.optOneCfg}");
+            if (temp.rc != "101")
+                goto fine;
+            temp.rc = CMSingleCommand($"F,{n},23,{unitCfg.optTwoCfg}");
+            if (temp.rc != "101")
+                goto fine;
+            temp.rc = CMSingleCommand($"F,{n},31,{unitCfg.optThreeCfg}", 3, 18000);
+            if (temp.rc != "101")
+                goto fine;
+            fine:
+            return temp.rc;
+        }
+
+        public SGetModuleInformation CMGetMachineInfo(string module)
+        {
+            string rc = CMSingleCommand($"T,{n},{module},13", 4);
+            replyGetModuleInformation = new SGetModuleInformation();
+            replyGetModuleInformation.rc = rc;
+            if (rc == "101")
+            {
+                replyGetModuleInformation.name = commandSingleAns[5];
+                replyGetModuleInformation.ver = commandSingleAns[6];
+                replyGetModuleInformation.rel = commandSingleAns[7];
+                replyGetModuleInformation.serialNumber = commandSingleAns[8];
+            }
+            return replyGetModuleInformation;
+        }
+
+        public SLANSettings CMGetLanSettings()
+        {
+            replyLanSettings = new SLANSettings();
+            replyLanSettings.rc = CMSingleCommand($"T,{n},6,15,1", 4);
+            if (replyLanSettings.rc != "101")
+                goto fine;
+            replyLanSettings.dhcpEnabled = commandSingleAns[5];
+            replyLanSettings.rc = CMSingleCommand($"T,{n},6,15,2", 4);
+            if (replyLanSettings.rc != "101")
+                goto fine;
+            replyLanSettings.ipAddress = commandSingleAns[5];
+            replyLanSettings.rc = CMSingleCommand($"T,{n},6,15,3", 4);
+            if (replyLanSettings.rc != "101")
+                goto fine;
+            replyLanSettings.subnetMask = commandSingleAns[5];
+            replyLanSettings.rc = CMSingleCommand($"T,{n},6,15,4", 4);
+            if (replyLanSettings.rc != "101")
+                goto fine;
+            replyLanSettings.gateway = commandSingleAns[5];
+            replyLanSettings.rc = CMSingleCommand($"T,{n},6,15,5", 4);
+            if (replyLanSettings.rc != "101")
+                goto fine;
+            replyLanSettings.deviceName = commandSingleAns[5];
+            replyLanSettings.rc = CMSingleCommand($"T,{n},6,15,6", 4);
+            if (replyLanSettings.rc != "101")
+                goto fine;
+            replyLanSettings.deviceDescription = commandSingleAns[5];
+            replyLanSettings.rc = CMSingleCommand($"T,{n},6,15,7", 4);
+            if (replyLanSettings.rc != "101")
+                goto fine;
+            replyLanSettings.primaryDNS = commandSingleAns[5];
+            replyLanSettings.rc = CMSingleCommand($"T,{n},6,15,8", 4);
+            if (replyLanSettings.rc != "101")
+                goto fine;
+            replyLanSettings.secondaryDNS = commandSingleAns[5];
+            replyLanSettings.rc = CMSingleCommand($"T,{n},6,15,11", 4);
+            if (replyLanSettings.rc != "101")
+                goto fine;
+            replyLanSettings.useNetBiosName = commandSingleAns[5];
+
+        fine:
+            return replyLanSettings;
+        }
+
+
+        //public string CMGetMachineSN()
+        //{
+        //    string rc = CMSingleCommand($"T,{n},0,13",4);
+        //    replyGetModuleInformation = new SGetModuleInformation();
+        //    replyGetModuleInformation.rc = rc;
+        //    if (rc == "101")
+        //    {
+        //        replyGetModuleInformation.name = commandSingleAns[5];
+        //        replyGetModuleInformation.ver = commandSingleAns[6];
+        //        replyGetModuleInformation.rel = commandSingleAns[7];
+        //        replyGetModuleInformation.serialNumber = commandSingleAns[8];
+        //    }
+        //    return replyGetModuleInformation.serialNumber;
+        //}
 
         /// <summary>
         /// Information regarding the cassettes enabled to the side specified (amount of notes contained in every cassette)
@@ -863,7 +1160,7 @@ namespace CM18tool
             replyExtendedStatus.safeStatus = commandSingleAns[6].Substring(1);
             for (int i = 7; i < commandSingleAns.Length; i++)
             {
-                switch (commandSingleAns[i].Substring(0,1))
+                switch (commandSingleAns[i].Substring(0, 1))
                 {
                     case "A":
                         replyExtendedStatus.cassetteAStatus = commandSingleAns[i].Substring(1);
@@ -1537,4 +1834,5 @@ namespace CM18tool
 
         }
     }
+    
 }

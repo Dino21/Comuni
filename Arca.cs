@@ -1,4 +1,8 @@
 ﻿//using Dino;
+
+// aggiungere al progetto il pacchetto nuget 'NewtownSoft.Json' 13.0.4 o superiore
+// aggiungere al progetto il pacchetto nuget 'LibUsbDotNet' 2.2.29 o superiore
+
 using CM18tool;
 using INI;
 using Newtonsoft.Json;
@@ -12,12 +16,15 @@ using System.IO;
 using System.IO.Ports;
 using System.Linq;
 using System.Runtime.InteropServices;
+using System.Runtime.InteropServices;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
 using System.Timers;
+using System.Windows;
+
 //using System.Windows.Controls;
 using System.Xml;
-using System.Runtime.InteropServices;
 
 //using System.Collections;
 //using System.Reflection;
@@ -210,6 +217,8 @@ namespace myArcaNameSpace
         {
             public SReader reader;
             public string type;
+            public bool highSpeed;
+            public bool bidirectional;
             public string code;
             public string tl;
             public string xmlFileName;
@@ -247,6 +256,7 @@ namespace myArcaNameSpace
             public string fwPh02Filename;
             public string fwSafeFilename;
             public string fwUiFilename;
+            public bool snr;
         }
 
         public struct SSingleTrackDetails
@@ -550,8 +560,11 @@ namespace myArcaNameSpace
             public short durataTotale;
             public short jitterNeg;
             public short jitterPos;
+            public short jitterNegSnr;
+            public short jitterPosSnr;
             public short timing;
             public short meanSpeed;
+            public short meanSpeedSnr;
             public short stallCurrMaint;
             public short stallCurrMaxAvv;
             public short stallCurrPostEcc;
@@ -1026,7 +1039,8 @@ namespace myArcaNameSpace
         public SCommand TransferBanknotes = new SCommand();
         public SCommand CheckHorTranspSpeed = new SCommand();
         public SCommand TestCassetteModule = new SCommand();
-        public SCommand OperateShutter = new SCommand();
+        public SCommand CheckHorTranspSpeedSnr = new SCommand();
+        public SCommand MoveShutter = new SCommand();
         public SCommand GetShutterPosition = new SCommand();
         public SCommand SetTestState = new SCommand();
         public SCommand GetTestState = new SCommand();
@@ -1344,6 +1358,10 @@ namespace myArcaNameSpace
             PowerDownWarning.msgOpCode = new byte[] { 0x00, 0x0C };
             PowerDownWarning.bytesAnswer = 0x01;
             PowerDownWarning.cmdName = "Power Down Warning";
+            MoveShutter.msgId = 0x01;
+            MoveShutter.msgOpCode = new byte[] { 0x00, 0x2B };
+            MoveShutter.bytesAnswer = 0x02;
+            MoveShutter.cmdName = "Operate Shutter";
             GetPhotoStatus.msgId = 0x01;
             GetPhotoStatus.msgOpCode = new byte[] { 0x01, 0x00 };
             GetPhotoStatus.bytesAnswer = 0x03;
@@ -1469,17 +1487,18 @@ namespace myArcaNameSpace
             TransferBanknotes.cmdName = "Transfer Banknotes";
             CheckHorTranspSpeed.msgId = 0x01;
             CheckHorTranspSpeed.msgOpCode = new byte[] { 0x01, 0x3C };
-            CheckHorTranspSpeed.bytesAnswer = 0x08;
+            CheckHorTranspSpeed.bytesAnswer = 0x0C;
             CheckHorTranspSpeed.timeOut = 10000;
             CheckHorTranspSpeed.cmdName = "Check Horizontal Transport Speed";
             TestCassetteModule.msgId = 0x01;
             TestCassetteModule.msgOpCode = new byte[] { 0x01, 0x3D };
             TestCassetteModule.bytesAnswer = 0x02;
             TestCassetteModule.cmdName = "Test Cassette Module";
-            OperateShutter.msgId = 0x01;
-            OperateShutter.msgOpCode = new byte[] { 0x01, 0x3E };
-            OperateShutter.bytesAnswer = 0x02;
-            OperateShutter.cmdName = "Operate Shutter";
+            CheckHorTranspSpeedSnr.msgId = 0x01;
+            CheckHorTranspSpeedSnr.msgOpCode = new byte[] { 0x01, 0x3E };
+            CheckHorTranspSpeedSnr.bytesAnswer = 0x0C;
+            CheckHorTranspSpeedSnr.timeOut = 10000;
+            CheckHorTranspSpeedSnr.cmdName = "Check Horizontal Transport Speed with SNR module";
             GetShutterPosition.msgId = 0x01;
             GetShutterPosition.msgOpCode = new byte[] { 0x01, 0x3F };
             GetShutterPosition.bytesAnswer = 0x03;
@@ -1627,7 +1646,7 @@ namespace myArcaNameSpace
             UtmCommands.Add(TransferBanknotes);
             UtmCommands.Add(CheckHorTranspSpeed);
             UtmCommands.Add(TestCassetteModule);
-            UtmCommands.Add(OperateShutter);
+            UtmCommands.Add(MoveShutter);
             UtmCommands.Add(GetShutterPosition);
             UtmCommands.Add(SetTestState);
             UtmCommands.Add(GetTestState);
@@ -3016,7 +3035,7 @@ namespace myArcaNameSpace
 
     {
 
-
+        
 
         public static SerialPort mySerial = new SerialPort();
         Stopwatch myTimer = new Stopwatch();
@@ -3043,6 +3062,8 @@ namespace myArcaNameSpace
         public void OpenCom()
         {
             //mySerial.Close();
+            mySerial.ReadBufferSize = 65536;
+            mySerial.ReceivedBytesThreshold = 1;
             try
             {
                 if (!mySerial.IsOpen)
@@ -3079,6 +3100,9 @@ namespace myArcaNameSpace
         /// <param name="stopBits">Number of Stop bits</param>
         public void ConfigCom(string portName, int baudRate = 9600, Parity parity = Parity.None, int dataBits = 8, StopBits stopBits = StopBits.One)
         {
+            mySerial.Handshake = Handshake.None;
+            mySerial.DtrEnable = true;
+            mySerial.RtsEnable = true;
             mySerial.PortName = portName;
             mySerial.BaudRate = baudRate;
             mySerial.Parity = parity;
@@ -3305,7 +3329,7 @@ namespace myArcaNameSpace
             byteReceived = 0;
             commandAnswer = "";
             string sent = command.Length.ToString();
-            if (command.Length < 10)
+            //if (command.Length < 10) // 20/05/26, rimosso if per i comandi più lunghi di 10 byte per riportare la lunghezza del comando al posto del comando nel comscope
                 sent = Arca.HexArray2HexString(command);
             if (mySerial.IsOpen == false)
                 mySerial.Open();
@@ -3567,25 +3591,53 @@ namespace myArcaNameSpace
             return commandAnswer;
         }
 
-        bool ProvaRead(byte[] cbVectRx, int iOffset, int iNum)
+        private byte[] buffer;
+        private int bytesReceived;
+        private int dimensioneFile;
+        private Thread rxThread;
+        private bool rxCompleted;
+
+        private void RxThreadProc()
         {
-            int iNumeroRx = 0;
-            while (iNum > 0)
+            try
             {
-                iNumeroRx = mySerial.Read(cbVectRx, iOffset, iNum);
-                iNum -= iNumeroRx;
-                iOffset += iNumeroRx;
+                while (bytesReceived < dimensioneFile)
+                {
+                    int toRead = dimensioneFile - bytesReceived;
+                    int read = mySerial.Read(buffer, bytesReceived, toRead);
+
+                    if (read > 0)
+                    {
+                        bytesReceived += read;
+                    }
+                    else
+                    {
+                        Thread.Sleep(5); // evita CPU al 100%
+                    }
+                }
+
+                rxCompleted = true;
             }
-            return true;
-
-
-
+            catch
+            {
+                rxCompleted = true;
+            }
         }
+        private void WaitForRxCompletion()
+        {
+            // Attesa con DoEvents: la UI rimane attiva
+            while (!rxCompleted)
+            {
+                
+                Thread.Sleep(100);
+            }
 
+            //MessageBox.Show("Ricezione completata: " + bytesReceived + " byte");
+        }
         public string GetJsonFile(byte[] command, int timeout = 200)
         {
             int nRetry = 0;
-            int dimensioneFile = 0;
+            //int dimensioneFile = 0;
             int numeroRX = 0;
             byte[] bufferDimension = new byte[4];
             mySerial.ReadTimeout = timeout;
@@ -3597,6 +3649,11 @@ namespace myArcaNameSpace
                 commandSent += command[i].ToString("X2");
             if (mySerial.IsOpen == false) { mySerial.Open(); }
         inizio:
+            if (nRetry > 10)
+            {
+                DataReceived("Ritento " + nRetry + "/10", null);
+                return "";
+            }
             byteReceived = 0;
             while (mySerial.BytesToRead != 0)
             {
@@ -3604,36 +3661,60 @@ namespace myArcaNameSpace
                 Arca.WaitingTime(100);
             }
             DataSent(commandSent, null);
-
+            // INVIO COMANDO
             mySerial.Write(command, 0, command.Length);
 
-            Arca.WaitingTime(50);
+            Arca.WaitingTime(250);
 
+            // LETTURA DIMENSIONE FILE DA RICEVERE
             numeroRX = mySerial.Read(bufferDimension, 0, 4);
             dimensioneFile = ((int)bufferDimension[3] << 24) + ((int)bufferDimension[2] << 16) + ((int)bufferDimension[1] << 8) + (bufferDimension[0]);
             byte[] jsonBytes = new byte[dimensioneFile];
-            Arca.WaitingTime(10);
-            try
-            {
-                byteReceived = mySerial.Read(jsonBytes, 0, dimensioneFile);
-                while (byteReceived < dimensioneFile)
-                    byteReceived += mySerial.Read(jsonBytes, byteReceived, dimensioneFile - byteReceived);
-            }
-            catch (TimeoutException ex)
-            {
-                string msg = ex.Message;
-                DataReceived("time-out", null);
-                nRetry++;
-                goto inizio;
-            }
-            if (byteReceived != dimensioneFile || mySerial.BytesToRead != 0)
+            DataReceived("Attesi " + dimensioneFile + " bytes", null);
+
+
+            // LETTURA FILE
+            buffer = new byte[dimensioneFile];
+            bytesReceived = 0;
+            rxCompleted = false;
+            // Avvio il thread di ricezione
+            rxThread = new Thread(RxThreadProc);
+            rxThread.IsBackground = true;
+            rxThread.Start();
+            WaitForRxCompletion();
+            string result = Arca.ByteArray2Ascii(buffer);
+            if (buffer.Length != dimensioneFile)
             {
                 DataReceived("incomplete", null);
                 nRetry++;
                 goto inizio;
             }
-            string result = Arca.ByteArray2Ascii(jsonBytes);
-            DataReceived(jsonBytes.Length + " bytes", null);
+            DataReceived("ricevuti " + buffer.Length + " bytes", null);
+
+
+
+            //Arca.WaitingTime(10);
+            //try
+            //{
+            //    byteReceived = mySerial.Read(jsonBytes, 0, dimensioneFile);
+            //    while (byteReceived < dimensioneFile)
+            //        byteReceived += mySerial.Read(jsonBytes, byteReceived, dimensioneFile - byteReceived);
+            //}
+            //catch (TimeoutException ex)
+            //{
+            //    string msg = ex.Message;
+            //    DataReceived("time-out", null);
+            //    nRetry++;
+            //    goto inizio;
+            //}
+            //if (byteReceived != dimensioneFile || mySerial.BytesToRead != 0)
+            //{
+            //    DataReceived("incomplete", null);
+            //    nRetry++;
+            //    goto inizio;
+            //}
+            //string result = Arca.ByteArray2Ascii(jsonBytes);
+            //DataReceived(jsonBytes.Length + " bytes", null);
 
             return result;
         }
@@ -5547,7 +5628,8 @@ namespace myArcaNameSpace
             if (side != 0)
                 command[2] = 0x44;
             comPort.OpenCom();
-            result = comPort.GetJsonFile(command);
+            result = comPort.GetJsonFile(command,1000);
+            //comPort.GetJsonFileTest(command);
             comPort.CloseCom();
             return result;
         }
@@ -7005,6 +7087,7 @@ namespace myArcaNameSpace
 
         public const string PASS = "PASS";
         public const string FAIL = "FAIL";
+        public const string REPEAT = "REPEAT";
         public const string ESC = "ESC";
         public const string ENTER = "ENTER";
         public const string OPEN = "OPEN";
