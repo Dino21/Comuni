@@ -842,6 +842,15 @@ namespace CM18tool
             return temp.rc;
         }
 
+        public class UnitConfiguration
+        {
+            public int idUnitConfiguration { get; set; }
+            public string cfg { get; set; }
+            public string optCfg { get; set; }
+            public string optOneCfg { get; set; }
+            public string optTwoCfg { get; set; }
+            public string optThreeCfg { get; set; }
+        }
         public string CMSetUnitConfig(UnitConfiguration unitCfg)
         {
             SUnitConfig temp = new SUnitConfig();

@@ -3326,6 +3326,7 @@ namespace myArcaNameSpace
         {
             answerByte = new byte[nByteAnswer];
             mySerial.ReadTimeout = timeout;
+            mySerial.WriteTimeout = 500;
             byteReceived = 0;
             commandAnswer = "";
             string sent = command.Length.ToString();
@@ -3334,7 +3335,17 @@ namespace myArcaNameSpace
             if (mySerial.IsOpen == false)
                 mySerial.Open();
             DataSent(sent, null);
-            mySerial.Write(command, 0, command.Count());
+            try
+            {
+                mySerial.Write(command, 0, command.Count());
+            }
+            catch (TimeoutException error)
+            {
+                string msg = error.Message;
+                DataSent("ERROR", null);
+                mySerial.Close();
+                return null;
+            }   
             try
             {
                 byteReceived = mySerial.Read(answerByte, 0, nByteAnswer);

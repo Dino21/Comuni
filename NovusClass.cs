@@ -22,15 +22,15 @@ public class CM50
     public UnitConfiguration UnitConfiguration { get; set; }
     public CmConfig CmConfig { get; set; }
 }
-public class UnitConfiguration
-{
-    public int idUnitConfiguration { get; set; }
-    public string cfg { get; set; }
-    public string optCfg { get; set; }
-    public string optOneCfg { get; set; }
-    public string optTwoCfg { get; set; }
-    public string optThreeCfg { get; set; }
-}
+//public class UnitConfiguration
+//{
+//    public int idUnitConfiguration { get; set; }
+//    public string cfg { get; set; }
+//    public string optCfg { get; set; }
+//    public string optOneCfg { get; set; }
+//    public string optTwoCfg { get; set; }
+//    public string optThreeCfg { get; set; }
+//}
 public class Slot
 {
     public int activeNumber { get; set; }
