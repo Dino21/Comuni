@@ -12,8 +12,8 @@ using System.IO;
 //using DatabaseProvider;
 //using System.Net.Configuration;
 
-namespace MySQLUtils
-{
+//namespace MySQLUtils
+//{
     
     public class SQLUtils
     {
@@ -34,7 +34,10 @@ namespace MySQLUtils
             myDBConnection = new MySqlConnection(connectionString);
         }
         
-
+        /// <summary>
+        /// Retrieves the names of all user-created databases from the MySQL server, excluding system databases.
+        /// </summary>
+        /// <returns>An array of database names.</returns>
         public string[] GetDatabasesList()
         {
             List<string> result = new List<string>();
@@ -50,7 +53,6 @@ namespace MySQLUtils
                         if (reader.GetString(0).ToString() != "information_schema" &&
                             reader.GetString(0).ToString() != "mydb" &&
                             reader.GetString(0).ToString() != "mysql" &&
-                            reader.GetString(0).ToString() != "information_schema" &&
                             reader.GetString(0).ToString() != "performance_schema" &&
                             reader.GetString(0).ToString() != "sys")
                             result.Add(reader.GetString(0).ToString());
@@ -289,16 +291,6 @@ namespace MySQLUtils
             return value;
         }
 
-        //public int GetLastId(string tableName, string idFieldName, string fieldName)
-        //{
-        //    int result = -1;
-        //    if (Open() != true)
-        //        return result;
-        //    string sqlStringCommand = $"SELECT {fieldName} FROM {tableName} ORDER BY {idFieldName} DESC LIMIT 1";
-        //    SetDBCommand(sqlStringCommand);
-        //    result = Convert.ToInt16(GetStringValue(sqlStringCommand, fieldName));
-        //    return result;
-        //}
         public int GetIntValue(string sqlStringCommand, string fieldName)
         {
             int value = -1;
@@ -338,4 +330,4 @@ namespace MySQLUtils
             return true;
         }
     }
-}
+//}

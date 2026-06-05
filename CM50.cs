@@ -172,6 +172,7 @@ namespace CM50Class
 
     public class cm50prodcode
     {
+        public string idProduct { get; set; } // ID of the product
         public string code { get; set; } // Product code
         public string description { get; set; } // Description of the product
         public int cassetteNumber { get; set; } // Number of cassettes in the product
