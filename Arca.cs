@@ -3051,6 +3051,10 @@ namespace myArcaNameSpace
 
         public RS232Novus(string comPort = "COM1", int baudRate = 9600, Parity parity = Parity.None, int dataBits = 8, StopBits stopBits = StopBits.One)
         {
+            mySerial.ErrorReceived += (s, e) =>
+            {
+                DataReceived("SerialError: " + e.EventType, null);
+            };
             ConfigCom(comPort, baudRate, parity, dataBits, stopBits);
             myTimer.Reset();
         }
@@ -3062,14 +3066,19 @@ namespace myArcaNameSpace
         public void OpenCom()
         {
             //mySerial.Close();
-            mySerial.ReadBufferSize = 65536;
-            mySerial.ReceivedBytesThreshold = 1;
+            
+            //mySerial.ReadBufferSize = 65536;
+            //mySerial.ReceivedBytesThreshold = 1;
             try
             {
                 if (!mySerial.IsOpen)
                 {
                     //mySerial.ReadBufferSize = 100000;
                     //mySerial.WriteBufferSize = 100000;
+                    mySerial.ReadBufferSize = 65536;
+                    mySerial.ReceivedBytesThreshold = 1;
+                    mySerial.Handshake = Handshake.RequestToSend; // o XOnXOff
+                    
                     mySerial.Open();
                     mySerial.DiscardInBuffer();
                     mySerial.DiscardOutBuffer();
@@ -3629,8 +3638,9 @@ namespace myArcaNameSpace
 
                 rxCompleted = true;
             }
-            catch
+            catch (Exception ex)
             {
+                //lastRxError = ex.Message;
                 rxCompleted = true;
             }
         }
@@ -3647,12 +3657,13 @@ namespace myArcaNameSpace
         }
         public string GetJsonFile(byte[] command, int timeout = 200)
         {
+
             int nRetry = 0;
             //int dimensioneFile = 0;
             int numeroRX = 0;
             byte[] bufferDimension = new byte[4];
             mySerial.ReadTimeout = timeout;
-
+            
 
             //mySerial.ReadBufferSize = 64000;
             commandSent = "";
@@ -3660,9 +3671,9 @@ namespace myArcaNameSpace
                 commandSent += command[i].ToString("X2");
             if (mySerial.IsOpen == false) { mySerial.Open(); }
         inizio:
-            if (nRetry > 10)
+            if (nRetry > 20)
             {
-                DataReceived("Ritento " + nRetry + "/10", null);
+                DataReceived("Fallite " + (nRetry - 1) + " letture", null);
                 return "";
             }
             byteReceived = 0;
@@ -3675,7 +3686,7 @@ namespace myArcaNameSpace
             // INVIO COMANDO
             mySerial.Write(command, 0, command.Length);
 
-            Arca.WaitingTime(250);
+            Arca.WaitingTime(100);
 
             // LETTURA DIMENSIONE FILE DA RICEVERE
             numeroRX = mySerial.Read(bufferDimension, 0, 4);
@@ -3694,12 +3705,18 @@ namespace myArcaNameSpace
             rxThread.Start();
             WaitForRxCompletion();
             string result = Arca.ByteArray2Ascii(buffer);
-            if (buffer.Length != dimensioneFile)
+            if (!rxCompleted || bytesReceived != dimensioneFile)
             {
-                DataReceived("incomplete", null);
+                DataReceived("incomplete (" + bytesReceived + "/" + dimensioneFile + ")", null);
                 nRetry++;
                 goto inizio;
             }
+            //if (buffer.Length != dimensioneFile)
+            //{
+            //    DataReceived("incomplete", null);
+            //    nRetry++;
+            //    goto inizio;
+            //}
             DataReceived("ricevuti " + buffer.Length + " bytes", null);
 
 
@@ -5625,7 +5642,7 @@ namespace myArcaNameSpace
             string result = "";
             if (side != 0)
                 command[2] = 0x09;
-
+            
             comPort.OpenCom();
             result = comPort.GetJsonFile(command, 500);
             comPort.CloseCom();
