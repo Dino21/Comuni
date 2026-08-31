@@ -117,7 +117,9 @@ namespace Novus
         {
             public string cmdMode { get; set; }
             public string cassetteDetails { get; set; }
-            //public string mode { get; set; }
+            public string continuousFeedingAction { get; set; }
+            public string continuousFeedingTime { get; set; }
+            public string mode { get; set; }
         }
         public CinDataDeposit InDataDeposit;
 

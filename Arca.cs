@@ -72,6 +72,7 @@ namespace myArcaNameSpace
             public SSigleCassette[] drum;
             public SUnitConfiguration dbUnitConfiguration;
             public SUnitConfiguration unitConfiguration;
+            public SUnitConfiguration unitCfgForTest;
             public SReader reader;
             public SCassetteConfiguration[] cassetteCfg;
             public string tl;
@@ -981,6 +982,7 @@ namespace myArcaNameSpace
         public SCommand CheckCashDataError = new SCommand();
         public SCommand ResetCashDataError = new SCommand();
         public SCommand ReaderCalibration = new SCommand();
+        public SCommand SetSafeDoorElectronickLock = new SCommand();
         public SCommand ProgramModuleBoot = new SCommand();
         public SCommand CheckSystemConsistency = new SCommand();
         public SCommand ReadE2PBlockData = new SCommand();
@@ -1020,10 +1022,12 @@ namespace myArcaNameSpace
         public SCommand PhotoAdjustFactoryMode = new SCommand();
         public SCommand GetSwitchStatus = new SCommand();
         public SCommand GetPhotoInformation = new SCommand();
+        public SCommand FactoryAdjustForPruduction = new SCommand();
         public SCommand GetDiverterParameters = new SCommand();
         public SCommand SetDiverterParameters = new SCommand();
         public SCommand OperateDiverter = new SCommand();
         public SCommand TestDiverter = new SCommand();
+        
         public SCommand GetMotorParameters = new SCommand();
         public SCommand SetMotorParameters = new SCommand();
         public SCommand OperateMotor = new SCommand();
@@ -1242,9 +1246,18 @@ namespace myArcaNameSpace
             ReaderCalibration.msgOpCode = new byte[] { 0x00, 0x28 };
             ReaderCalibration.bytesAnswer = 0x02;
             ReaderCalibration.cmdName = "Reader Calibration";
-            //set safe door electronic lock // 0x01 0x0029
-            // move shutter // 0x01 0x002B
-            // read shutter position // 0x01 0x002C
+            SetSafeDoorElectronickLock.msgId = 0x01;
+            SetSafeDoorElectronickLock.msgOpCode = new byte[] { 0x00, 0x29 };
+            SetSafeDoorElectronickLock.bytesAnswer = 0x02;
+            SetSafeDoorElectronickLock.cmdName = "Set Safe Dooe Electronics Lock";
+            MoveShutter.msgId = 0x01;
+            MoveShutter.msgOpCode = new byte[] { 0x00, 0x2B };
+            MoveShutter.bytesAnswer = 0x02;
+            MoveShutter.cmdName = "Move Shutter";
+            GetShutterPosition.msgId = 0x01;
+            GetShutterPosition.msgOpCode = new byte[] { 0x00, 0x2C };
+            GetShutterPosition.bytesAnswer = 0x02;
+            GetShutterPosition.cmdName = "Get Shutter Position";
             ProgramModuleBoot.msgId = 0x01;
             ProgramModuleBoot.msgOpCode = new byte[] { 0x00, 0x2D }; // 
             ProgramModuleBoot.bytesAnswer = 5;
@@ -1429,6 +1442,10 @@ namespace myArcaNameSpace
             TestDiverter.msgOpCode = new byte[] { 0x01, 0x13 };
             TestDiverter.bytesAnswer = 0x02;
             TestDiverter.cmdName = "Test Diverter";
+            FactoryAdjustForPruduction.msgId = 0x01;
+            FactoryAdjustForPruduction.msgOpCode = new byte[] { 0x01, 0x0C };
+            FactoryAdjustForPruduction.bytesAnswer = 0x02;
+            FactoryAdjustForPruduction.cmdName = "Factory Adjust for Production";
             GetMotorParameters.msgId = 0x01;
             GetMotorParameters.msgOpCode = new byte[] { 0x01, 0x20 };
             GetMotorParameters.bytesAnswer = 0x18;
@@ -1631,6 +1648,7 @@ namespace myArcaNameSpace
             UtmCommands.Add(SetDiverterParameters);
             UtmCommands.Add(OperateDiverter);
             UtmCommands.Add(TestDiverter);
+            UtmCommands.Add(FactoryAdjustForPruduction);
             UtmCommands.Add(GetMotorParameters);
             UtmCommands.Add(SetMotorParameters);
             UtmCommands.Add(OperateMotor);
@@ -3077,8 +3095,8 @@ namespace myArcaNameSpace
                     //mySerial.WriteBufferSize = 100000;
                     mySerial.ReadBufferSize = 65536;
                     mySerial.ReceivedBytesThreshold = 1;
-                    mySerial.Handshake = Handshake.RequestToSend; // o XOnXOff
-                    
+                    mySerial.Handshake = Handshake.None; // il device (porta COM virtuale su USB CDC) non implementa RTS/CTS: con l'handshake attivo si perdevano byte in ricezione
+
                     mySerial.Open();
                     mySerial.DiscardInBuffer();
                     mySerial.DiscardOutBuffer();
@@ -3611,142 +3629,89 @@ namespace myArcaNameSpace
             return commandAnswer;
         }
 
-        private byte[] buffer;
-        private int bytesReceived;
-        private int dimensioneFile;
-        private Thread rxThread;
-        private bool rxCompleted;
-
-        private void RxThreadProc()
+        /// <summary>
+        /// Legge esattamente count byte, effettuando più chiamate a SerialPort.Read se necessario
+        /// (Read non garantisce di riempire il buffer richiesto in un'unica chiamata).
+        /// Ritorna false se il timeout complessivo scade prima di aver ricevuto tutti i byte.
+        /// </summary>
+        private bool ReadExact(byte[] buffer, int offset, int count, int timeoutMs, out int bytesReceived)
         {
-            try
+            mySerial.ReadTimeout = timeoutMs; // unica sorgente di verità: il timeout del singolo Read segue sempre il budget richiesto per questa fase (header o payload)
+            var sw = Stopwatch.StartNew();
+            bytesReceived = 0;
+            while (bytesReceived < count)
             {
-                while (bytesReceived < dimensioneFile)
+                if (sw.ElapsedMilliseconds > timeoutMs)
+                    return false;
+                try
                 {
-                    int toRead = dimensioneFile - bytesReceived;
-                    int read = mySerial.Read(buffer, bytesReceived, toRead);
-
+                    int read = mySerial.Read(buffer, offset + bytesReceived, count - bytesReceived);
                     if (read > 0)
-                    {
                         bytesReceived += read;
-                    }
-                    else
-                    {
-                        Thread.Sleep(5); // evita CPU al 100%
-                    }
                 }
-
-                rxCompleted = true;
+                catch (TimeoutException)
+                {
+                    // una pausa fra due blocchi non è un errore fatale: decide solo il budget complessivo (sw/timeoutMs)
+                }
             }
-            catch (Exception ex)
-            {
-                //lastRxError = ex.Message;
-                rxCompleted = true;
-            }
+            return true;
         }
-        private void WaitForRxCompletion()
+
+        public string GetJsonFile(byte[] command, int timeout = 200, int payloadTimeout = 500)
         {
-            // Attesa con DoEvents: la UI rimane attiva
-            while (!rxCompleted)
-            {
-                
-                Thread.Sleep(100);
-            }
+            const int maxRetry = 20;
+            const int maxFileSize = 5_000_000; // limite di sicurezza contro header corrotti/letti male
 
-            //MessageBox.Show("Ricezione completata: " + bytesReceived + " byte");
-        }
-        public string GetJsonFile(byte[] command, int timeout = 200)
-        {
-
-            int nRetry = 0;
-            //int dimensioneFile = 0;
-            int numeroRX = 0;
-            byte[] bufferDimension = new byte[4];
-            mySerial.ReadTimeout = timeout;
-            
-
-            //mySerial.ReadBufferSize = 64000;
             commandSent = "";
             for (int i = 0; i < command.Count(); i++)
                 commandSent += command[i].ToString("X2");
             if (mySerial.IsOpen == false) { mySerial.Open(); }
-        inizio:
-            if (nRetry > 20)
+
+            byte[] bufferDimension = new byte[4];
+            for (int nRetry = 0; nRetry <= maxRetry; nRetry++)
             {
-                DataReceived("Fallite " + (nRetry - 1) + " letture", null);
-                return "";
-            }
-            byteReceived = 0;
-            while (mySerial.BytesToRead != 0)
-            {
-                mySerial.ReadExisting();
-                Arca.WaitingTime(100);
-            }
-            DataSent(commandSent, null);
-            // INVIO COMANDO
-            mySerial.Write(command, 0, command.Length);
+                while (mySerial.BytesToRead != 0)
+                {
+                    mySerial.ReadExisting();
+                    Arca.WaitingTime(100);
+                }
+                DataSent(commandSent, null);
+                // INVIO COMANDO
+                mySerial.Write(command, 0, command.Length);
 
-            Arca.WaitingTime(100);
+                // NIENTE attesa qui: ogni ms in cui non si legge è un ms in cui il buffer nativo del
+                // driver USB-CDC (piccolo e non ridimensionabile, tipicamente usbser.sys) può riempirsi
+                // e scartare silenziosamente i byte in eccesso se il device risponde subito e a raffica.
 
-            // LETTURA DIMENSIONE FILE DA RICEVERE
-            numeroRX = mySerial.Read(bufferDimension, 0, 4);
-            dimensioneFile = ((int)bufferDimension[3] << 24) + ((int)bufferDimension[2] << 16) + ((int)bufferDimension[1] << 8) + (bufferDimension[0]);
-            byte[] jsonBytes = new byte[dimensioneFile];
-            DataReceived("Attesi " + dimensioneFile + " bytes", null);
+                // LETTURA DIMENSIONE FILE DA RICEVERE (4 byte: Read non garantisce di riceverli tutti in un colpo solo)
+                if (!ReadExact(bufferDimension, 0, 4, timeout, out int headerBytes))
+                {
+                    DataReceived("Header incompleto (" + headerBytes + "/4)", null);
+                    continue;
+                }
+                int dimensioneFile = ((int)bufferDimension[3] << 24) + ((int)bufferDimension[2] << 16) + ((int)bufferDimension[1] << 8) + (bufferDimension[0]);
 
+                if (dimensioneFile <= 0 || dimensioneFile > maxFileSize)
+                {
+                    DataReceived("Dimensione file non valida (" + dimensioneFile + "), retry", null);
+                    continue;
+                }
+                DataReceived("Attesi " + dimensioneFile + " bytes", null);
 
-            // LETTURA FILE
-            buffer = new byte[dimensioneFile];
-            bytesReceived = 0;
-            rxCompleted = false;
-            // Avvio il thread di ricezione
-            rxThread = new Thread(RxThreadProc);
-            rxThread.IsBackground = true;
-            rxThread.Start();
-            WaitForRxCompletion();
-            string result = Arca.ByteArray2Ascii(buffer);
-            if (!rxCompleted || bytesReceived != dimensioneFile)
-            {
+                // LETTURA FILE, con watchdog: evita blocchi indefiniti se il device si interrompe a metà trasmissione
+                byte[] buffer = new byte[dimensioneFile];
+                if (ReadExact(buffer, 0, dimensioneFile, payloadTimeout, out int bytesReceived))
+                {
+                    DataReceived("ricevuti " + bytesReceived + " bytes", null);
+                    return Arca.ByteArray2Ascii(buffer);
+                }
+
                 DataReceived("incomplete (" + bytesReceived + "/" + dimensioneFile + ")", null);
-                nRetry++;
-                goto inizio;
             }
-            //if (buffer.Length != dimensioneFile)
-            //{
-            //    DataReceived("incomplete", null);
-            //    nRetry++;
-            //    goto inizio;
-            //}
-            DataReceived("ricevuti " + buffer.Length + " bytes", null);
 
-
-
-            //Arca.WaitingTime(10);
-            //try
-            //{
-            //    byteReceived = mySerial.Read(jsonBytes, 0, dimensioneFile);
-            //    while (byteReceived < dimensioneFile)
-            //        byteReceived += mySerial.Read(jsonBytes, byteReceived, dimensioneFile - byteReceived);
-            //}
-            //catch (TimeoutException ex)
-            //{
-            //    string msg = ex.Message;
-            //    DataReceived("time-out", null);
-            //    nRetry++;
-            //    goto inizio;
-            //}
-            //if (byteReceived != dimensioneFile || mySerial.BytesToRead != 0)
-            //{
-            //    DataReceived("incomplete", null);
-            //    nRetry++;
-            //    goto inizio;
-            //}
-            //string result = Arca.ByteArray2Ascii(jsonBytes);
-            //DataReceived(jsonBytes.Length + " bytes", null);
-
-            return result;
+            DataReceived("Fallite " + maxRetry + " letture", null);
+            return "";
         }
-
 
     }
     public class RL40
@@ -4082,6 +4047,7 @@ namespace myArcaNameSpace
             public float doc4_comp_gamma_wh;
             public byte doc4_comp_passes;
             public float doc4_comp_mean_pos_rd;
+            public float doc4_comp_mean_neg_rd;
             public float doc4_comp_mean_neg_gr;
             public float doc4_comp_mean_pos_gr;
             public float doc4_comp_mean_neg_bl;
@@ -5231,6 +5197,7 @@ namespace myArcaNameSpace
             // 1 = Serial number
             // 2 = Board ID
             // 3 = Module name
+            // 4 = Data di generazione
             byte[] values = Arca.Hex2ByteArray(Arca.Ascii2Hex(value));
             int dimension = value.Length + 3;
             byte[] command = new byte[value.Length + 3];
@@ -5354,6 +5321,8 @@ namespace myArcaNameSpace
             comPort.CloseCom();
             return result;
         }
+
+        
 
         public string CmdSptStreamRilUpload()
         {
@@ -5868,6 +5837,26 @@ namespace myArcaNameSpace
         const string TYPE_READER = "READER";
         const string TYPE_REMOTE = "REMOTE";
 
+        XmlDocument readerXmlCache;
+        string readerXmlCacheFilename;
+
+        /// <summary>
+        /// Restituisce il documento XML del collaudo corrente, riusando quello già caricato in memoria
+        /// se il nome del file non è cambiato da ReaderXmlCreate. Evita di ricaricare/riparsare da disco
+        /// un file che può crescere di diversi MB (immagini in base64) ad ogni singola modifica: il Save
+        /// resta invariato (scrive su disco ad ogni chiamata come prima), cambia solo il Load.
+        /// </summary>
+        XmlDocument GetReaderXmlDocument()
+        {
+            if (readerXmlCache == null || readerXmlCacheFilename != readerXmlFilename)
+            {
+                readerXmlCache = new XmlDocument();
+                readerXmlCache.Load(readerXmlFilename);
+                readerXmlCacheFilename = readerXmlFilename;
+            }
+            return readerXmlCache;
+        }
+
         public void FtXmlCreate(string filename, string date, string timeStart, string station, string user, string serial, string swVer = "0.0")
         {
             xmlFilename = "XML\\" + filename;
@@ -6301,8 +6290,7 @@ namespace myArcaNameSpace
              * val_status
              * */
             string[] stdAttributes = { "result", "false", "date", DateTime.Now.ToString("yyyy-MM-dd"), "time_start", DateTime.Now.ToLongTimeString(), "time_end", DateTime.Now.ToLongTimeString(), "hw_level", "0", "com_status", "00", "val_status", "00" };
-            XmlDocument xDocument = new XmlDocument();
-            xDocument.Load(readerXmlFilename);
+            XmlDocument xDocument = GetReaderXmlDocument();
             XmlNode root1 = xDocument.DocumentElement;
 
             XmlNode child = xDocument.CreateNode(XmlNodeType.Element, elementName, "");
@@ -6348,8 +6336,7 @@ namespace myArcaNameSpace
         {
             if (readerType == TYPE_REMOTE && pos != 1 || readerType == TYPE_READER)
             {
-                XmlDocument xDocument = new XmlDocument();
-                xDocument.Load(readerXmlFilename);
+                XmlDocument xDocument = GetReaderXmlDocument();
                 XmlNode root1 = xDocument.DocumentElement;
                 XmlElement root = xDocument.DocumentElement;
                 XmlNodeList rootNodes = root.ChildNodes;
@@ -6372,13 +6359,59 @@ namespace myArcaNameSpace
             }
         }
 
+        /// <summary>
+        /// Come ReaderXmlEditCisElement, ma applica più valori in un solo Load/Save del file XML.
+        /// Da usare quando si devono scrivere più elementi consecutivi sullo stesso CIS (es. le immagini di un collaudo),
+        /// per evitare di ricaricare e riscrivere l'intero file una volta per ogni singolo valore.
+        /// </summary>
+        public void ReaderXmlEditCisElements(int pos, IEnumerable<KeyValuePair<string, string>> values)
+        {
+            if (readerType == TYPE_REMOTE && pos != 1 || readerType == TYPE_READER)
+            {
+                XmlDocument xDocument = GetReaderXmlDocument();
+                XmlElement root = xDocument.DocumentElement;
+                foreach (XmlNode rootNode in root.ChildNodes)
+                {
+                    foreach (XmlNode moduleNode in rootNode.ChildNodes)
+                    {
+                        if (moduleNode.Name != "CIS" || moduleNode.Attributes["pos"].Value != pos.ToString())
+                            continue;
+
+                        foreach (KeyValuePair<string, string> kv in values)
+                        {
+                            XmlNode existing = null;
+                            foreach (XmlNode child in moduleNode.ChildNodes)
+                            {
+                                if (child.Name == kv.Key)
+                                {
+                                    existing = child;
+                                    break;
+                                }
+                            }
+                            if (existing != null)
+                            {
+                                existing.InnerText = kv.Value;
+                            }
+                            else
+                            {
+                                XmlNode newChild = xDocument.CreateElement(kv.Key);
+                                newChild.InnerText = kv.Value;
+                                moduleNode.AppendChild(newChild);
+                            }
+                        }
+                        xDocument.Save(readerXmlFilename);
+                        return;
+                    }
+                }
+            }
+        }
+
         public void ReaderXmlEditCisElement(int pos, string elementName, string newValue)
         {
             if (readerType == TYPE_REMOTE && pos != 1 || readerType == TYPE_READER)
             {
                 bool trovato = false;
-                XmlDocument xDocument = new XmlDocument();
-                xDocument.Load(readerXmlFilename);
+                XmlDocument xDocument = GetReaderXmlDocument();
                 int idreader, idmodules, idmodule, idelement;
                 for (int i = 0; i < xDocument.ChildNodes.Count; i++)
                 {
@@ -6433,8 +6466,7 @@ namespace myArcaNameSpace
             if (readerType == TYPE_REMOTE && pos != 1 || readerType == TYPE_READER)
             {
                 bool trovato = false;
-                XmlDocument xDocument = new XmlDocument();
-                xDocument.Load(readerXmlFilename);
+                XmlDocument xDocument = GetReaderXmlDocument();
                 XmlNode root1 = xDocument.DocumentElement;
                 for (int i = root1.ChildNodes[0].ChildNodes.Count - 1 ; i >= 0; i--)
                 {
@@ -6470,8 +6502,7 @@ namespace myArcaNameSpace
 
         public void ReaderXmlAddReaderElement(string elementName, string value, params string[] attributes)
         {
-            XmlDocument xDocument = new XmlDocument();
-            xDocument.Load(readerXmlFilename);
+            XmlDocument xDocument = GetReaderXmlDocument();
             XmlNode root1 = xDocument.DocumentElement;
             XmlElement root = xDocument.DocumentElement;
             XmlNodeList rootNodes = root.ChildNodes;
@@ -6776,8 +6807,7 @@ namespace myArcaNameSpace
 
         public void ReaderXmlAddModuleElement(string moduleName, string elementName, string value, params string[] attributes)
         {
-            XmlDocument xDocument = new XmlDocument();
-            xDocument.Load(readerXmlFilename);
+            XmlDocument xDocument = GetReaderXmlDocument();
             XmlNode root1 = xDocument.DocumentElement;
             XmlElement root = xDocument.DocumentElement;
             XmlNodeList rootNodes = root.ChildNodes;
@@ -6822,8 +6852,7 @@ namespace myArcaNameSpace
 
         public void ReaderXmlEditReaderElement(string elementName, string newValue)
         {
-            XmlDocument xDocument = new XmlDocument();
-            xDocument.Load(readerXmlFilename);
+            XmlDocument xDocument = GetReaderXmlDocument();
             int idreader, idelement;
             for (int i = 0; i < xDocument.ChildNodes.Count; i++)
             {
@@ -6897,8 +6926,7 @@ namespace myArcaNameSpace
 
         public void ReaderXmlEditModuleElement(string moduleName, string elementName, string newValue)
         {
-            XmlDocument xDocument = new XmlDocument();
-            xDocument.Load(readerXmlFilename);
+            XmlDocument xDocument = GetReaderXmlDocument();
             int idreader, idmodules, idmodule, idelement;
             for (int i = 0; i < xDocument.ChildNodes.Count; i++) // 
             {
@@ -6985,8 +7013,7 @@ namespace myArcaNameSpace
         public void ReaderXmlEditModuleAttribute(string moduleName, string attributeName, string newAttributeValue, bool AddIfNotExist = true)
         {
             bool trovato = false;
-            XmlDocument xDocument = new XmlDocument();
-            xDocument.Load(readerXmlFilename);
+            XmlDocument xDocument = GetReaderXmlDocument();
             XmlNode root1 = xDocument.DocumentElement;
             //for (int i = 0; i < root1.ChildNodes[0].ChildNodes.Count; i++)
             for (int i = root1.ChildNodes[0].ChildNodes.Count - 1; i >= 0; i--)
@@ -7049,8 +7076,7 @@ namespace myArcaNameSpace
         }
         public void ReaderXmlAddModuleAttribute(string moduleName, string attributeName, string newAttributeValue)
         {
-            XmlDocument xDocument = new XmlDocument();
-            xDocument.Load(readerXmlFilename);
+            XmlDocument xDocument = GetReaderXmlDocument();
             XmlNode root1 = xDocument.DocumentElement;
             for (int i = 0; i < root1.ChildNodes[0].ChildNodes.Count; i++)
             {
@@ -7087,8 +7113,7 @@ namespace myArcaNameSpace
 
         public void ReaderXmlEditRootAttribute(string attributeName, string newAttributeValue)
         {
-            XmlDocument xDocument = new XmlDocument();
-            xDocument.Load(readerXmlFilename);
+            XmlDocument xDocument = GetReaderXmlDocument();
             for (int i = 0; i < xDocument.DocumentElement.Attributes.Count; i++)
             {
                 if (xDocument.DocumentElement.Attributes[i].Name == attributeName)

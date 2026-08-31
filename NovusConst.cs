@@ -34,6 +34,10 @@ namespace Novus
         public const string UPDATEVERSION_TYPE_SUITE = "Suite";
         public const string UPDATEVERSION_TYPE_REFERENCE = "Reference";
         public const string DEVICE_RESET_MODE_FORCED = "forced";
+        public const string CONTINUOS_FEEDING_ACTION_START = "start";
+        public const string CONTINUOS_FEEDING_ACTION_STOP = "stop";
+        public const string DEPOSIT_MODE_CONTINUOS_FEEDING = "continousFeeding";
+
 
         // ------------------------------------------------------------------------
         //                      REPLY-CODE

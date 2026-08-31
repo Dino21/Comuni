@@ -147,6 +147,7 @@ public class UserCustomization
     public int ecoModeTimeout { get; set; }
     public string setCassConfig { get; set; }
     public string countryCode { get; set; }
+    public string machineCustomization { get; set; }
     public string displayLanguage { get; set; }
     public int systemRate { get; set; }
 }

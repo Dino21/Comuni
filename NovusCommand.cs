@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using System.Runtime.InteropServices;
+using System.IO;
 // aggiungere al progetto i file: novuscommand.cs, Novus_Json.cs, novConst.cs
 // aggiungere al progetto il pacchetto Newtonsoft.Json da nuget manager
 // aggiungere al progetto il file ArcaLibLog.dll, ArcaDevInt.dll, ARCAdevsvc.dll
@@ -386,6 +387,8 @@ namespace Novus
             dllInitialized = false;
             novus.InDataInitialize = new Novus_Json.CinDataInitialize();
             novus.InDataInitialize.pathtrace = logPath;
+            if (!Directory.Exists(logPath))
+                Directory.CreateDirectory(logPath);
             StringBuilder inData = new StringBuilder(JsonConvert.SerializeObject(novus.InDataInitialize));
             reply = ARCAInitialize(LIBRARY_VERSION_1_0, inData);
             if (reply == 0)
@@ -399,6 +402,8 @@ namespace Novus
             dllInitialized = false;
             novus.InDataInitialize = new Novus_Json.CinDataInitialize();
             novus.InDataInitialize.pathtrace = logPath;
+            if (!Directory.Exists(logPath))
+                Directory.CreateDirectory(logPath);
             StringBuilder inData = new StringBuilder(JsonConvert.SerializeObject(novus.InDataInitialize));
             reply = ARCAInitializeSrv(LIBRARY_VERSION_1_0, inData);
             if (reply == 0)
@@ -674,6 +679,20 @@ namespace Novus
             reply = ARCAexeTraceTransfer(hCon, inData, STRDIM_MID, outData);
             return reply;
         }
+        public int DownloadDataLogger(string filename)
+        {
+            int reply = -1;
+            novus.inDataTraceTransfer = new Novus_Json.CinDataeExeTraceTransfer();
+            novus.inDataTraceTransfer.TransferType = "Download";
+            novus.inDataTraceTransfer.TransferMode = "Service";
+            novus.inDataTraceTransfer.TransferFile = "dataLogger";
+            novus.inDataTraceTransfer.ZipfileName = filename;
+            StringBuilder inData = new StringBuilder();
+            inData = new StringBuilder(JsonConvert.SerializeObject(novus.inDataTraceTransfer));
+            StringBuilder outData = new StringBuilder(STRDIM_MID);
+            reply = ARCAexeTraceTransfer(hCon, inData, STRDIM_MID, outData);
+            return reply;
+        }
 
         public int Deposit()
         {
@@ -682,6 +701,24 @@ namespace Novus
             novus.InDataDeposit.cmdMode = novConst.DLINK_CMDMODE_SYNC;
             novus.InDataDeposit.cassetteDetails = "true";
             //novus.InDataDeposit.mode = "";
+            StringBuilder inData = new StringBuilder(JsonConvert.SerializeObject(novus.InDataDeposit));
+            StringBuilder outData = new StringBuilder(STRDIM_LITTLE);
+            reply = ARCADeposit(hCon, inData, STRDIM_LITTLE, outData);
+            novus.OutDataDeposit = JsonConvert.DeserializeObject<Novus_Json.CoutDataDeposit>(outData.ToString());
+
+            return reply;
+        }
+        public int ContinuosFeeding(int mSecFeedingTime)
+        {
+            int reply;
+            novus.InDataDeposit = new Novus_Json.CinDataDeposit()
+            {
+                cassetteDetails = "true",
+                cmdMode = novConst.DLINK_CMDMODE_SYNC,
+                continuousFeedingAction = novConst.CONTINUOS_FEEDING_ACTION_START,
+                continuousFeedingTime = mSecFeedingTime.ToString(),
+                mode=novConst.DEPOSIT_MODE_CONTINUOS_FEEDING
+            };
             StringBuilder inData = new StringBuilder(JsonConvert.SerializeObject(novus.InDataDeposit));
             StringBuilder outData = new StringBuilder(STRDIM_LITTLE);
             reply = ARCADeposit(hCon, inData, STRDIM_LITTLE, outData);
