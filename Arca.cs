@@ -1505,7 +1505,7 @@ namespace myArcaNameSpace
             CheckHorTranspSpeed.msgId = 0x01;
             CheckHorTranspSpeed.msgOpCode = new byte[] { 0x01, 0x3C };
             CheckHorTranspSpeed.bytesAnswer = 0x0C;
-            CheckHorTranspSpeed.timeOut = 10000;
+            CheckHorTranspSpeed.timeOut = 20000;
             CheckHorTranspSpeed.cmdName = "Check Horizontal Transport Speed";
             TestCassetteModule.msgId = 0x01;
             TestCassetteModule.msgOpCode = new byte[] { 0x01, 0x3D };
@@ -1514,7 +1514,7 @@ namespace myArcaNameSpace
             CheckHorTranspSpeedSnr.msgId = 0x01;
             CheckHorTranspSpeedSnr.msgOpCode = new byte[] { 0x01, 0x3E };
             CheckHorTranspSpeedSnr.bytesAnswer = 0x0C;
-            CheckHorTranspSpeedSnr.timeOut = 10000;
+            CheckHorTranspSpeedSnr.timeOut = 20000;
             CheckHorTranspSpeedSnr.cmdName = "Check Horizontal Transport Speed with SNR module";
             GetShutterPosition.msgId = 0x01;
             GetShutterPosition.msgOpCode = new byte[] { 0x01, 0x3F };
