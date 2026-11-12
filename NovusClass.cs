@@ -146,6 +146,7 @@ public class UserCustomization
     public List<Banks> bank { get; set; }
     public int ecoModeTimeout { get; set; }
     public string setCassConfig { get; set; }
+    public int setCassetteProtocol { get; set; }
     public string countryCode { get; set; }
     public string machineCustomization { get; set; }
     public string displayLanguage { get; set; }

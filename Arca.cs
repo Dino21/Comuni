@@ -8510,7 +8510,7 @@ namespace CM18tool
             return result;
         }
 
-        public static byte[] FloatArray2ReversedByteArray(float[] values)
+        public static byte[] FloatArray2BigEndianByteArray(float[] values)
         {
             byte[] singleFloatInByte;
             byte[] answer = new byte[values.Length * 4];
